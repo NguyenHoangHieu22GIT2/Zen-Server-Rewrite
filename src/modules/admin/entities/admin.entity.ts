@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { BaseUser } from 'src/base-user/entity/base-user.entity';
-import { SUPERVISORROLE, role } from 'src/constants/admin';
+import { BaseUser } from 'src/cores/base-user/entity/base-user.entity';
+import { SUPERVISORROLE, role } from 'src/common/constants/admin';
 
 @Schema()
 export class Admin extends BaseUser {

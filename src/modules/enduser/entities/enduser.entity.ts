@@ -1,12 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { BaseUser } from 'src/base-user/entity/base-user.entity';
+import { BaseUser } from 'src/cores/base-user/entity/base-user.entity';
 
 @Schema()
 export class EndUser extends BaseUser {
   @Prop({ required: true, type: String })
   email: string;
 
-  @Prop({ required: true, type: String })
+  @Prop({ required: false, type: String, default: '' })
   avatar: string;
 
   @Prop({ required: true, type: String })

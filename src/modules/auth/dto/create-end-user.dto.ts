@@ -7,7 +7,7 @@ import {
   MinLength,
 } from 'class-validator';
 // --- Local ---
-import { OTHER, gender } from 'src/constants/enduser';
+import { OTHER, gender } from 'src/common/constants/enduser';
 
 export class CreateEnduserDto {
   @ApiProperty({
@@ -37,16 +37,17 @@ export class CreateEnduserDto {
     title: 'Email of the User',
     type: String,
     required: true,
+    example: 'mikey@gmail.com',
   })
   @IsEmail()
   email: string;
 
+  // Let's see If we can send File through this. I am certain (70%) that we can not do that. in any case, let's just put it here
   // @ApiProperty({
   //   title: 'Avatar of the user',
-  //   type: String,
+  //   type: ,
   //   required: true,
   //   pattern: 'the name of the avatar',
-  //   example: 'picture-of-mike.png',
   // })
   // @IsString()
   // avatar: string;
