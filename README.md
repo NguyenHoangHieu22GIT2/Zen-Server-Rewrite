@@ -1,73 +1,30 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# <p style="text-align:center"> ⭐ HELLO WORLD TO ALL MY FRIENDS READING THIS PROJECT ⭐ </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<p style="text-align:center">This is a improved project (server) for Zen. The reason why I did this is because the old codes are messy, no Designs at the start and no dedication when writing codes. All results in a project that is nearly impossible to maintain, understand or even change one bit.<br/><br/> That's why this project is created, it aims for more well-built. I have started to draw some diagrams, learn about clean codes and stuff like that. It will make the project more mature and can even do more things in the future.</p>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+### TO RUN THE SERVER, YOU SHOULD HAVE:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. Node.JS installed
+2. Redis installed
+3. Mongodb server installed
 
-## Installation
+### steps to run the project
 
-```bash
-$ pnpm install
-```
+1.  Install dependencies:
+    > If you use npm:
+    > <code style="background-color:black;color:white;">npm install</code>
+    >
+    > If you use pnpm:
+    > <code style="background-color:black;color:white;">pnpm install</code>
+    >
+    > If you use yarn:
+    > <code style="background-color:black;color:white;">yarn install</code>
+2.  Run server: <code style="background-color:black;color:white;">npm start:dev</code> | <code style="background-color:black;color:white;">pnpm start:dev </code>| <code style="background-color:black;color:white;">yarn start:dev</code>
 
-## Running the app
+---
 
-```bash
-# development
-$ pnpm run start
+# Footer
 
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+Thank you for reading my codes. I hope that it will give you better ideas of how to code better, with all my experiences in this project, I think you will learn a thing or two in this. HAPPY NEW YEAR (when I write this haha)
