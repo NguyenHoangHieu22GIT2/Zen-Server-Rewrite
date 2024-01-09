@@ -21,6 +21,10 @@ export class Comment {
     ref: nameOfCollections.Comment,
   })
   parentCommentId: Types.ObjectId;
+
+  createdAt: Date;
+
+  updatedAt: Date;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

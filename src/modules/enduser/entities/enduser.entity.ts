@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { BaseUser } from 'src/cores/base-user/entity/base-user.entity';
 
-@Schema()
+@Schema({ timestamps: true })
 export class EndUser extends BaseUser {
   _id: Types.ObjectId;
 
@@ -23,6 +23,10 @@ export class EndUser extends BaseUser {
 
   @Prop({ required: true, type: [String], default: [] })
   restrict: string[];
+
+  createdAt: Date;
+
+  updatedAt: Date;
 }
 
 export const EndUserSchema = SchemaFactory.createForClass(EndUser);
