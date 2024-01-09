@@ -1,4 +1,3 @@
-// --- Libraries ---
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
@@ -6,10 +5,9 @@ import {
   IsStrongPassword,
   MinLength,
 } from 'class-validator';
-// --- Local ---
 import { OTHER, gender } from 'src/common/constants/enduser';
 
-export class CreateEnduserDto {
+export class RegisterEndUserDto {
   @ApiProperty({
     title: 'Username of the user',
     type: String,
