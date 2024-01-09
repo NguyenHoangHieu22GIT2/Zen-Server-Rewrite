@@ -3,6 +3,7 @@ import { Group } from 'src/modules/group/entities/group.entity';
 import { RedisClient } from './client.redis';
 import {
   EventKey,
+  groupEventsKey,
   groupKey,
   groupMembersKey,
   groupPostsKey,
@@ -48,5 +49,16 @@ export class GroupRedis {
 
   static async groupPostsPFCOUNT(groupId: Types.ObjectId) {
     return RedisClient.PFCOUNT(groupPostsKey(groupId));
+  }
+
+  static async groupEventPFADD(
+    groupId: Types.ObjectId,
+    eventId: Types.ObjectId,
+  ) {
+    return RedisClient.PFADD(groupEventsKey(groupId), eventId.toString());
+  }
+
+  static async groupEventPFCOUNT(groupId: Types.ObjectId) {
+    return RedisClient.PFCOUNT(groupEventsKey(groupId));
   }
 }
