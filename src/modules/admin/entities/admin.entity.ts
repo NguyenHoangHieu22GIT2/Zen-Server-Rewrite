@@ -4,6 +4,9 @@ import { SUPERVISORROLE, role } from 'src/common/constants/admin';
 
 @Schema()
 export class Admin extends BaseUser {
+  @Prop({ required: true, type: String, index: { unique: true } })
+  username: string;
+
   @Prop({ required: true, default: [], type: [String] })
   logs_ban: string[];
 
