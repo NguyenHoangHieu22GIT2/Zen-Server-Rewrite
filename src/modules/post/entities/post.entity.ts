@@ -19,6 +19,10 @@ export class Post {
     type: UserMinimalProp,
   })
   user: userMinimalType;
+
+  createdAt: Date;
+
+  updatedAt: Date;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

@@ -1,7 +1,7 @@
 import { EndUser } from 'src/modules/enduser/entities/enduser.entity';
 import { RedisClient } from './client.redis';
 import { ConvertObjectPropertiesTypeToString } from 'src/common/utils/convertObjectPropertiesTypeToString';
-import { UserRedisType } from 'src/common/types/objectTypes/user.redis.type';
+import { UserRedisType } from 'src/common/types/redisTypes/user.redis.type';
 import {
   userFriendsKey,
   userKey,

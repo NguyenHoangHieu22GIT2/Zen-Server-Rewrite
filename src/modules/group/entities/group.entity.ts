@@ -17,6 +17,9 @@ export class Group {
   avatar: string;
   @Prop({ required: true, type: UserMinimalProp })
   user: userMinimalType;
+  createdAt: Date;
+
+  updatedAt: Date;
 }
 
 export const GroupSchema = SchemaFactory.createForClass(Group);

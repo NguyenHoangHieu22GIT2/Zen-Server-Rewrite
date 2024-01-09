@@ -19,6 +19,10 @@ export class Event {
 
   @Prop({ required: true, type: String })
   wallpaper: string;
+
+  createdAt: Date;
+
+  updatedAt: Date;
 }
 
 export const EventSchema = SchemaFactory.createForClass(Event);

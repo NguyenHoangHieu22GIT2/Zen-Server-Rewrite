@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { nameOfCollections } from 'src/common/constants/name-of-collections';
 
@@ -24,4 +24,10 @@ export class Message {
   ConversationId: Types.ObjectId;
 
   visibility: 'retrieve' | 'delete' | 'normal';
+
+  createdAt: Date;
+
+  updatedAt: Date;
 }
+
+export const MessageSchema = SchemaFactory.createForClass(Message);
