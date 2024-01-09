@@ -7,22 +7,26 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateEnduserDto } from './dto/create-end-user.dto';
-import { ApiBody, ApiResponse } from '@nestjs/swagger';
-
+import { AuthServiceUnstable } from './unstable/auth.unstable.service';
+import { RegisterEndUserDto } from './dto/register-end-user.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { RegisterAccountSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/registerAccount.api';
+import { LoginEndUserDto } from './dto/login-end-user.dto';
+import { LoginAccountSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/loginAccount.api';
+@ApiTags('Authentication/Authorization')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
-  @ApiBody({ type: CreateEnduserDto })
-  @ApiResponse({
-    status: 201,
-    description: 'your account has been successfully created',
-  })
-  @ApiResponse({ status: 400, description: 'Invalid inputs' })
-  @Post()
-  create(@Body() createEnduserDto: CreateEnduserDto) {
-    console.log('Hello world');
-    return this.authService.registerAccount(createEnduserDto);
+  constructor(private readonly authServerUnstable: AuthServiceUnstable) {}
+
+  @RegisterAccountSwaggerAPIDecorators()
+  @Post('register-account')
+  registerAccount(@Body() registerEndUserDto: RegisterEndUserDto) {
+    return this.authServerUnstable.registerAccount(registerEndUserDto);
+  }
+
+  @LoginAccountSwaggerAPIDecorators()
+  @Patch('login-account')
+  loginAccount(@Body() loginEndUserDto: LoginEndUserDto) {
+    return this.authServerUnstable.loginAccount(loginEndUserDto);
   }
 }
