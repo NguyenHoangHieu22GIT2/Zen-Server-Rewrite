@@ -1,22 +1,21 @@
 import { EndUser } from 'src/modules/enduser/entities/enduser.entity';
 import { RedisClient } from './client.redis';
-import { ConvertObjectPropertiesTypeToString } from 'src/common/utils/convertObjectPropertiesTypeToString';
-import { UserRedisType } from 'src/common/types/redisTypes/user.redis.type';
 import {
   userFriendsKey,
   userKey,
   usersHaveRegisteredKey,
   usersRecentlyLoginKey,
 } from '../redisKeys/user.redis.keys';
+import { ConvertObjectToHash } from 'src/common/utils/convertObjectToHash';
 
 export class UserRedis {
+  //HASH
   static async userConvertToRedisTypeThenHSET(email: string, user: EndUser) {
-    const convertedUserForRedis =
-      ConvertObjectPropertiesTypeToString<UserRedisType>(user);
-    convertedUserForRedis.email;
-    return RedisClient.HSET(userKey(email), convertedUserForRedis);
+    const convertedUser = ConvertObjectToHash<EndUser>(user);
+    return RedisClient.HSET(userKey(email), convertedUser);
   }
 
+  //HYPERLOGLOG
   static async usersRecentlyLoginPFADD(email: string) {
     return RedisClient.PFADD(usersRecentlyLoginKey(), email);
   }

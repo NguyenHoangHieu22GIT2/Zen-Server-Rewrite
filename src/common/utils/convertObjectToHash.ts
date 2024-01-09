@@ -1,7 +1,9 @@
-export function ConvertObjectPropertiesTypeToString<T extends object>(
+import { ObjectToHashType } from '../types/redisTypes/ObjectToHash.redis.type';
+
+export function ConvertObjectToHash<T extends Object>(
   objectToConvert: object,
-): T {
-  const convertedObject = {} as T;
+): ObjectToHashType<T> {
+  const convertedObject = {} as ObjectToHashType<T>;
   for (const key in objectToConvert) {
     const propertyInObjectToConvert = objectToConvert[key];
     // If Date, then convert to Unix time then Stringify it
