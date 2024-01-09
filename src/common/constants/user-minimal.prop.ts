@@ -1,7 +1,8 @@
 import { Types } from 'mongoose';
+import { nameOfCollections } from './name-of-collections';
 
 export const UserMinimalProp = {
+  _id: { type: Types.ObjectId, required: true, ref: nameOfCollections.EndUser },
   username: { type: String, required: true },
   avatar: { type: String, required: true },
-  _id: { type: Types.ObjectId, required: true, ref: 'User' },
-};
+} as const;

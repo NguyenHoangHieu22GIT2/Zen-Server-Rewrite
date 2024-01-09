@@ -12,6 +12,8 @@ import { CommentModule } from './comment/comment.module';
 import { PostModule } from './post/post.module';
 import { FriendModule } from './friend/friend.module';
 import { EventModule } from './event/event.module';
+import { ConversationModule } from './conversation/conversation.module';
+import { MessageModule } from './message/message.module';
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://localhost:27017', {
@@ -31,6 +33,8 @@ import { EventModule } from './event/event.module';
     PostModule,
     FriendModule,
     EventModule,
+    ConversationModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
