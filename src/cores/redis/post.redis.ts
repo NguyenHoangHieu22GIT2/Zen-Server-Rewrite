@@ -1,20 +1,20 @@
-import { PostRedisType } from 'src/common/types/redisTypes/post.redis.type';
-import { ConvertObjectPropertiesTypeToString } from 'src/common/utils/convertObjectPropertiesTypeToString';
 import { Post } from 'src/modules/post/entities/post.entity';
 import { RedisClient } from './client.redis';
-import { likesKey, postKey, viewsKey } from '../redisKeys/post.redis.key';
+import { likesKey, postKey, viewsKey } from '../redisKeys/post.redis.keys';
 import { Types } from 'mongoose';
+import { ConvertObjectToHash } from 'src/common/utils/convertObjectToHash';
 
 export class PostRedis {
+  //HASH
   static async postConvertToRedisTypeThenHSET(
     postId: Types.ObjectId,
     post: Post,
   ) {
-    const convertedPostToRedisType =
-      ConvertObjectPropertiesTypeToString<PostRedisType>(Post);
-    return RedisClient.HSET(postKey(postId), convertedPostToRedisType);
+    const convertedPost = ConvertObjectToHash<Post>(post);
+    return RedisClient.HSET(postKey(postId), convertedPost);
   }
 
+  //HYPERLOGLOG
   static async viewsPFADD(postId: Types.ObjectId, userId: Types.ObjectId) {
     return RedisClient.PFADD(viewsKey(postId), userId.toString());
   }
