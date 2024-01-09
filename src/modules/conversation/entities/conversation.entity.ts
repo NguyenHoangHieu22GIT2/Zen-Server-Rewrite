@@ -3,23 +3,15 @@ import { Types } from 'mongoose';
 import { nameOfCollections } from 'src/common/constants/name-of-collections';
 
 @Schema()
-export class Friend {
+export class Conversation {
   _id: Types.ObjectId;
-
-  @Prop({
-    required: true,
-    type: Types.ObjectId,
-    ref: nameOfCollections.EndUser,
-    index: { unique: true },
-  })
-  userId: Types.ObjectId;
 
   @Prop({
     required: true,
     type: [Types.ObjectId],
     ref: nameOfCollections.EndUser,
   })
-  friends: Types.ObjectId[];
+  users: Types.ObjectId[];
 }
 
-export const FriendSchema = SchemaFactory.createForClass(Friend);
+export const ConversationSchema = SchemaFactory.createForClass(Conversation);
