@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { BaseUser } from 'src/cores/base-user/entity/base-user.entity';
+import { v4 } from 'uuid';
 
 @Schema({ timestamps: true })
 export class EndUser extends BaseUser {
@@ -17,6 +18,15 @@ export class EndUser extends BaseUser {
 
   @Prop({ required: true, type: String })
   gender: string;
+
+  @Prop({ required: true, type: Boolean, default: false })
+  isOnline: boolean;
+
+  @Prop({ required: true, type: Date, default: Date.now() })
+  offlineTime: Date;
+
+  @Prop({ required: true, type: String, default: v4() })
+  token: string;
 
   @Prop({ required: true, type: Boolean, default: false })
   isBanned: boolean;
