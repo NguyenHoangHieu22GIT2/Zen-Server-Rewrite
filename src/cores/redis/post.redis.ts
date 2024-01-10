@@ -1,4 +1,4 @@
-import { Post } from 'src/modules/post/entities/post.entity';
+import { Post } from 'src/modules/feeds/post/entities/post.entity';
 import { RedisClient } from './client.redis';
 import { likesKey, postKey, viewsKey } from '../redisKeys/post.redis.keys';
 import { Types } from 'mongoose';

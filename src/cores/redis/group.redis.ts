@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { Group } from 'src/modules/group/entities/group.entity';
+import { Group } from 'src/modules/community/group/entities/group.entity';
 import { RedisClient } from './client.redis';
 import {
   EventKey,
@@ -8,7 +8,7 @@ import {
   groupMembersKey,
   groupPostsKey,
 } from '../redisKeys/group.redis.keys';
-import { Event } from 'src/modules/event/entities/event.entity';
+import { Event } from 'src/modules/community/event/entities/event.entity';
 import { ConvertObjectToHash } from 'src/common/utils/convertObjectToHash';
 
 export class GroupRedis {

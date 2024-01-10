@@ -7,7 +7,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import { RegisterEndUserDto } from '../dto/register-end-user.dto';
-import { EndUser } from '../../enduser/entities/enduser.entity';
+import { EndUser,EndUserSchema } from 'src/modules/users/enduser/entities/enduser.entity';
+
 import { AuthServiceStable } from '../stable/auth.stable.service';
 import { LoginEndUserDto } from '../dto/login-end-user.dto';
 

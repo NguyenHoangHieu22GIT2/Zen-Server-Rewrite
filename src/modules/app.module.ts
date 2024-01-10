@@ -2,18 +2,18 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { EnduserModule } from './enduser/enduser.module';
-import { AdminModule } from './admin/admin.module';
+import { EnduserModule } from 'src/modules/users/enduser/enduser.module';
+import { AdminModule } from 'src/modules/users/admin/admin.module';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
-import { GroupModule } from './group/group.module';
-import { LikeModule } from './like/like.module';
-import { CommentModule } from './comment/comment.module';
-import { PostModule } from './post/post.module';
-import { FriendModule } from './friend/friend.module';
-import { EventModule } from './event/event.module';
-import { ConversationModule } from './conversation/conversation.module';
-import { MessageModule } from './message/message.module';
+import { AuthModule } from 'src/modules/auth/auth.module';
+import { GroupModule } from 'src/modules/community/group/group.module';
+import { LikeModule } from 'src/modules/feeds/like/like.module';
+import { CommentModule } from 'src/modules/feeds/comment/comment.module';
+import { PostModule } from 'src/modules/feeds/post/post.module';
+import { FriendModule } from 'src/modules/users/friend/friend.module';
+import { EventModule } from 'src/modules/community/event/event.module';
+import { ConversationModule } from 'src/modules/communication/conversation/conversation.module';
+import { MessageModule } from 'src/modules/communication/message/message.module';
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://localhost:27017', {
