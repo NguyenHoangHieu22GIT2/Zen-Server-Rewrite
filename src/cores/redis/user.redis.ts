@@ -1,4 +1,4 @@
-import { EndUser } from 'src/modules/enduser/entities/enduser.entity';
+import { EndUser } from "src/modules/users/enduser/entities/enduser.entity";
 import { RedisClient } from './client.redis';
 import {
   userFriendsKey,

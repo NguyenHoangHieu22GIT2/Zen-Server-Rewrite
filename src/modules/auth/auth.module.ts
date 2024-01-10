@@ -3,7 +3,10 @@ import { AuthServiceStable } from './stable/auth.stable.service';
 import { AuthServiceUnstable } from './unstable/auth.unstable.service';
 import { AuthController } from './auth.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { EndUser, EndUserSchema } from '../enduser/entities/enduser.entity';
+import {
+  EndUser,
+  EndUserSchema,
+} from 'src/modules/users/enduser/entities/enduser.entity';
 
 @Module({
   controllers: [AuthController],
