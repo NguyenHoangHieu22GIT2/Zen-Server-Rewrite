@@ -10,7 +10,8 @@ import { GroupModule } from 'src/modules/community/group/group.module';
 import { LikeModule } from 'src/modules/feeds/like/like.module';
 import { CommentModule } from 'src/modules/feeds/comment/comment.module';
 import { PostModule } from 'src/modules/feeds/post/post.module';
-import { FriendModule } from 'src/modules/users/friend/friend.module';
+import { FriendModule } from 'src/modules/social/friend/friend.module';
+import { NotificationModule } from 'src/modules/social/notification/notification.module';
 import { EventModule } from 'src/modules/community/event/event.module';
 import { ConversationModule } from 'src/modules/communication/conversation/conversation.module';
 import { MessageModule } from 'src/modules/communication/message/message.module';
@@ -35,6 +36,7 @@ import { MessageModule } from 'src/modules/communication/message/message.module'
     EventModule,
     ConversationModule,
     MessageModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
