@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import { RegisterEndUserDto } from '../dto/register-end-user.dto';
-import { EndUser,EndUserSchema } from 'src/modules/users/enduser/entities/enduser.entity';
+import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
 
 import { AuthServiceStable } from '../stable/auth.stable.service';
 import { LoginEndUserDto } from '../dto/login-end-user.dto';
@@ -58,8 +58,12 @@ export class AuthServiceUnstable {
       if (!isMatchedPassword) {
         throw new UnauthorizedException('Invalid Password');
       }
-
-      return 'You logged in successfully';
+      const { _id, username, avatar } = existedUser;
+      return {
+        _id,
+        username,
+        avatar,
+      };
     } catch (error) {
       throw error;
     }

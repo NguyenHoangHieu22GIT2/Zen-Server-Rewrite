@@ -7,10 +7,17 @@ import {
   EndUser,
   EndUserSchema,
 } from 'src/modules/users/enduser/entities/enduser.entity';
+import { LocalStrategy } from './passport/local.strategy';
+import { AuthSerializer } from './passport/Serialize.provider';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthServiceStable, AuthServiceUnstable],
+  providers: [
+    AuthServiceStable,
+    AuthServiceUnstable,
+    LocalStrategy,
+    AuthSerializer,
+  ],
   imports: [
     MongooseModule.forFeature([{ name: EndUser.name, schema: EndUserSchema }]),
   ],

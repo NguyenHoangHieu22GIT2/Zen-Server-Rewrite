@@ -15,6 +15,8 @@ import { NotificationModule } from 'src/modules/social/notification/notification
 import { EventModule } from 'src/modules/community/event/event.module';
 import { ConversationModule } from 'src/modules/communication/conversation/conversation.module';
 import { MessageModule } from 'src/modules/communication/message/message.module';
+import { GroupMembersModule } from './community/group-members/group-members.module';
+import { GroupPostsModule } from './community/group-posts/group-posts.module';
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://localhost:27017', {
@@ -37,6 +39,8 @@ import { MessageModule } from 'src/modules/communication/message/message.module'
     ConversationModule,
     MessageModule,
     NotificationModule,
+    GroupMembersModule,
+    GroupPostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
