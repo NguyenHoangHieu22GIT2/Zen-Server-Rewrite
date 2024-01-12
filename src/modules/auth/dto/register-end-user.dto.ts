@@ -35,7 +35,7 @@ export class RegisterEndUserDto {
     title: 'Email of the User',
     type: String,
     required: true,
-    example: 'mikey@gmail.com',
+    example: 'hoanghieufro@gmail.com',
   })
   @IsEmail()
   email: string;
