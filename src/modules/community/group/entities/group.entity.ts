@@ -9,14 +9,19 @@ export class Group {
 
   @Prop({ required: true, type: String })
   name: string;
+
   @Prop({ required: true, type: String })
   description: string;
+
   @Prop({ required: true, type: Boolean })
   isVisible: boolean;
+
   @Prop({ required: true, type: String })
   avatar: string;
+
   @Prop({ required: true, type: UserMinimalProp })
   user: userMinimalType;
+
   createdAt: Date;
 
   updatedAt: Date;
