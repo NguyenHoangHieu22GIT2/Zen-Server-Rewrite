@@ -59,9 +59,10 @@ export class AuthServiceStable {
   public async checkLoginAccount(
     loginEndUserDto: LoginEndUserDto,
   ): Promise<EndUser | DocumentMongodbType<EndUser>> {
-    let existedAccount = await UserRedis.findUserHGETALLAndDeserialize(
+    let existedAccount = await UserRedis.findUserHGETALLThenDeserialize(
       loginEndUserDto.email,
     );
+
     if (!existedAccount) {
       existedAccount = await this.checkAccountIfNotExistThenThrowError({
         filterQuery: { email: loginEndUserDto.email },
@@ -69,6 +70,18 @@ export class AuthServiceStable {
       });
     }
     return existedAccount;
+  }
+  public async checkRegisteredAccount(email: string, message: string) {
+    const isAccountExist = await UserRedis.usersHaveRegisteredPFADD(email);
+
+    if (!isAccountExist) {
+      throw new ConflictException(message);
+    }
+
+    await this.checkAccountIfAlreadyExistThenThrowError({
+      filterQuery: { email },
+      message,
+    });
   }
 
   // Handle functions

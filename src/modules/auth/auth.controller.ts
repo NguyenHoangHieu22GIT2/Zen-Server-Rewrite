@@ -37,6 +37,7 @@ export class AuthController {
   }
 
   @ActivateAccountSwaggerAPIDecorators()
+  @SerializeDecorator(EndUserSerializeDto)
   @Patch('activate-account')
   async activateAccount(@Body() activateAccountDto: ActivateAccountDto) {
     return this.authServiceUnstable.activateAccount(

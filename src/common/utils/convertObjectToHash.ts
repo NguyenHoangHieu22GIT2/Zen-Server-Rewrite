@@ -1,5 +1,6 @@
 import { ObjectToHashType } from '../types/redisTypes/ObjectToHash.redis.type';
 
+//DEPRECATED FOR NOW 2024-01-14
 export function ConvertObjectToHash<T extends Object>(
   objectToConvert: object,
 ): ObjectToHashType<T> {
