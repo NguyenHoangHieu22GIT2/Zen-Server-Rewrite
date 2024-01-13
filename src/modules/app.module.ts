@@ -18,6 +18,8 @@ import { MessageModule } from 'src/modules/communication/message/message.module'
 import { GroupMembersModule } from './community/group-members/group-members.module';
 import { GroupPostsModule } from './community/group-posts/group-posts.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { SerializeInterceptor } from 'src/cores/interceptors/Serialize.interceptor';
+import { UserRedis } from 'src/cores/redis/user.redis';
 @Module({
   imports: [
     //Configurations
@@ -59,6 +61,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
     GroupPostsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, UserRedis],
 })
 export class AppModule {}

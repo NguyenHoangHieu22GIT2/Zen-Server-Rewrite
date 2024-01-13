@@ -1,4 +1,4 @@
-import { EndUser } from "src/modules/users/enduser/entities/enduser.entity";
+import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
 import { RedisClient } from './client.redis';
 import {
   userFriendsKey,
@@ -7,12 +7,18 @@ import {
   usersRecentlyLoginKey,
 } from '../redisKeys/user.redis.keys';
 import { ConvertObjectToHash } from 'src/common/utils/convertObjectToHash';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserRedis {
   //HASH
   static async userConvertToRedisTypeThenHSET(email: string, user: EndUser) {
     const convertedUser = ConvertObjectToHash<EndUser>(user);
     return RedisClient.HSET(userKey(email), convertedUser);
+  }
+
+  static async findUserHGETALL(email: string) {
+    return RedisClient.HGETALL(userKey(email));
   }
 
   //HYPERLOGLOG

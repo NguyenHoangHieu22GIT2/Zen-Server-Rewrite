@@ -12,7 +12,7 @@ export function LoginAccountSwaggerAPIDecorators(): MethodDecorator {
     ApiResponse({ status: 400, description: 'Invalid inputs' }),
     ApiResponse({
       status: 401,
-      description: 'Invalid Credentials',
+      description: 'Unauthorized (has not activate the account)',
     }),
   );
 }
