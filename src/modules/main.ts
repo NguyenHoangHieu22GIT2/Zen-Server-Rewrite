@@ -36,6 +36,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('zen')
     .build();
+
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, swaggerDocument);
   // Swagger Configuration : END
@@ -44,9 +45,9 @@ async function bootstrap() {
   RedisClient.connect();
 
   // Passport Configuration
-
   app.use(passport.initialize());
   app.use(passport.session());
+
   await app.listen(3001);
 }
 bootstrap();

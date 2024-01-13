@@ -12,6 +12,7 @@ import { v4 } from 'uuid';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ChangeForgottonPasswordDto } from '../dto/change-forgotton-password.dto';
 import { UserRedis } from 'src/cores/redis/user.redis';
+import { checkingToConvertToObjectFromDocument } from 'src/common/utils/convertToObjectMongodb';
 
 @Injectable()
 export class AuthServiceUnstable {
@@ -74,35 +75,32 @@ export class AuthServiceUnstable {
 
   async loginAccount(loginEndUserDto: LoginEndUserDto) {
     try {
-      const existedAccount =
-        await this.authServiceStable.checkAccountIfNotExistThenThrowError({
-          filterQuery: { email: loginEndUserDto.email },
-          message: 'Invalid Email!',
-        });
+      let existedAccount =
+        await this.authServiceStable.checkLoginAccount(loginEndUserDto);
+
       if (existedAccount.activationToken) {
         throw new UnauthorizedException(
           'This account has not been activated, please go to your email account to activate it',
         );
       }
 
-      const isMatchedPassword = await bcrypt.compare(
+      await this.authServiceStable.checkPasswordAndThrowError(
         loginEndUserDto.password,
         existedAccount.password,
       );
 
-      if (!isMatchedPassword) {
-        throw new UnauthorizedException('Invalid Password');
-      }
+      const convertedExistedAccount =
+        checkingToConvertToObjectFromDocument(existedAccount);
 
       await Promise.all([
-        UserRedis.usersRecentlyLoginPFADD(existedAccount.email),
+        UserRedis.usersRecentlyLoginPFADD(convertedExistedAccount.email),
         UserRedis.userConvertToRedisTypeThenHSET(
-          existedAccount.email,
-          existedAccount.toObject(),
+          convertedExistedAccount.email,
+          convertedExistedAccount,
         ),
       ]);
 
-      return existedAccount;
+      return convertedExistedAccount;
     } catch (error) {
       console.log(error);
       throw error;
