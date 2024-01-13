@@ -25,8 +25,13 @@ export class EndUser extends BaseUser {
   @Prop({ required: true, type: Date, default: Date.now() })
   offlineTime: Date;
 
-  @Prop({ required: true, type: String, default: v4() })
-  token: string;
+  //Token for activate the account when first try to login
+  @Prop({ required: false, type: String })
+  activationToken: string;
+
+  //Token for changing any credentials like password, email, or anything else.
+  @Prop({ required: false, type: String })
+  modifyToken: string;
 
   @Prop({ required: true, type: Boolean, default: false })
   isBanned: boolean;

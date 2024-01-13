@@ -4,9 +4,10 @@ import {
   HttpException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { FilterQuery, Model, Types } from 'mongoose';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
 
@@ -17,20 +18,20 @@ export class AuthServiceStable {
   ) {}
 
   private async checkAccountIfAlreadyExist(
-    email: string,
+    filterQuery: FilterQuery<EndUser>,
   ): Promise<DocumentMongodbType<EndUser>> | null {
-    const user = await this.EndUserModel.findOne({ email });
+    const user = await this.EndUserModel.findOne(filterQuery);
     return user ? user : null;
   }
 
   public async checkAccountIfAlreadyExistThenThrowError({
-    email,
+    filterQuery,
     message,
   }: {
-    email: string;
+    filterQuery: FilterQuery<EndUser>;
     message: string;
   }) {
-    const user = await this.checkAccountIfAlreadyExist(email);
+    const user = await this.checkAccountIfAlreadyExist(filterQuery);
     if (user) {
       throw new ConflictException(message);
     }
@@ -38,20 +39,20 @@ export class AuthServiceStable {
   }
 
   public async checkAccountIfNotExistThenThrowError({
-    email,
+    filterQuery,
     message,
   }: {
-    email: string;
+    filterQuery: FilterQuery<EndUser>;
     message: string;
   }) {
-    const user = await this.checkAccountIfAlreadyExist(email);
+    const user = await this.checkAccountIfAlreadyExist(filterQuery);
     if (!user) {
-      throw new NotFoundException(message);
+      throw new UnauthorizedException(message);
     }
     return user;
   }
 
-  async findAccountById(id: Types.ObjectId) {
-    return this.EndUserModel.findById(id);
+  public async findAccountById(_id: Types.ObjectId) {
+    return this.checkAccountIfAlreadyExist({ _id });
   }
 }

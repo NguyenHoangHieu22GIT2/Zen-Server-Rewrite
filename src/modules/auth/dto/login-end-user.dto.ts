@@ -6,7 +6,7 @@ export class LoginEndUserDto {
     title: "End user's Email",
     type: String,
     required: true,
-    example: 'mikey@gmail.com',
+    example: 'hoanghieufro@gmail.com',
   })
   @IsEmail()
   email: string;
