@@ -6,7 +6,6 @@ export function ConvertObjectToHash<T extends Object>(
   const convertedObject = {} as ObjectToHashType<T>;
   for (const key in objectToConvert) {
     const propertyInObjectToConvert = objectToConvert[key];
-    console.log(key, propertyInObjectToConvert);
     // If Date, then convert to Unix time then Stringify it
     if (propertyInObjectToConvert instanceof Date)
       convertedObject[key] = propertyInObjectToConvert.getTime().toString();

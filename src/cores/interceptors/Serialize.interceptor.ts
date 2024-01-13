@@ -8,6 +8,7 @@ import {
 import { Observable, map } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 
+// Easier to call
 export function SerializeDecorator(serializeDto: any) {
   return UseInterceptors(new SerializeInterceptor(serializeDto));
 }
@@ -15,7 +16,7 @@ export function SerializeDecorator(serializeDto: any) {
 @Injectable()
 export class SerializeInterceptor implements NestInterceptor {
   constructor(private readonly serializeDto: any) {}
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(_context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data) => {
         const result = plainToInstance(this.serializeDto, data, {

@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EnduserModule } from 'src/modules/users/enduser/enduser.module';
 import { AdminModule } from 'src/modules/users/admin/admin.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { GroupModule } from 'src/modules/community/group/group.module';
 import { LikeModule } from 'src/modules/feeds/like/like.module';
@@ -18,7 +18,6 @@ import { MessageModule } from 'src/modules/communication/message/message.module'
 import { GroupMembersModule } from './community/group-members/group-members.module';
 import { GroupPostsModule } from './community/group-posts/group-posts.module';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { SerializeInterceptor } from 'src/cores/interceptors/Serialize.interceptor';
 import { UserRedis } from 'src/cores/redis/user.redis';
 @Module({
   imports: [
