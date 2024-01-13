@@ -24,11 +24,10 @@ export class AuthServiceUnstable {
 
   async registerAccount(createEndUserDto: RegisterEndUserDto) {
     try {
-      await this.authServiceStable.checkAccountIfAlreadyExistThenThrowError({
-        filterQuery: { email: createEndUserDto.email },
-        message: 'This email is already in used. Try another one',
-      });
-
+      await this.authServiceStable.checkRegisteredAccount(
+        createEndUserDto.email,
+        'This email is already in used. Try another one',
+      );
       const hashedPassword = await bcrypt.hash(
         createEndUserDto.password,
         +process.env.BCRYPT_HASH,
@@ -53,7 +52,6 @@ export class AuthServiceUnstable {
     }
   }
 
-  //TODO: Activate Account Function
   async activateAccount(activationToken: string) {
     try {
       const inactivateAccount =
@@ -91,6 +89,7 @@ export class AuthServiceUnstable {
 
       const convertedExistedAccount =
         checkingToConvertToObjectFromDocument(existedAccount);
+      console.log('convertedExistedAccount', convertedExistedAccount);
 
       await Promise.all([
         UserRedis.usersRecentlyLoginPFADD(convertedExistedAccount.email),

@@ -10,21 +10,26 @@ import { ConvertObjectToHash } from 'src/common/utils/convertObjectToHash';
 import { Injectable } from '@nestjs/common';
 import { userDeserialize } from '../redis-deserialize/user.deserialize';
 import { ObjectToHashType } from 'src/common/types/redisTypes/ObjectToHash.redis.type';
+import { userSerialize } from '../redis-serialize/user.serialize';
 
 @Injectable()
 export class UserRedis {
   //HASH
-  static async userConvertToRedisTypeThenHSET(email: string, user: EndUser) {
-    const convertedUser = ConvertObjectToHash<EndUser>(user);
+  static async userConvertToRedisTypeThenHSET(email: string, endUser: EndUser) {
+    const convertedUser = userSerialize(endUser);
     return RedisClient.HSET(userKey(email), convertedUser);
   }
 
-  static async findUserHGETALLAndDeserialize(email: string) {
-    const serializedUser = (await RedisClient.HGETALL(
+  static async findUserHGETALLThenDeserialize(
+    email: string,
+  ): Promise<EndUser | undefined> {
+    const serializedEndUser = (await RedisClient.HGETALL(
       userKey(email),
-    )) as unknown as ObjectToHashType<EndUser>;
-    const deserializedUser = userDeserialize(serializedUser);
-    return deserializedUser;
+    )) as unknown as null | ObjectToHashType<EndUser>;
+    if (Object.keys(serializedEndUser).length > 0) {
+      return userDeserialize(serializedEndUser);
+    }
+    return undefined;
   }
 
   //HYPERLOGLOG
