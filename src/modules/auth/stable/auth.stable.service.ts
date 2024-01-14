@@ -86,7 +86,10 @@ export class AuthServiceStable {
 
   // Handle functions
 
-  async checkPasswordAndThrowError(password: string, hashedPassword: string) {
+  async checkPasswordAndThrowErrorIfNotMatch(
+    password: string,
+    hashedPassword: string,
+  ) {
     const isMatchedPassword = await bcrypt.compare(password, hashedPassword);
 
     if (!isMatchedPassword) {

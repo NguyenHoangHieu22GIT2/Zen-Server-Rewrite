@@ -25,6 +25,7 @@ export class AuthController {
   ) {}
 
   @RegisterAccountSwaggerAPIDecorators()
+  @SerializeDecorator(EndUserSerializeDto)
   @Post('register-account')
   async registerAccount(@Body() registerEndUserDto: RegisterEndUserDto) {
     const result =
@@ -32,8 +33,7 @@ export class AuthController {
 
     // await this.mailerService.sendMail(registerMail(result.email, result.token));
 
-    const { activationToken, email, ...user } = result;
-    return user;
+    return result;
   }
 
   @ActivateAccountSwaggerAPIDecorators()
