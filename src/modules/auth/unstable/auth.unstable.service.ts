@@ -28,6 +28,7 @@ export class AuthServiceUnstable {
         createEndUserDto.email,
         'This email is already in used. Try another one',
       );
+
       const hashedPassword = await bcrypt.hash(
         createEndUserDto.password,
         +process.env.BCRYPT_HASH,
@@ -82,14 +83,13 @@ export class AuthServiceUnstable {
         );
       }
 
-      await this.authServiceStable.checkPasswordAndThrowError(
+      await this.authServiceStable.checkPasswordAndThrowErrorIfNotMatch(
         loginEndUserDto.password,
         existedAccount.password,
       );
 
       const convertedExistedAccount =
         checkingToConvertToObjectFromDocument(existedAccount);
-      console.log('convertedExistedAccount', convertedExistedAccount);
 
       await Promise.all([
         UserRedis.usersRecentlyLoginPFADD(convertedExistedAccount.email),
@@ -147,6 +147,7 @@ export class AuthServiceUnstable {
         changeForgottonPasswordDto.password,
         +process.env.BCRYPT_HASH,
       );
+      await UserRedis.userConvertToRedisTypeThenHSET(existedAccount.email,existedAccount.toObject());
       return existedAccount.save();
     } catch (error) {
       console.log(error);
