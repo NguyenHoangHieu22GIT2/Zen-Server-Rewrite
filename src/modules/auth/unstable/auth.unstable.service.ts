@@ -19,7 +19,6 @@ export class AuthServiceUnstable {
   constructor(
     @InjectModel(EndUser.name) private readonly EndUserModel: Model<EndUser>,
     private readonly authServiceStable: AuthServiceStable,
-    private readonly mailerService: MailerService,
   ) {}
 
   async registerAccount(createEndUserDto: RegisterEndUserDto) {
@@ -45,8 +44,7 @@ export class AuthServiceUnstable {
       //REDIS CODES
       await UserRedis.usersHaveRegisteredPFADD(createEndUserDto.email);
 
-      const { _id, username, activationToken, email } = createdAccount;
-      return { _id, username, activationToken, email };
+      return createdAccount;
     } catch (error) {
       console.log(error);
       throw error;
@@ -147,7 +145,10 @@ export class AuthServiceUnstable {
         changeForgottonPasswordDto.password,
         +process.env.BCRYPT_HASH,
       );
-      await UserRedis.userConvertToRedisTypeThenHSET(existedAccount.email,existedAccount.toObject());
+      await UserRedis.userConvertToRedisTypeThenHSET(
+        existedAccount.email,
+        existedAccount.toObject(),
+      );
       return existedAccount.save();
     } catch (error) {
       console.log(error);

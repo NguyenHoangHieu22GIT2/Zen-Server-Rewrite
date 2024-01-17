@@ -30,7 +30,7 @@ export class AuthServiceStable {
   }: {
     filterQuery: FilterQuery<EndUser>;
     message: string;
-  }) {
+  }): Promise<DocumentMongodbType<EndUser>> {
     const user = await this.checkAccountIfAlreadyExist(filterQuery);
     if (user) {
       throw new ConflictException(message);
@@ -44,7 +44,7 @@ export class AuthServiceStable {
   }: {
     filterQuery: FilterQuery<EndUser>;
     message: string;
-  }) {
+  }): Promise<DocumentMongodbType<EndUser>> {
     const user = await this.checkAccountIfAlreadyExist(filterQuery);
     if (!user) {
       throw new UnauthorizedException(message);
@@ -52,7 +52,9 @@ export class AuthServiceStable {
     return user;
   }
 
-  public async findAccountById(_id: Types.ObjectId) {
+  public async findAccountById(
+    _id: Types.ObjectId,
+  ): Promise<DocumentMongodbType<EndUser>> {
     return this.checkAccountIfAlreadyExist({ _id });
   }
 
