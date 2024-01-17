@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthServiceStable } from './stable/auth.stable.service';
 import { AuthServiceUnstable } from './unstable/auth.unstable.service';
 import { AuthController } from './auth.controller';
-import { MongooseModule } from '@nestjs/mongoose';
+import { MongooseModule, getModelToken } from '@nestjs/mongoose';
 import {
   EndUser,
   EndUserSchema,
