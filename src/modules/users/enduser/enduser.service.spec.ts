@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EnduserService } from './enduser.service';
+import { EnduserServiceUnstable } from './services/enduser.unstable.service';
 
-describe('EnduserService', () => {
-  let service: EnduserService;
+describe('EnduserServiceUnstable', () => {
+  let service: EnduserServiceUnstable;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [EnduserService],
+      providers: [EnduserServiceUnstable],
     }).compile();
 
-    service = module.get<EnduserService>(EnduserService);
+    service = module.get<EnduserServiceUnstable>(EnduserServiceUnstable);
   });
 
   it('should be defined', () => {

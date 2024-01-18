@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EnduserController } from './enduser.controller';
-import { EnduserService } from './enduser.service';
+import { EnduserServiceUnstable } from './services/enduser.unstable.service';
 
 describe('EnduserController', () => {
   let controller: EnduserController;
@@ -8,7 +8,7 @@ describe('EnduserController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EnduserController],
-      providers: [EnduserService],
+      providers: [EnduserServiceUnstable],
     }).compile();
 
     controller = module.get<EnduserController>(EnduserController);
