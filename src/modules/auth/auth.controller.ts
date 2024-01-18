@@ -19,10 +19,7 @@ import { ChangeForgottonPasswordSwaggerAPIDecorators } from 'src/documents/swagg
 @ApiTags('Authentication/Authorization')
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authServiceUnstable: AuthServiceUnstable,
-    private readonly mailerService: MailerService,
-  ) {}
+  constructor(private readonly authServiceUnstable: AuthServiceUnstable) {}
 
   @RegisterAccountSwaggerAPIDecorators()
   @SerializeDecorator(EndUserSerializeDto)
@@ -48,11 +45,13 @@ export class AuthController {
   @LoginAccountSwaggerAPIDecorators()
   @SerializeDecorator(EndUserSerializeDto)
   @Patch('login-account')
+  @UseGuards(LocalGuard)
   loginAccount(@Req() req: Request) {
     return req.user;
   }
 
   @ForgotPasswordSwaggerAPIDecorators()
+  @SerializeDecorator(EndUserSerializeDto)
   @Patch('forgot-password')
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     const result =
@@ -60,8 +59,7 @@ export class AuthController {
     // await this.mailerService.sendMail(
     //   forgotPasswordMail(result.email, result.token),
     // );
-    const { modifyToken, email, ...user } = result;
-    return user;
+    return result;
   }
 
   @ChangeForgottonPasswordSwaggerAPIDecorators()

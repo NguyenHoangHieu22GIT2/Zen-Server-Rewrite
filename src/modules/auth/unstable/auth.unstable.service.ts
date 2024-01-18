@@ -13,6 +13,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { ChangeForgottonPasswordDto } from '../dto/change-forgotton-password.dto';
 import { UserRedis } from 'src/cores/redis/user.redis';
 import { checkingToConvertToObjectFromDocument } from 'src/common/utils/convertToObjectMongodb';
+import { RedisClient } from 'src/cores/redis/client.redis';
 
 @Injectable()
 export class AuthServiceUnstable {
@@ -42,7 +43,9 @@ export class AuthServiceUnstable {
       const createdAccount = await this.EndUserModel.create(accountInfo);
 
       //REDIS CODES
-      await UserRedis.usersHaveRegisteredPFADD(createEndUserDto.email);
+      if (RedisClient.isOpen) {
+        await UserRedis.usersHaveRegisteredPFADD(createEndUserDto.email);
+      }
 
       return createdAccount;
     } catch (error) {
@@ -145,10 +148,12 @@ export class AuthServiceUnstable {
         changeForgottonPasswordDto.password,
         +process.env.BCRYPT_HASH,
       );
-      await UserRedis.userConvertToRedisTypeThenHSET(
-        existedAccount.email,
-        existedAccount.toObject(),
-      );
+      if (RedisClient.isOpen) {
+        await UserRedis.userConvertToRedisTypeThenHSET(
+          existedAccount.email,
+          existedAccount.toObject(),
+        );
+      }
       return existedAccount.save();
     } catch (error) {
       console.log(error);

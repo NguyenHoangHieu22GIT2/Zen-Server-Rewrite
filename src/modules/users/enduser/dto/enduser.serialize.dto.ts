@@ -5,6 +5,12 @@ export class EndUserSerializeDto {
   @Exclude()
   password: string;
 
+  @Exclude()
+  modifyToken: string;
+
+  @Exclude()
+  activationToken: string;
+
   @Expose()
   _id: Types.ObjectId;
 
