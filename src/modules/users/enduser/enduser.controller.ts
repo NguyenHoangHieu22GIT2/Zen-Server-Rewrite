@@ -6,9 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { EnduserService } from './enduser.service';
-import { UpdateEnduserDto } from './dto/update-enduser.dto';
 import {
   ApiBody,
   ApiHeader,
@@ -16,33 +15,22 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { EnduserServiceStable } from './services/enduser.stable.service';
+import { SerializeDecorator } from 'src/cores/interceptors/Serialize.interceptor';
+import { EndUserSerializeDto } from './dto/enduser.serialize.dto';
+import { LocalGuard } from 'src/modules/auth/passport/local.guard';
+import { FindByIdEndUserDto } from './dto/find-one.dto';
+import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
 
 @ApiTags('End User')
-// @ApiHeader({
-//   name: 'X-MyHeader',
-//   description: 'Custom header',
-// })
 @Controller('enduser')
+@SerializeDecorator(EndUserSerializeDto)
+@UseGuards(LoggedInGuard)
 export class EnduserController {
-  constructor(private readonly enduserService: EnduserService) {}
+  constructor(private readonly enduserServiceStable: EnduserServiceStable) {}
 
-  @Get()
-  findAll() {
-    return this.enduserService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.enduserService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEnduserDto: UpdateEnduserDto) {
-    return this.enduserService.update(+id, updateEnduserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.enduserService.remove(+id);
+  @Get('/:id')
+  async findOne(@Param() params: FindByIdEndUserDto) {
+    console.log(params);
   }
 }

@@ -47,7 +47,6 @@ export class AuthController {
 
   @LoginAccountSwaggerAPIDecorators()
   @SerializeDecorator(EndUserSerializeDto)
-  @UseGuards(LocalGuard)
   @Patch('login-account')
   loginAccount(@Req() req: Request) {
     return req.user;
