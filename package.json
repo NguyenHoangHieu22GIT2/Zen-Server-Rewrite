@@ -46,7 +46,7 @@
     "express-session": "^1.17.3",
     "helmet": "^7.1.0",
     "libcrypto": "^0.0.1",
-    "mongodb-memory-server": "^9.1.5",
+    "mongodb-memory-server": "7.0.0-beta.44",
     "mongoose": "^8.0.3",
     "nodemailer": "^6.9.8",
     "passport": "^0.7.0",

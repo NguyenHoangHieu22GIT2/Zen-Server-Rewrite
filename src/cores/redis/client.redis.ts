@@ -9,5 +9,3 @@ export const RedisClient: RedisClientType = createClient({
     port: parseInt(process.env.REDIS_PORT),
   },
 });
-
-RedisClient.on('error', (err) => console.error(err));

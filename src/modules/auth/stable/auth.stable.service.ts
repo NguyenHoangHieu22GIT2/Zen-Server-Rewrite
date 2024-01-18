@@ -10,6 +10,7 @@ import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
 import * as bcrypt from 'bcryptjs';
 import { LoginEndUserDto } from '../dto/login-end-user.dto';
 import { UserRedis } from 'src/cores/redis/user.redis';
+import { RedisClient } from 'src/cores/redis/client.redis';
 
 @Injectable()
 export class AuthServiceStable {
@@ -74,10 +75,11 @@ export class AuthServiceStable {
     return existedAccount;
   }
   public async checkRegisteredAccount(email: string, message: string) {
-    const isAccountExist = await UserRedis.usersHaveRegisteredPFADD(email);
-
-    if (!isAccountExist) {
-      throw new ConflictException(message);
+    if (RedisClient.isOpen) {
+      const isAccountExist = await UserRedis.usersHaveRegisteredPFADD(email);
+      if (!isAccountExist) {
+        throw new ConflictException(message);
+      }
     }
 
     await this.checkAccountIfAlreadyExistThenThrowError({
