@@ -2,13 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthServiceStable } from './stable/auth.stable.service';
 import { AuthServiceUnstable } from './unstable/auth.unstable.service';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import { Connection, Model, Mongoose, connect, mongo } from 'mongoose';
+import { connect } from 'mongoose';
 import {
   EndUser,
   EndUserSchema,
 } from '../users/enduser/entities/enduser.entity';
-import { MongooseModule, getModelToken } from '@nestjs/mongoose';
+import { MongooseModule } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { v4 } from 'uuid';
 
@@ -36,7 +35,7 @@ describe('AuthController', () => {
   });
 
   afterAll(() => {
-    mongod.connection.db.dropDatabase();
+    // mongod.connection.db.dropDatabase();
   });
 
   it('should be defined', () => {
@@ -45,7 +44,7 @@ describe('AuthController', () => {
 
   it('should create a user', async () => {
     const user = await controller.registerAccount({
-      email: `test@test.com`,
+      email: `test${id}@test.com`,
       gender: 'male',
       password: 'SonGoku@1',
       username: 'test',

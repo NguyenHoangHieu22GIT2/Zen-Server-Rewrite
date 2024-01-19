@@ -1,19 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsString } from 'class-validator';
+import { IsDefined } from 'class-validator';
+import { Types } from 'mongoose';
+import { convertToMongoId } from 'src/common/utils/convertToMongodbId';
 
 export class FindByIdEndUserDto {
-  @ApiProperty({
-    title: "End user's id",
-    type: String,
-    required: true,
-    example: '65a7dd2afc9b699c621363a9',
-    default: '65a7dd2afc9b699c621363a9',
-  })
-  @IsString()
+  @IsDefined({ message: 'Wrong Id format in mongodb' })
   @Transform((opts) => {
-    console.log(opts.value);
-    return 'Hello' + opts.value;
+    return convertToMongoId(opts.value);
   })
-  userId: string;
+  id: Types.ObjectId;
 }

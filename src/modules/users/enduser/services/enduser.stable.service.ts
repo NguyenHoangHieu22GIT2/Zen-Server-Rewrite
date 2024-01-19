@@ -12,7 +12,7 @@ export class EnduserServiceStable {
     @InjectModel(EndUser.name) private readonly EndUserModel: Model<EndUser>,
   ) {}
 
-  public async findById(userId: string) {
+  public async findById(userId: Types.ObjectId) {
     const user = await this.EndUserModel.findById(userId);
     return user;
   }
@@ -22,7 +22,7 @@ export class EnduserServiceStable {
     userId,
   }: {
     file: Express.Multer.File;
-    userId: string;
+    userId: Types.ObjectId;
   }) {
     checkImageType(file);
     const fileName = createImageName(file.originalname);

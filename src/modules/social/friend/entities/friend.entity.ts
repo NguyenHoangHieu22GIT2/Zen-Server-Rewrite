@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { nameOfCollections } from 'src/common/constants/name-of-collections';
+import { EndUserId, FriendId } from 'src/common/types/utilTypes/Brand';
 
 @Schema()
 export class Friend {
-  _id: Types.ObjectId;
+  _id: FriendId;
 
   @Prop({
     required: true,
@@ -12,14 +13,14 @@ export class Friend {
     ref: nameOfCollections.EndUser,
     index: { unique: true },
   })
-  userId: Types.ObjectId;
+  userId: EndUserId;
 
   @Prop({
     required: true,
     type: [Types.ObjectId],
     ref: nameOfCollections.EndUser,
   })
-  friends: Types.ObjectId[];
+  friends: EndUserId[];
 }
 
 export const FriendSchema = SchemaFactory.createForClass(Friend);
