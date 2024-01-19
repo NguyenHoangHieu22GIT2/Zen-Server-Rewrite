@@ -1,11 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
 import { BaseUser } from 'src/cores/base-user/entity/base-user.entity';
-import { v4 } from 'uuid';
 
 @Schema({ timestamps: true })
-export class EndUser extends BaseUser {
+class EndUserDeprecated_one extends BaseUser {
   _id: EndUserId;
 
   @Prop({ required: true, type: String, index: 'text' })
@@ -20,12 +18,12 @@ export class EndUser extends BaseUser {
   @Prop({ required: true, type: String })
   gender: string;
 
-  @Prop({ required: true, type: Boolean, default: false })
-  isOnline: boolean;
+  createdAt: Date;
 
-  @Prop({ required: true, type: Date, default: Date.now() })
-  offlineTime: Date;
+  updatedAt: Date;
+}
 
+export class EndUser extends EndUserDeprecated_one {
   //Token for activate the account when first try to login
   @Prop({ required: false, type: String })
   activationToken: string;
@@ -34,15 +32,20 @@ export class EndUser extends BaseUser {
   @Prop({ required: false, type: String })
   modifyToken: string;
 
+  @Prop({ required: false, type: Date })
+  expireTimeForModifyToken: Date;
+
+  @Prop({ required: true, type: Boolean, default: false })
+  isOnline: boolean;
+
+  @Prop({ required: true, type: Date, default: Date.now() })
+  offlineTime: Date;
+
   @Prop({ required: true, type: Boolean, default: false })
   isBanned: boolean;
 
   @Prop({ required: true, type: [String], default: [] })
   restrict: string[];
-
-  createdAt: Date;
-
-  updatedAt: Date;
 }
 
 export const EndUserSchema = SchemaFactory.createForClass(EndUser);

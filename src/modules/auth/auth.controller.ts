@@ -3,7 +3,6 @@ import { AuthServiceUnstable } from './unstable/auth.unstable.service';
 import { RegisterEndUserDto } from './dto/register-end-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { RegisterAccountSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/registerAccount.api';
-import { LoginEndUserDto } from './dto/login-end-user.dto';
 import { LoginAccountSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/loginAccount.api';
 import { LocalGuard } from './passport/local.guard';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';

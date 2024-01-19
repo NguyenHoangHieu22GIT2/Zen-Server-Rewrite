@@ -119,14 +119,7 @@ export class AuthServiceUnstable {
 
       const savedUser = await user.save();
 
-      const { _id, username, modifyToken, email } = savedUser;
-
-      return {
-        _id,
-        username,
-        modifyToken,
-        email,
-      };
+      return savedUser;
     } catch (error) {
       console.log(error);
       throw error;
