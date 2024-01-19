@@ -1,11 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
+import { EndUserId } from 'src/common/types/utilTypes/Brand';
 import { BaseUser } from 'src/cores/base-user/entity/base-user.entity';
 import { v4 } from 'uuid';
 
 @Schema({ timestamps: true })
 export class EndUser extends BaseUser {
-  _id: Types.ObjectId;
+  _id: EndUserId;
 
   @Prop({ required: true, type: String, index: 'text' })
   username: string;

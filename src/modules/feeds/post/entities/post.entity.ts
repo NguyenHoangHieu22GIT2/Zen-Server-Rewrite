@@ -1,10 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
-import { UserMinimalProp } from 'src/common/constants/user-minimal.prop';
+import { nameOfCollections } from 'src/common/constants/name-of-collections';
 import { userMinimalType } from 'src/common/types/objectTypes/user-minimal.type';
+import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
 
 @Schema({ timestamps: true })
 export class Post {
+  _id: PostId;
+
   @Prop({ required: true, type: String })
   title: string;
 
@@ -16,9 +19,10 @@ export class Post {
 
   @Prop({
     required: true,
-    type: UserMinimalProp,
+    type: Types.ObjectId,
+    ref: nameOfCollections.EndUser,
   })
-  user: userMinimalType;
+  userId: EndUserId;
 
   createdAt: Date;
 

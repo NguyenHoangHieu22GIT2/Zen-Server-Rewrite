@@ -6,7 +6,6 @@ import {
   usersHaveRegisteredKey,
   usersRecentlyLoginKey,
 } from '../redisKeys/user.redis.keys';
-import { ConvertObjectToHash } from 'src/common/utils/convertObjectToHash';
 import { Injectable } from '@nestjs/common';
 import { userDeserialize } from '../redis-deserialize/user.deserialize';
 import { ObjectToHashType } from 'src/common/types/redisTypes/ObjectToHash.redis.type';

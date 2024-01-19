@@ -1,16 +1,19 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
-import { UserMinimalProp } from 'src/common/constants/user-minimal.prop';
-import { userMinimalType } from 'src/common/types/objectTypes/user-minimal.type';
+import { nameOfCollections } from 'src/common/constants/name-of-collections';
 
 @Schema({ timestamps: true })
 export class GroupMember {
   _id: Types.ObjectId;
 
-  @Prop({ required: true, type: UserMinimalProp })
-  user: userMinimalType;
+  @Prop({
+    required: true,
+    type: Types.ObjectId,
+    ref: nameOfCollections.EndUser,
+  })
+  userId: Types.ObjectId;
 
-  @Prop({ required: true, type: Types.ObjectId, ref: 'Group' })
+  @Prop({ required: true, type: Types.ObjectId, ref: nameOfCollections.Group })
   groupId: Types.ObjectId;
 
   createdAt: Date;
