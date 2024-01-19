@@ -2,12 +2,12 @@ import { IsString } from 'class-validator';
 import { FindByIdEndUserDto } from './find-one.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ChangeGenderDto extends FindByIdEndUserDto {
+export class ChangeUsernameDto extends FindByIdEndUserDto {
   @ApiProperty({
-    title: "User's Gender to change to",
+    title: "User's username to change to",
     type: String,
-    examples: ['male', 'female', 'other'],
+    examples: ['Mikey', 'Anne', 'Elizabeth'],
   })
   @IsString()
-  gender: string;
+  username: string;
 }

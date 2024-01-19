@@ -18,5 +18,6 @@ export const EndUserDtoStub = (): EndUser => {
     modifyToken: '',
     offlineTime: new Date(),
     activationToken: '',
+    expireTimeForModifyToken: new Date(),
   };
 };

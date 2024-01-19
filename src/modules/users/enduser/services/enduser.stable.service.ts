@@ -6,6 +6,7 @@ import { checkImageType } from 'src/common/utils/checkImageType';
 import { createImageName } from 'src/common/utils/createImageName';
 import { storeFile } from 'src/common/utils/storeFile';
 import { deleteFile } from 'src/common/utils/removeFile';
+import { EndUserId } from 'src/common/types/utilTypes/Brand';
 @Injectable()
 export class EnduserServiceStable {
   constructor(
@@ -22,7 +23,7 @@ export class EnduserServiceStable {
     userId,
   }: {
     file: Express.Multer.File;
-    userId: Types.ObjectId;
+    userId: EndUserId;
   }) {
     checkImageType(file);
     const fileName = createImageName(file.originalname);
@@ -37,13 +38,19 @@ export class EnduserServiceStable {
     userId,
     username,
   }: {
-    userId: string;
+    userId: EndUserId;
     username: string;
   }) {
     return this.EndUserModel.findByIdAndUpdate(userId, { $set: { username } });
   }
 
-  public changeGender({ userId, gender }: { userId: string; gender: string }) {
+  public changeGender({
+    userId,
+    gender,
+  }: {
+    userId: EndUserId;
+    gender: string;
+  }) {
     return this.EndUserModel.findByIdAndUpdate(userId, { $set: { gender } });
   }
 }

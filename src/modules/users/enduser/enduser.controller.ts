@@ -25,6 +25,10 @@ import { FindByIdEndUserDto } from './dto/find-one.dto';
 import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
 import { FindOneEndUserSwaggerAPIDecorators } from 'src/documents/swagger-api/endusers/find-one.api';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ChangeUsernameDto } from './dto/change-username.dto';
+import { ChangeGenderDto } from './dto/change-gender.dto';
+import { ChangeUsernameSwaggerAPIDecorators } from 'src/documents/swagger-api/endusers/change-username.api';
+import { ChangeGenderSwaggerAPIDecorators } from 'src/documents/swagger-api/endusers/change-gender.api';
 
 @ApiTags('End User')
 @Controller('endusers')
@@ -49,6 +53,24 @@ export class EnduserController {
     return this.enduserServiceStable.changeAvatar({
       userId: findByIdEndUserDto.id,
       file,
+    });
+  }
+
+  @ChangeUsernameSwaggerAPIDecorators()
+  @Patch('/change-username')
+  async changeUsername(@Body() changeUsernameDto: ChangeUsernameDto) {
+    return this.enduserServiceStable.changeUsername({
+      userId: changeUsernameDto.id,
+      username: changeUsernameDto.username,
+    });
+  }
+
+  @ChangeGenderSwaggerAPIDecorators()
+  @Patch('/change-gender')
+  async changeGender(@Body() changeGenderDto: ChangeGenderDto) {
+    return this.enduserServiceStable.changeGender({
+      userId: changeGenderDto.id,
+      gender: changeGenderDto.gender,
     });
   }
 }

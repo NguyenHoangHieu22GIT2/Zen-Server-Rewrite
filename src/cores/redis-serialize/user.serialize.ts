@@ -12,5 +12,8 @@ export function userSerialize(endUser: EndUser): ObjectToHashType<EndUser> {
     createdAt: endUser.createdAt.getTime().toString(),
     updatedAt: endUser.updatedAt.getTime().toString(),
     restrict: JSON.stringify(endUser.restrict),
+    expireTimeForModifyToken: endUser.expireTimeForModifyToken
+      .getTime()
+      .toString(),
   };
 }

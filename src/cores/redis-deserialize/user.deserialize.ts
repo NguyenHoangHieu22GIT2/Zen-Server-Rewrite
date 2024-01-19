@@ -14,5 +14,8 @@ export function userDeserialize(endUser: ObjectToHashType<EndUser>): EndUser {
     createdAt: new Date(parseInt(endUser.createdAt)),
     updatedAt: new Date(parseInt(endUser.updatedAt)),
     offlineTime: new Date(parseInt(endUser.offlineTime)),
+    expireTimeForModifyToken: new Date(
+      parseInt(endUser.expireTimeForModifyToken),
+    ),
   };
 }
