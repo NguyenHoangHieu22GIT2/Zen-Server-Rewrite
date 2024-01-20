@@ -7,50 +7,30 @@ import { createImageName } from 'src/common/utils/createImageName';
 import { storeFile } from 'src/common/utils/storeFile';
 import { deleteFile } from 'src/common/utils/removeFile';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
+import { ChangeInformationDto } from '../dto/change-information.dto';
+import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 @Injectable()
 export class EnduserServiceStable {
   constructor(
     @InjectModel(EndUser.name) private readonly EndUserModel: Model<EndUser>,
   ) {}
 
-  public async findById(userId: Types.ObjectId) {
+  public async findById(
+    userId: Types.ObjectId,
+  ): Promise<DocumentMongodbType<EndUser>> {
     const user = await this.EndUserModel.findById(userId);
     return user;
   }
 
-  public async changeAvatar({
-    file,
+  public async changeInformation({
     userId,
+    changeInformationDto,
   }: {
-    file: Express.Multer.File;
+    changeInformationDto: ChangeInformationDto;
     userId: EndUserId;
   }) {
-    checkImageType(file);
-    const fileName = createImageName(file.originalname);
-    const user = await this.EndUserModel.findById(userId);
-    storeFile({ fileName, file });
-    deleteFile(user.avatar);
-    user.avatar = fileName;
+    const user = await this.findById(userId);
+    Object.assign(user, changeInformationDto);
     return user.save();
-  }
-
-  public changeUsername({
-    userId,
-    username,
-  }: {
-    userId: EndUserId;
-    username: string;
-  }) {
-    return this.EndUserModel.findByIdAndUpdate(userId, { $set: { username } });
-  }
-
-  public changeGender({
-    userId,
-    gender,
-  }: {
-    userId: EndUserId;
-    gender: string;
-  }) {
-    return this.EndUserModel.findByIdAndUpdate(userId, { $set: { gender } });
   }
 }

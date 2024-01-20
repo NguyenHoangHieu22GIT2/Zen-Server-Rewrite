@@ -18,6 +18,7 @@ describe('AuthController', () => {
   let userToTest: Partial<EndUser>;
 
   beforeAll(async () => {
+    console.log(process.env.DB_URL);
     mongod = await connect(process.env.DB_URL, { dbName: 'Zen-Test' });
     id = v4();
     const module: TestingModule = await Test.createTestingModule({
@@ -35,6 +36,7 @@ describe('AuthController', () => {
   });
 
   afterAll(() => {
+    // NEVER USE THIS, INSTEAD USE dropCollection if need to delete data
     // mongod.connection.db.dropDatabase();
   });
 

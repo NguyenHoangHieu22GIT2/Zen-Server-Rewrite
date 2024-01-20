@@ -9,11 +9,8 @@ import { AuthServiceStable } from '../stable/auth.stable.service';
 import { LoginEndUserDto } from '../dto/login-end-user.dto';
 import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { v4 } from 'uuid';
-import { MailerService } from '@nestjs-modules/mailer';
 import { ChangeForgottonPasswordDto } from '../dto/change-forgotton-password.dto';
-import { UserRedis } from 'src/cores/redis/user.redis';
 import { checkingToConvertToObjectFromDocument } from 'src/common/utils/convertToObjectMongodb';
-import { RedisClient } from 'src/cores/redis/client.redis';
 
 @Injectable()
 export class AuthServiceUnstable {
@@ -42,14 +39,8 @@ export class AuthServiceUnstable {
 
       const createdAccount = await this.EndUserModel.create(accountInfo);
 
-      //REDIS CODES
-      if (RedisClient.isOpen) {
-        await UserRedis.usersHaveRegisteredPFADD(createEndUserDto.email);
-      }
-
       return createdAccount;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -68,7 +59,6 @@ export class AuthServiceUnstable {
 
       return activatedAccount.save();
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -92,17 +82,8 @@ export class AuthServiceUnstable {
       const convertedExistedAccount =
         checkingToConvertToObjectFromDocument(existedAccount);
 
-      await Promise.all([
-        UserRedis.usersRecentlyLoginPFADD(convertedExistedAccount.email),
-        UserRedis.userConvertToRedisTypeThenHSET(
-          convertedExistedAccount.email,
-          convertedExistedAccount,
-        ),
-      ]);
-
       return convertedExistedAccount;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -121,7 +102,6 @@ export class AuthServiceUnstable {
 
       return savedUser;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
@@ -141,15 +121,8 @@ export class AuthServiceUnstable {
         changeForgottonPasswordDto.password,
         +process.env.BCRYPT_HASH,
       );
-      if (RedisClient.isOpen) {
-        await UserRedis.userConvertToRedisTypeThenHSET(
-          existedAccount.email,
-          existedAccount.toObject(),
-        );
-      }
       return existedAccount.save();
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
