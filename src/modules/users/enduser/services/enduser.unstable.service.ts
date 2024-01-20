@@ -18,6 +18,7 @@ export class EnduserServiceUnstable {
 
   public async findById(userId: EndUserId) {
     const user = await this.enduserServiceStable.findById(userId);
+    return user;
   }
 
   public async changeAvatar({
