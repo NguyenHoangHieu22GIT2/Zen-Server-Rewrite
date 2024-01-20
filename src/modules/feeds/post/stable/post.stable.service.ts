@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { UpdatePostDto } from '../dto/update-post.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Post } from '../entities/post.entity';
+import { FindPostDto } from '../dto/find-post.dto';
+import { nameOfCollections } from 'src/common/constants/name-of-collections';
 
 @Injectable()
 export class PostServiceStable {
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
-  }
+  constructor(
+    @InjectModel(Post.name) private readonly postModel: Model<Post>,
+  ) {}
 
-  findAll() {
-    return `This action returns all post`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
-  }
-
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  public async findPost(findPostDto: FindPostDto) {
+    const post = await this.postModel.aggregate([
+      {
+        $match: { _id: findPostDto.postId },
+      },
+      {
+        $lookup: {
+          from: nameOfCollections.EndUser,
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'userFull',
+        },
+      },
+      {
+        $set: {
+          user: {
+            _id: '$userFull._id',
+            username: '$userFull.username',
+            avatar: '$userFull.avatar',
+          },
+        },
+      },
+      {
+        $unset: ['$userFull'],
+      },
+    ]);
+    return post;
   }
 }

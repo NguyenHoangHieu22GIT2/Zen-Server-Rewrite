@@ -8,12 +8,17 @@ import { createImageName } from 'src/common/utils/createImageName';
 import { storeFile } from 'src/common/utils/storeFile';
 import { deleteFile } from 'src/common/utils/removeFile';
 import { EnduserServiceStable } from './enduser.stable.service';
+import { ChangeInformationDto } from '../dto/change-information.dto';
 @Injectable()
 export class EnduserServiceUnstable {
   constructor(
     @InjectModel(EndUser.name) private readonly EndUserModel: Model<EndUser>,
     private readonly enduserServiceStable: EnduserServiceStable,
   ) {}
+
+  public async findById(userId: EndUserId) {
+    const user = await this.enduserServiceStable.findById(userId);
+  }
 
   public async changeAvatar({
     file,
@@ -28,6 +33,18 @@ export class EnduserServiceUnstable {
     storeFile({ fileName, file });
     deleteFile(user.avatar);
     user.avatar = fileName;
+    return user.save();
+  }
+
+  public async changeInformation({
+    userId,
+    changeInformationDto,
+  }: {
+    changeInformationDto: ChangeInformationDto;
+    userId: EndUserId;
+  }) {
+    const user = await this.enduserServiceStable.findById(userId);
+    Object.assign(user, changeInformationDto);
     return user.save();
   }
 }
