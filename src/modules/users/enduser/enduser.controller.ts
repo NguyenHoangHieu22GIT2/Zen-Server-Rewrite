@@ -68,7 +68,7 @@ export class EnduserController {
       id: req.user._id,
       returnError: true,
     });
-    return this.enduserServiceStable.changeInformation({
+    return this.enduserServiceUnstable.changeInformation({
       changeInformationDto,
       userId,
     });
