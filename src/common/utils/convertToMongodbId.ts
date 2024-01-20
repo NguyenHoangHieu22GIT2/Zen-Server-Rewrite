@@ -5,7 +5,7 @@ export const convertToMongoId = <TType>({
   id,
   returnError,
 }: {
-  id: any;
+  id: string;
   returnError: boolean;
 }) => {
   if (typeof id === 'string' && id.length == 24) {

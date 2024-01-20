@@ -11,6 +11,7 @@ import * as bcrypt from 'bcryptjs';
 import { LoginEndUserDto } from '../dto/login-end-user.dto';
 import { UserRedis } from 'src/cores/redis/user.redis';
 import { RedisClient } from 'src/cores/redis/client.redis';
+import { filter } from 'rxjs';
 
 @Injectable()
 export class AuthServiceStable {

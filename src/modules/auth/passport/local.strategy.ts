@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { AuthServiceUnstable } from '../unstable/auth.unstable.service';
+import { UserRedis } from 'src/cores/redis/user.redis';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthServiceUnstable) {
@@ -11,8 +12,18 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  /**
+   * validate function has to be named validate.
+   * So I can not change it to fit with the responsibility it has.
+   * Sad but nothing we can do.
+   * */
   async validate(email: string, password: string) {
     const user = await this.authService.loginAccount({ email, password });
+
+    await Promise.all([
+      UserRedis.usersRecentlyLoginPFADD(user.email),
+      UserRedis.userConvertToRedisTypeThenHSET(user.email, user),
+    ]);
     return user;
   }
 }

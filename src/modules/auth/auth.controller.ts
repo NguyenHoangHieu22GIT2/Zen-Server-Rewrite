@@ -15,6 +15,8 @@ import { SerializeDecorator } from 'src/cores/interceptors/Serialize.interceptor
 import { EndUserSerializeDto } from '../users/enduser/dto/enduser.serialize.dto';
 import { Request } from 'express';
 import { ChangeForgottonPasswordSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/change-forgotten-password.api';
+import { RedisClient } from 'src/cores/redis/client.redis';
+import { UserRedis } from 'src/cores/redis/user.redis';
 @ApiTags('Authentication/Authorization')
 @Controller('auth')
 export class AuthController {
@@ -29,6 +31,9 @@ export class AuthController {
 
     // await this.mailerService.sendMail(registerMail(result.email, result.token));
 
+    if (RedisClient.isOpen) {
+      await UserRedis.usersHaveRegisteredPFADD(registerEndUserDto.email);
+    }
     return result;
   }
 
@@ -64,11 +69,18 @@ export class AuthController {
   @ChangeForgottonPasswordSwaggerAPIDecorators()
   @Patch('change-forgottent-password')
   @SerializeDecorator(EndUserSerializeDto)
-  changeForgottonPassword(
+  async changeForgottonPassword(
     @Body() changeForgottonPasswordDto: ChangeForgottonPasswordDto,
   ) {
-    return this.authServiceUnstable.changeForgottonPassword(
+    const user = await this.authServiceUnstable.changeForgottonPassword(
       changeForgottonPasswordDto,
     );
+    if (RedisClient.isOpen) {
+      await UserRedis.userConvertToRedisTypeThenHSET(
+        user.email,
+        user.toObject(),
+      );
+    }
+    return user;
   }
 }
