@@ -1,11 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { nameOfCollections } from 'src/common/constants/name-of-collections';
-import { userMinimalType } from 'src/common/types/objectTypes/user-minimal.type';
 import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
 
-@Schema({ timestamps: true })
-export class Post {
+class BasePost {
   _id: PostId;
 
   @Prop({ required: true, type: String })
@@ -27,6 +25,23 @@ export class Post {
   createdAt: Date;
 
   updatedAt: Date;
+}
+
+@Schema({ timestamps: true })
+export class Post extends BasePost {
+  @Prop({
+    required: false,
+    type: String,
+    default: [],
+  })
+  images: string[];
+
+  @Prop({
+    required: false,
+    type: String,
+    default: [],
+  })
+  files: string[];
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

@@ -7,7 +7,7 @@ import { Model } from 'mongoose';
 import { PostServiceStable } from '../stable/post.stable.service';
 import { getPostsDto } from '../dto/get-posts.dto';
 import { FindPostDto } from '../dto/find-post.dto';
-import { nameOfCollections } from 'src/common/constants/name-of-collections';
+import { EndUserId } from 'src/common/types/utilTypes/Brand';
 
 @Injectable()
 export class PostServiceUnstable {
@@ -17,9 +17,38 @@ export class PostServiceUnstable {
   ) {}
 
   public async findPost(findPostDto: FindPostDto) {
-    const post = await this.postServiceStable.findPost(findPostDto);
-    return post;
+    try {
+      const post = await this.postServiceStable.findPost(findPostDto);
+      return post;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  public async getPosts(getPostsDto: getPostsDto) {}
+  public async getPosts(getPostsDto: getPostsDto) {
+    try {
+      const posts = await this.postServiceStable.getPosts(getPostsDto);
+      return posts;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async createPost({
+    createPostDto,
+    userId,
+  }: {
+    createPostDto: CreatePostDto;
+    userId: EndUserId;
+  }) {
+    try {
+      const createdPost = await this.postServiceStable.createPost({
+        createPostDto,
+        userId,
+      });
+      return createdPost;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
