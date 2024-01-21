@@ -1,7 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import mongoose from 'mongoose';
 
-export const convertToMongoId = <TType>({
+export const checkToConvertToMongoIdOrThrowError = <TType>({
   id,
   returnError,
 }: {

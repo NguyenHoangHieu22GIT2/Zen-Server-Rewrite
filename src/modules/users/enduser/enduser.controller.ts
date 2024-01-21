@@ -17,12 +17,10 @@ import { FindByIdEndUserDto } from './dto/find-one.dto';
 import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
 import { FindOneEndUserSwaggerAPIDecorators } from 'src/documents/swagger-api/endusers/find-one.api';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ChangeUsernameSwaggerAPIDecorators } from 'src/documents/swagger-api/endusers/change-username.api';
-import { ChangeGenderSwaggerAPIDecorators } from 'src/documents/swagger-api/endusers/change-gender.api';
 import { ChangeInformationDto } from './dto/change-information.dto';
 import { Request } from 'express';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
-import { convertToMongoId } from 'src/common/utils/convertToMongodbId';
+import { checkToConvertToMongoIdOrThrowError  } from 'src/common/utils/convertToMongodbId';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
 import { EnduserServiceUnstable } from './services/enduser.unstable.service';
 
@@ -49,7 +47,7 @@ export class EnduserController {
     @UploadedFile() file: Express.Multer.File,
     @Req() req: RequestUser,
   ) {
-    const userId = convertToMongoId<EndUserId>({
+    const userId = checkToConvertToMongoIdOrThrowError <EndUserId>({
       id: req.user._id,
       returnError: true,
     });
@@ -64,7 +62,7 @@ export class EnduserController {
     @Body() changeInformationDto: ChangeInformationDto,
     @Req() req: RequestUser,
   ) {
-    const userId = convertToMongoId<EndUserId>({
+    const userId = checkToConvertToMongoIdOrThrowError <EndUserId>({
       id: req.user._id,
       returnError: true,
     });
