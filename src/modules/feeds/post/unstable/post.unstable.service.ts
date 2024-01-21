@@ -8,6 +8,7 @@ import { PostServiceStable } from '../stable/post.stable.service';
 import { getPostsDto } from '../dto/get-posts.dto';
 import { FindPostDto } from '../dto/find-post.dto';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
+import { ModifyPostDto } from '../dto/modify-post.dto';
 
 @Injectable()
 export class PostServiceUnstable {
@@ -15,6 +16,24 @@ export class PostServiceUnstable {
     @InjectModel(Post.name) private readonly postModel: Model<Post>,
     private readonly postServiceStable: PostServiceStable,
   ) {}
+
+  public async createPost({
+    createPostDto,
+    userId,
+  }: {
+    createPostDto: CreatePostDto;
+    userId: EndUserId;
+  }) {
+    try {
+      const createdPost = await this.postServiceStable.createPost({
+        createPostDto,
+        userId,
+      });
+      return createdPost;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   public async findPost(findPostDto: FindPostDto) {
     try {
@@ -34,19 +53,18 @@ export class PostServiceUnstable {
     }
   }
 
-  public async createPost({
-    createPostDto,
+  public async modifyPost({
     userId,
+    modifyPostDto,
   }: {
-    createPostDto: CreatePostDto;
+    modifyPostDto: ModifyPostDto;
     userId: EndUserId;
   }) {
     try {
-      const createdPost = await this.postServiceStable.createPost({
-        createPostDto,
+      const post = await this.postServiceStable.modifyPost({
+        modifyPostDto,
         userId,
       });
-      return createdPost;
     } catch (error) {
       throw error;
     }
