@@ -9,6 +9,7 @@ import { nameOfCollections } from 'src/common/constants/name-of-collections';
 import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/post.aggregation';
 import { getPostsDto } from '../dto/get-posts.dto';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
+import { ModifyPostDto } from '../dto/modify-post.dto';
 
 @Injectable()
 export class PostServiceStable {
@@ -72,5 +73,19 @@ export class PostServiceStable {
       userId,
     });
     return createdPost;
+  }
+
+  public async modifyPost({
+    userId,
+    modifyPostDto,
+  }: {
+    modifyPostDto: ModifyPostDto;
+    userId: EndUserId;
+  }) {
+    const modifiedPost = await this.postModel.findByIdAndUpdate(
+      modifyPostDto.postId,
+      modifyPostDto,
+    );
+    return modifiedPost;
   }
 }
