@@ -20,7 +20,7 @@ class BasePost {
     type: Types.ObjectId,
     ref: nameOfCollections.EndUser,
   })
-  userId: EndUserId;
+  endUserId: EndUserId;
 
   createdAt: Date;
 
@@ -35,13 +35,6 @@ export class Post extends BasePost {
     default: [],
   })
   images: string[];
-
-  @Prop({
-    required: false,
-    type: String,
-    default: [],
-  })
-  files: string[];
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
