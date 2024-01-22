@@ -9,15 +9,19 @@ import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongo
 import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
 import * as bcrypt from 'bcryptjs';
 import { LoginEndUserDto } from '../dto/login-end-user.dto';
-import { UserRedis } from 'src/cores/redis/user.redis';
-import { RedisClient } from 'src/cores/redis/client.redis';
-import { filter } from 'rxjs';
 
 @Injectable()
 export class AuthServiceStable {
   constructor(
     @InjectModel(EndUser.name) private readonly EndUserModel: Model<EndUser>,
   ) {}
+
+  public async create(
+    accountInfo: Partial<EndUser>,
+  ): Promise<DocumentMongodbType<EndUser>>   {
+    return this.EndUserModel.create(accountInfo);
+  }
+
   // Checks
   private async checkAccountIfAlreadyExist(
     filterQuery: FilterQuery<EndUser>,
@@ -63,26 +67,13 @@ export class AuthServiceStable {
   public async checkLoginAccount(
     loginEndUserDto: LoginEndUserDto,
   ): Promise<EndUser | DocumentMongodbType<EndUser>> {
-    let existedAccount = await UserRedis.findUserHGETALLThenDeserialize(
-      loginEndUserDto.email,
-    );
-
-    if (!existedAccount) {
-      existedAccount = await this.checkAccountIfNotExistThenThrowError({
-        filterQuery: { email: loginEndUserDto.email },
-        message: 'Invalid Email!',
-      });
-    }
+    let existedAccount = await this.checkAccountIfNotExistThenThrowError({
+      filterQuery: { email: loginEndUserDto.email },
+      message: 'Invalid Email!',
+    });
     return existedAccount;
   }
   public async checkRegisteredAccount(email: string, message: string) {
-    if (RedisClient.isOpen) {
-      const isAccountExist = await UserRedis.usersHaveRegisteredPFADD(email);
-      if (!isAccountExist) {
-        throw new ConflictException(message);
-      }
-    }
-
     await this.checkAccountIfAlreadyExistThenThrowError({
       filterQuery: { email },
       message,

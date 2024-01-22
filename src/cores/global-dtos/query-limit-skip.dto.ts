@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsNumber, Min } from 'class-validator';
 
 export class QueryLimitSkip {
@@ -10,6 +11,9 @@ export class QueryLimitSkip {
   })
   @IsNumber()
   @Min(1)
+  @Transform((opts) => {
+    return Number(opts.value);
+  })
   limit: number;
 
   @ApiProperty({
@@ -20,5 +24,8 @@ export class QueryLimitSkip {
   })
   @IsNumber()
   @Min(0)
+  @Transform((opts) => {
+    return Number(opts.value);
+  })
   skip: 0;
 }

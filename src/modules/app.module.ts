@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -19,6 +19,7 @@ import { GroupMembersModule } from './community/group-members/group-members.modu
 import { GroupPostsModule } from './community/group-posts/group-posts.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { UserRedis } from 'src/cores/redis/user.redis';
+import { AuthorizationMiddleware } from 'src/cores/middlewares/Authorization.middleware';
 @Module({
   imports: [
     //Configurations
@@ -62,4 +63,8 @@ import { UserRedis } from 'src/cores/redis/user.redis';
   controllers: [AppController],
   providers: [AppService, UserRedis],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthorizationMiddleware).forRoutes('*');
+  }
+}

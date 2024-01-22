@@ -11,33 +11,26 @@ import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { v4 } from 'uuid';
 import { ChangeForgottonPasswordDto } from '../dto/change-forgotton-password.dto';
 import { checkingToConvertToObjectFromDocument } from 'src/common/utils/convertToObjectMongodb';
+import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 
 @Injectable()
 export class AuthServiceUnstable {
-  constructor(
-    @InjectModel(EndUser.name) private readonly EndUserModel: Model<EndUser>,
-    private readonly authServiceStable: AuthServiceStable,
-  ) {}
+  constructor(private readonly authServiceStable: AuthServiceStable) {}
 
-  async registerAccount(createEndUserDto: RegisterEndUserDto) {
+  async registerAccount(registerEndUserDto: RegisterEndUserDto) {
     try {
-      await this.authServiceStable.checkRegisteredAccount(
-        createEndUserDto.email,
-        'This email is already in used. Try another one',
-      );
-
       const hashedPassword = await bcrypt.hash(
-        createEndUserDto.password,
+        registerEndUserDto.password,
         +process.env.BCRYPT_HASH,
       );
 
       const accountInfo: Partial<EndUser> = {
-        ...createEndUserDto,
+        ...registerEndUserDto,
         password: hashedPassword,
         activationToken: v4(),
       };
 
-      const createdAccount = await this.EndUserModel.create(accountInfo);
+      const createdAccount = await this.authServiceStable.create(accountInfo);
 
       return createdAccount;
     } catch (error) {
@@ -45,14 +38,8 @@ export class AuthServiceUnstable {
     }
   }
 
-  async activateAccount(activationToken: string) {
+  async activateAccount(inactivateAccount: DocumentMongodbType<EndUser>) {
     try {
-      const inactivateAccount =
-        await this.authServiceStable.checkAccountIfNotExistThenThrowError({
-          filterQuery: { activationToken },
-          message: 'We found no account with this token!',
-        });
-
       // Set To undefined so the property in mongodb document remove the field entirely
       inactivateAccount.activationToken = undefined;
       const activatedAccount = inactivateAccount;
@@ -88,17 +75,11 @@ export class AuthServiceUnstable {
     }
   }
 
-  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+  async forgotPassword(existedAccount: DocumentMongodbType<EndUser>) {
     try {
-      const user =
-        await this.authServiceStable.checkAccountIfNotExistThenThrowError({
-          filterQuery: { email: forgotPasswordDto.email },
-          message: 'Check your Input carefully please!',
-        });
+      existedAccount.modifyToken = v4();
 
-      user.modifyToken = v4();
-
-      const savedUser = await user.save();
+      const savedUser = await existedAccount.save();
 
       return savedUser;
     } catch (error) {
@@ -107,20 +88,16 @@ export class AuthServiceUnstable {
   }
 
   async changeForgottonPassword(
-    changeForgottonPasswordDto: ChangeForgottonPasswordDto,
+    existedAccount: DocumentMongodbType<EndUser>,
+    newPassword: string,
   ) {
     try {
-      const existedAccount =
-        await this.authServiceStable.checkAccountIfNotExistThenThrowError({
-          filterQuery: { modifyToken: changeForgottonPasswordDto.modifyToken },
-          message: 'This is not the right place for you to be. Get out.',
-        });
-
       existedAccount.modifyToken = undefined;
       existedAccount.password = await bcrypt.hash(
-        changeForgottonPasswordDto.password,
+        newPassword,
         +process.env.BCRYPT_HASH,
       );
+
       return existedAccount.save();
     } catch (error) {
       throw error;
