@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { EndUser } from '../entities/enduser.entity';
 import { Model } from 'mongoose';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
-import { checkImageType } from 'src/common/utils/checkImageType';
+import { checkImageTypeToThrowErrors } from 'src/common/utils/checkImageType';
 import { createImageName } from 'src/common/utils/createImageName';
 import { storeFile } from 'src/common/utils/storeFile';
 import { deleteFile } from 'src/common/utils/removeFile';
@@ -28,7 +28,7 @@ export class EnduserServiceUnstable {
     file: Express.Multer.File;
     userId: EndUserId;
   }) {
-    checkImageType(file);
+    checkImageTypeToThrowErrors(file);
     const fileName = createImageName(file.originalname);
     const user = await this.enduserServiceStable.findById(userId);
     storeFile({ fileName, file });

@@ -11,6 +11,8 @@ import { getPostsDto } from '../dto/get-posts.dto';
 import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
 import { ModifyPostDto } from '../dto/modify-post.dto';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
+import { createImageName } from 'src/common/utils/createImageName';
+import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
 
 @Injectable()
 export class PostServiceStable {
@@ -41,11 +43,18 @@ export class PostServiceStable {
     },
   ];
 
-  public async getPostsAggregation(getPostsDto: getPostsDto) {
+  public async getPostsAggregation({
+    queryLimitSkip,
+    //TODO: endUserId will be used to filter out which post that user should see
+    endUserId,
+  }: {
+    queryLimitSkip: QueryLimitSkip;
+    endUserId: EndUserId;
+  }) {
     const postsAggregation: PostAggregation[] = await this.postModel.aggregate([
       {
-        $limit: getPostsDto.limit,
-        $skip: getPostsDto.skip,
+        $limit: queryLimitSkip.limit,
+        $skip: queryLimitSkip.skip,
       },
       ...this.queryAggregation,
     ]);
@@ -72,15 +81,29 @@ export class PostServiceStable {
   public async createPost({
     endUserId,
     createPostDto,
+    imageNames,
   }: {
     createPostDto: CreatePostDto;
     endUserId: EndUserId;
+    imageNames: string[];
   }): Promise<DocumentMongodbType<Post>> {
     const createdPost = await this.postModel.create({
       ...createPostDto,
       endUserId,
+      images: imageNames,
     });
     return createdPost;
+  }
+
+  public createImageObjectsToSave(images: Express.Multer.File[]) {
+    const imageNames = [];
+    const createdImageObjects = images.map((image) => {
+      const imageName = createImageName(image.originalname);
+      imageNames.push(imageName);
+      // file and fileName property because storeFile function demands it
+      return { file: image, fileName: imageName };
+    });
+    return { createdImageObjects, imageNames };
   }
 
   public async modifyPost({

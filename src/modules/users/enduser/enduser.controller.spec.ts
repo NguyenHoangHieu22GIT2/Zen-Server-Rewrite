@@ -9,7 +9,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { v4 } from 'uuid';
 import { EnduserServiceStable } from './services/enduser.stable.service';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
-import { checkToConvertToMongoIdOrThrowError  } from 'src/common/utils/convertToMongodbId';
+import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/convertToMongodbId';
 import { readFileSync } from 'fs';
 import path, { join } from 'path';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
@@ -58,7 +58,7 @@ describe('EnduserController', () => {
   it('should find a user', async () => {
     console.log(userToTest);
     const user = await controller.findOne({
-      id: checkToConvertToMongoIdOrThrowError <EndUserId>({
+      id: checkToConvertToMongoIdOrThrowError<EndUserId>({
         id: userToTest._id.toString(),
         returnError: false,
       }),
@@ -67,7 +67,7 @@ describe('EnduserController', () => {
 
     fakeRequestUser = {
       user: {
-        _id: userToTest._id.toString(),
+        _id: userToTest._id,
         avatar: userToTest.avatar,
         username: userToTest.username,
       },

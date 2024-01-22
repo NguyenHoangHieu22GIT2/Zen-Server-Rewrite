@@ -6,7 +6,6 @@ import { RegisterAccountSwaggerAPIDecorators } from 'src/documents/swagger-api/a
 import { LoginAccountSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/loginAccount.api';
 import { LocalGuard } from './passport/local.guard';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { MailerService } from '@nestjs-modules/mailer';
 import { ForgotPasswordSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/forgot-password.api';
 import { ActivateAccountDto } from './dto/activate-account.dto';
 import { ActivateAccountSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/activate-account.api';
@@ -15,39 +14,58 @@ import { SerializeDecorator } from 'src/cores/interceptors/Serialize.interceptor
 import { EndUserSerializeDto } from '../users/enduser/dto/enduser.serialize.dto';
 import { Request } from 'express';
 import { ChangeForgottonPasswordSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/change-forgotten-password.api';
-import { RedisClient } from 'src/cores/redis/client.redis';
-import { UserRedis } from 'src/cores/redis/user.redis';
+
+import { AuthRedisStableService } from './stable/auth.redis.stable.service';
+import { AuthServiceStable } from './stable/auth.stable.service';
+
 @ApiTags('Authentication/Authorization')
+@SerializeDecorator(EndUserSerializeDto)
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authServiceUnstable: AuthServiceUnstable) {}
+  constructor(
+    private readonly authServiceUnstable: AuthServiceUnstable,
+    private readonly authRedisStableService: AuthRedisStableService,
+    private readonly authServiceStable: AuthServiceStable,
+  ) {}
 
   @RegisterAccountSwaggerAPIDecorators()
-  @SerializeDecorator(EndUserSerializeDto)
   @Post('register-account')
   async registerAccount(@Body() registerEndUserDto: RegisterEndUserDto) {
+    const message = 'This email is already in used. Try another one';
+
+    await this.authRedisStableService.checkRegisteredAccount(
+      registerEndUserDto.email,
+      message,
+    );
+    await this.authServiceStable.checkRegisteredAccount(
+      registerEndUserDto.email,
+      message,
+    );
+
     const result =
       await this.authServiceUnstable.registerAccount(registerEndUserDto);
 
     // await this.mailerService.sendMail(registerMail(result.email, result.token));
 
-    if (RedisClient.isOpen) {
-      await UserRedis.usersHaveRegisteredPFADD(registerEndUserDto.email);
-    }
+    await this.authRedisStableService.usersHaveRegisteredPFADD(
+      registerEndUserDto.email,
+    );
     return result;
   }
 
   @ActivateAccountSwaggerAPIDecorators()
-  @SerializeDecorator(EndUserSerializeDto)
   @Patch('activate-account')
-  async activateAccount(@Body() activateAccountDto: ActivateAccountDto) {
-    return this.authServiceUnstable.activateAccount(
-      activateAccountDto.activationToken,
-    );
+  async activateAccount(@Body() { activationToken }: ActivateAccountDto) {
+    const inactivateAccount =
+      await this.authServiceStable.checkAccountIfNotExistThenThrowError({
+        filterQuery: { activationToken },
+        message: 'We found no account with this token!',
+      });
+
+    return this.authServiceUnstable.activateAccount(inactivateAccount);
   }
 
   @LoginAccountSwaggerAPIDecorators()
-  @SerializeDecorator(EndUserSerializeDto)
   @Patch('login-account')
   @UseGuards(LocalGuard)
   loginAccount(@Req() req: Request) {
@@ -55,11 +73,15 @@ export class AuthController {
   }
 
   @ForgotPasswordSwaggerAPIDecorators()
-  @SerializeDecorator(EndUserSerializeDto)
   @Patch('forgot-password')
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
-    const result =
-      await this.authServiceUnstable.forgotPassword(forgotPasswordDto);
+    const user =
+      await this.authServiceStable.checkAccountIfNotExistThenThrowError({
+        filterQuery: { email: forgotPasswordDto.email },
+        message: 'Check your Input carefully please!',
+      });
+
+    const result = await this.authServiceUnstable.forgotPassword(user);
     // await this.mailerService.sendMail(
     //   forgotPasswordMail(result.email, result.token),
     // );
@@ -68,19 +90,23 @@ export class AuthController {
 
   @ChangeForgottonPasswordSwaggerAPIDecorators()
   @Patch('change-forgottent-password')
-  @SerializeDecorator(EndUserSerializeDto)
   async changeForgottonPassword(
     @Body() changeForgottonPasswordDto: ChangeForgottonPasswordDto,
   ) {
+    const existedAccount =
+      await this.authServiceStable.checkAccountIfNotExistThenThrowError({
+        filterQuery: { modifyToken: changeForgottonPasswordDto.modifyToken },
+        message: 'This is not the right place for you to be. Get out.',
+      });
+
     const user = await this.authServiceUnstable.changeForgottonPassword(
-      changeForgottonPasswordDto,
+      existedAccount,
+      changeForgottonPasswordDto.password,
     );
-    if (RedisClient.isOpen) {
-      await UserRedis.userConvertToRedisTypeThenHSET(
-        user.email,
-        user.toObject(),
-      );
-    }
+
+    await this.authRedisStableService.userConvertToRedisTypeThenHSET(
+      user.toObject(),
+    );
     return user;
   }
 }

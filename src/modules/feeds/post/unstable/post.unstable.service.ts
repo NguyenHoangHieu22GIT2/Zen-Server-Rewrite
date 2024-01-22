@@ -1,44 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from '../dto/create-post.dto';
-import { UpdatePostDto } from '../dto/update-post.dto';
-import { InjectModel } from '@nestjs/mongoose';
-import { Post } from '../entities/post.entity';
-import { Model } from 'mongoose';
+
 import { PostServiceStable } from '../stable/post.stable.service';
-import { getPostsDto } from '../dto/get-posts.dto';
 import { FindPostDto } from '../dto/find-post.dto';
 import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
 import { ModifyPostDto } from '../dto/modify-post.dto';
-import {
-  checkImageType,
-  checkImagesType,
-} from 'src/common/utils/checkImageType';
-import { storeFile, storeFiles } from 'src/common/utils/storeFile';
+
+import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
 
 @Injectable()
 export class PostServiceUnstable {
-  constructor(
-    @InjectModel(Post.name) private readonly postModel: Model<Post>,
-    private readonly postServiceStable: PostServiceStable,
-  ) {}
+  constructor(private readonly postServiceStable: PostServiceStable) {}
 
   public async createPost({
     createPostDto,
     endUserId,
-    images,
+    imageNames,
   }: {
     createPostDto: CreatePostDto;
     endUserId: EndUserId;
-    images: Express.Multer.File[];
+    imageNames: string[];
   }) {
     try {
-      checkImagesType(images);
-
-      storeFiles()
-
       const createdPost = await this.postServiceStable.createPost({
         createPostDto,
         endUserId,
+        imageNames,
       });
       return createdPost;
     } catch (error) {
@@ -56,10 +43,18 @@ export class PostServiceUnstable {
     }
   }
 
-  public async getPosts(getPostsDto: getPostsDto) {
+  public async getPosts({
+    queryLimitSkip,
+    endUserId,
+  }: {
+    queryLimitSkip: QueryLimitSkip;
+    endUserId: EndUserId;
+  }) {
     try {
-      const posts =
-        await this.postServiceStable.getPostsAggregation(getPostsDto);
+      const posts = await this.postServiceStable.getPostsAggregation({
+        queryLimitSkip,
+        endUserId,
+      });
       return posts;
     } catch (error) {
       throw error;

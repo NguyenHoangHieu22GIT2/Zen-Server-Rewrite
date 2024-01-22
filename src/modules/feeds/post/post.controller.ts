@@ -10,6 +10,7 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFiles,
+  Query,
 } from '@nestjs/common';
 import { PostServiceUnstable } from './unstable/post.unstable.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -19,10 +20,32 @@ import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
 import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/convertToMongodbId';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { PostRedis } from 'src/cores/redis/post.redis';
+import { ApiTags } from '@nestjs/swagger';
+import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
+import { checkImagesTypeToThrowErrors } from 'src/common/utils/checkImageType';
+import { PostServiceStable } from './stable/post.stable.service';
+import { storeFiles } from 'src/common/utils/storeFile';
+import { PostRedisStableService } from './stable/post.redis.stable.service';
 
+@ApiTags('Post')
 @Controller('posts')
 export class PostController {
-  constructor(private readonly postUnstableService: PostServiceUnstable) {}
+  constructor(
+    private readonly postUnstableService: PostServiceUnstable,
+    private readonly postStableService: PostServiceStable,
+    private readonly postRedisStableService: PostRedisStableService,
+  ) {}
+
+  @Get()
+  async getPosts(@Req() req: RequestUser, @Query() query: QueryLimitSkip) {
+    const posts = await this.postUnstableService.getPosts({
+      endUserId: req.user._id,
+      queryLimitSkip: query,
+    });
+
+    await this.postRedisStableService.savePosts(posts);
+  }
 
   @Post()
   @UseGuards(LoggedInGuard)
@@ -32,15 +55,19 @@ export class PostController {
     @Req() req: RequestUser,
     @UploadedFiles() images: Express.Multer.File[],
   ) {
-    const endUserId = checkToConvertToMongoIdOrThrowError<EndUserId>({
-      id: req.user._id,
-      returnError: true,
-    });
+    checkImagesTypeToThrowErrors(images);
+
+    const { createdImageObjects, imageNames } =
+      this.postStableService.createImageObjectsToSave(images);
+
+    storeFiles(createdImageObjects);
+
     const post = await this.postUnstableService.createPost({
-      endUserId,
+      endUserId: req.user._id,
       createPostDto,
-      images,
+      imageNames,
     });
+
     return post;
   }
 }

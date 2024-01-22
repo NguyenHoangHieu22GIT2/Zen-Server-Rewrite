@@ -10,6 +10,7 @@ import {
 import { MongooseModule } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { v4 } from 'uuid';
+import { AuthRedisStableService } from './stable/auth.redis.stable.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -23,7 +24,11 @@ describe('AuthController', () => {
     id = v4();
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [AuthServiceStable, AuthServiceUnstable],
+      providers: [
+        AuthServiceStable,
+        AuthServiceUnstable,
+        AuthRedisStableService,
+      ],
       imports: [
         MongooseModule.forRoot(process.env.DB_URL, { dbName: 'Zen-Test' }),
         MongooseModule.forFeature([
