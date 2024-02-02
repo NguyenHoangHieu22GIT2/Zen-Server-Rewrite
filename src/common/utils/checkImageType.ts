@@ -1,10 +1,12 @@
 import { BadRequestException } from '@nestjs/common';
 
-export function checkImagesTypeToThrowErrors(files: Express.Multer.File[]) {
+export default function checkImagesTypeToThrowErrors(
+  files: Express.Multer.File[],
+) {
   files.forEach((file) => {
     checkImageTypeToThrowErrors(file);
   });
-  return true;  
+  return true;
 }
 
 export function checkImageTypeToThrowErrors(

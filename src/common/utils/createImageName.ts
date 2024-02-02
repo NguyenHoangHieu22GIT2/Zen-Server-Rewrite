@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 
-export function createImageNames(imageOriginalNames: string[]) {
+export default function createImageNames(imageOriginalNames: string[]) {
   const imageNames: string[] = [];
   imageOriginalNames.forEach((imageOriginalName) => {
     const createdImageName = createImageName(imageOriginalName);
