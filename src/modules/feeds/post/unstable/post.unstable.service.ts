@@ -7,6 +7,7 @@ import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
 import { ModifyPostDto } from '../dto/modify-post.dto';
 
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
+import { PipelineStage } from 'mongoose';
 
 @Injectable()
 export class PostServiceUnstable {
@@ -45,15 +46,15 @@ export class PostServiceUnstable {
 
   public async getPosts({
     queryLimitSkip,
-    endUserId,
+    queryAggregation,
   }: {
     queryLimitSkip: QueryLimitSkip;
-    endUserId: EndUserId;
+    queryAggregation: PipelineStage[];
   }) {
     try {
       const posts = await this.postServiceStable.getPostsAggregation({
         queryLimitSkip,
-        endUserId,
+        queryAggregation,
       });
       return posts;
     } catch (error) {
