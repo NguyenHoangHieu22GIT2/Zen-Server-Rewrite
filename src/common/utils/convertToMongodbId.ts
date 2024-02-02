@@ -1,14 +1,14 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import mongoose, { Types } from 'mongoose';
 import { EndUserId } from '../types/utilTypes/Brand';
 
-export const checkToConvertToMongoIdOrThrowError = <TType>({
+export default function checkToConvertToMongoIdOrThrowError<TType>({
   id,
   returnError,
 }: {
   id: string | EndUserId;
   returnError: boolean;
-}) => {
+}) {
   if (
     (typeof id === 'string' && id.toString().length == 24) ||
     Types.ObjectId.isValid(id)
@@ -19,4 +19,4 @@ export const checkToConvertToMongoIdOrThrowError = <TType>({
     throw new BadRequestException('Wrong Id Type');
   }
   return null;
-};
+}
