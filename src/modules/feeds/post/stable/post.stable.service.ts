@@ -10,7 +10,7 @@ import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
 import { ModifyPostDto } from '../dto/modify-post.dto';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
-import checkAuthorized from 'src/common/utils/checkAuthorized';
+import { checkAuthorized } from 'src/common/utils/checkAuthorized';
 
 @Injectable()
 export class PostServiceStable {
@@ -43,7 +43,6 @@ export class PostServiceStable {
 
   public async getPostsAggregation({
     queryLimitSkip,
-    //TODO: endUserId will be used to filter out which post that user should see
     queryAggregation,
   }: {
     queryLimitSkip: QueryLimitSkip;
