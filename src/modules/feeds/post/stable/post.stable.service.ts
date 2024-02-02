@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage } from 'mongoose';
@@ -10,6 +10,7 @@ import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
 import { ModifyPostDto } from '../dto/modify-post.dto';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
+import checkAuthorized from 'src/common/utils/checkAuthorized';
 
 @Injectable()
 export class PostServiceStable {
@@ -102,7 +103,7 @@ export class PostServiceStable {
   }): Promise<DocumentMongodbType<Post>> {
     const post = await this.findPost({ postId: modifyPostDto.postId });
 
-    this.checkAuthorized({
+    checkAuthorized({
       userActionId: endUserId,
       userHasPostId: post.endUserId,
     });
@@ -125,26 +126,12 @@ export class PostServiceStable {
   }): Promise<DocumentMongodbType<Post>> {
     const post = await this.findPost({ postId });
 
-    this.checkAuthorized({
+    checkAuthorized({
       userActionId: endUserId,
       userHasPostId: post.endUserId,
     });
 
     await post.deleteOne();
     return post;
-  }
-
-  private checkAuthorized({
-    userActionId,
-    userHasPostId,
-  }: {
-    userActionId: EndUserId;
-    userHasPostId: EndUserId;
-  }) {
-    if (!userHasPostId.equals(userActionId)) {
-      throw new UnauthorizedException(
-        "You don't have access to do this action!",
-      );
-    }
   }
 }
