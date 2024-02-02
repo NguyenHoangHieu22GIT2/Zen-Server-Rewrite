@@ -1,4 +1,4 @@
-export function ConvertFilesToArrayOfFileNamesString(
+export default function ConvertFilesToArrayOfFileNamesString(
   files: Express.Multer.File[],
 ) {
   const fileNames: string[] = [];
