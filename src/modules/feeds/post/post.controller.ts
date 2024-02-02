@@ -16,11 +16,13 @@ import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
-import { checkImagesTypeToThrowErrors } from 'src/common/utils/checkImageType';
+import {
+  checkImagesTypeToThrowError,
+  storeFiles,
+  createImageObjectsToSave,
+} from 'src/common/utils/index';
 import { PostServiceStable } from './stable/post.stable.service';
-import { storeFiles } from 'src/common/utils/storeFile';
 import { PostRedisStableService } from './stable/post.redis.stable.service';
-import createImageObjectsToSave from 'src/common/utils/createImageObjectsToSave';
 
 @ApiTags('Post')
 @Controller('posts')
@@ -49,7 +51,7 @@ export class PostController {
     @Req() req: RequestUser,
     @UploadedFiles() images: Express.Multer.File[],
   ) {
-    checkImagesTypeToThrowErrors(images);
+    checkImagesTypeToThrowError(images);
 
     const { createdImageObjects, imageNames } =
       createImageObjectsToSave(images);
