@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as checkAuthorized from './checkAuthorized';
 
-import * as checkImageType from './checkImageType';
+import * as checkImageType from './checkImageTypeToThrowError';
+
+import * as checkImageTypes from './checkImagesTypeToThrowError';
 
 import * as checkRedisClientConnection from './checkRedisClientConnection';
 
@@ -15,7 +17,9 @@ import * as convertToMongodbId from './convertToMongodbId';
 
 import * as convertToObjectMongodb from './convertToObjectMongodb';
 
-import * as createImageNames from './createImageName';
+import * as createImageName from './createImageName';
+
+import * as createImageNames from './createImageNames';
 
 import * as createImageObjectsToSave from './createImageObjectsToSave';
 
@@ -24,3 +28,5 @@ import * as createPathImage from './createPathImage';
 import * as removeFile from './removeFile';
 
 import * as storeFile from './storeFile';
+
+import * as storeFiles from './storeFiles';

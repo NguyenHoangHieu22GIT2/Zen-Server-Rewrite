@@ -1,4 +1,4 @@
-import { createImageName } from './createImageName';
+import createImageName from './createImageName';
 
 export default function createImageObjectsToSave(
   images: Express.Multer.File[],
