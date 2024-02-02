@@ -3,9 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   Req,
   UseGuards,
   UseInterceptors,
@@ -14,19 +11,16 @@ import {
 } from '@nestjs/common';
 import { PostServiceUnstable } from './unstable/post.unstable.service';
 import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
 import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
-import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/convertToMongodbId';
-import { EndUserId } from 'src/common/types/utilTypes/Brand';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { PostRedis } from 'src/cores/redis/post.redis';
 import { ApiTags } from '@nestjs/swagger';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
 import { checkImagesTypeToThrowErrors } from 'src/common/utils/checkImageType';
 import { PostServiceStable } from './stable/post.stable.service';
 import { storeFiles } from 'src/common/utils/storeFile';
 import { PostRedisStableService } from './stable/post.redis.stable.service';
+import createImageObjectsToSave from 'src/common/utils/createImageObjectsToSave';
 
 @ApiTags('Post')
 @Controller('posts')
@@ -58,7 +52,7 @@ export class PostController {
     checkImagesTypeToThrowErrors(images);
 
     const { createdImageObjects, imageNames } =
-      this.postStableService.createImageObjectsToSave(images);
+      createImageObjectsToSave(images);
 
     storeFiles(createdImageObjects);
 
