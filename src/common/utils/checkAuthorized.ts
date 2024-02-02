@@ -1,7 +1,7 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { EndUserId } from '../types/utilTypes/Brand';
 
-export default function checkAuthorized({
+export function checkAuthorized({
   userActionId,
   userHasPostId,
 }: {
