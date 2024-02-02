@@ -35,7 +35,7 @@ export class PostController {
 
   @Get()
   async getPosts(@Req() req: RequestUser, @Query() query: QueryLimitSkip) {
-    const posts = await this.postUnstableService.getPosts({
+    const posts = await this.postUnstableService.getRecommendedPosts({
       endUserId: req.user._id,
       queryLimitSkip: query,
     });

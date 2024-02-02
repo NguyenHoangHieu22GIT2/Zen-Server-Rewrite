@@ -44,14 +44,17 @@ export class PostServiceUnstable {
     }
   }
 
-  public async getPosts({
+  public async getRecommendedPosts({
     queryLimitSkip,
-    queryAggregation,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    endUserId,
   }: {
     queryLimitSkip: QueryLimitSkip;
-    queryAggregation: PipelineStage[];
+    endUserId: EndUserId;
   }) {
     try {
+      const queryAggregation: PipelineStage[] = [];
+
       const posts = await this.postServiceStable.getPostsAggregation({
         queryLimitSkip,
         queryAggregation,
