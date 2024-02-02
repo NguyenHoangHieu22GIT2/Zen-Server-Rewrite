@@ -1,6 +1,6 @@
 import { DocumentMongodbType } from '../types/mongodbTypes/DocumentMongodbType';
 
-export default function checkingToConvertToObjectFromDocument<T extends object>(
+export function checkingToConvertToObjectFromDocument<T extends object>(
   entity: T | DocumentMongodbType<T>,
 ): T {
   if ('toObject' in entity) {

@@ -1,8 +1,6 @@
-import createImageName from './createImageName';
+import { createImageName } from './createImageName';
 
-export default function createImageObjectsToSave(
-  images: Express.Multer.File[],
-) {
+export function createImageObjectsToSave(images: Express.Multer.File[]) {
   const imageNames = [];
   const createdImageObjects = images.map((image) => {
     const imageName = createImageName(image.originalname);
