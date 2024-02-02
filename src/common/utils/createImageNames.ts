@@ -1,6 +1,6 @@
-import createImageName from './createImageName';
+import { createImageName } from './createImageName';
 
-export default function createImageNames(imageOriginalNames: string[]) {
+export function createImageNames(imageOriginalNames: string[]) {
   const imageNames: string[] = [];
   imageOriginalNames.forEach((imageOriginalName) => {
     const createdImageName = createImageName(imageOriginalName);

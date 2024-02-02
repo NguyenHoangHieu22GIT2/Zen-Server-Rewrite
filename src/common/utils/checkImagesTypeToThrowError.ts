@@ -1,10 +1,8 @@
-import checkImageTypeToThrowErrors from './checkImageTypeToThrowError';
+import { checkImageTypeToThrowError } from './checkImageTypeToThrowError';
 
-export default function checkImagesTypeToThrowError(
-  files: Express.Multer.File[],
-) {
+export function checkImagesTypeToThrowError(files: Express.Multer.File[]) {
   files.forEach((file) => {
-    checkImageTypeToThrowErrors(file);
+    checkImageTypeToThrowError(file);
   });
   return true;
 }
