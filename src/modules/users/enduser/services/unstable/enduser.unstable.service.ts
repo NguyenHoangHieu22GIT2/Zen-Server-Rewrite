@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { EndUser } from '../entities/enduser.entity';
+import { EndUser } from '../../entities/enduser.entity';
 import { Model } from 'mongoose';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
-import { checkImageTypeToThrowError, removeFile } from 'src/common/utils/index';
+import { checkImageTypeToThrowError } from 'src/common/utils/index';
 import { createImageName } from 'src/common/utils/createImageName';
 import { storeFile } from 'src/common/utils/storeFile';
-import { EnduserServiceStable } from './enduser.stable.service';
-import { ChangeInformationDto } from '../dto/change-information.dto';
+import { removeFile } from 'src/common/utils/index';
+import { EnduserServiceStable } from '../stable/enduser.stable.service';
+import { ChangeInformationDto } from '../../dto/change-information.dto';
 @Injectable()
 export class EnduserServiceUnstable {
   constructor(

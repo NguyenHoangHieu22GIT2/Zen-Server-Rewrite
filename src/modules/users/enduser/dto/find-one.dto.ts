@@ -1,9 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsDefined } from 'class-validator';
-import { Types } from 'mongoose';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
-import { checkToConvertToMongoIdOrThrowError  } from 'src/common/utils/convertToMongodbId';
+import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/convertToMongodbId';
 
 export class FindByIdEndUserDto {
   @ApiProperty({
@@ -12,7 +11,7 @@ export class FindByIdEndUserDto {
   })
   @IsDefined({ message: 'Wrong Id format in mongodb' })
   @Transform((opts) => {
-    return checkToConvertToMongoIdOrThrowError <EndUserId>(opts.value);
+    return checkToConvertToMongoIdOrThrowError<EndUserId>(opts.value);
   })
   id: EndUserId;
 }
