@@ -58,6 +58,7 @@ export class PostServiceStable {
     ]);
     return postsAggregation;
   }
+
   public async findPostAggregation(findPostDto: FindPostDto) {
     const postsAggregation: PostAggregation[] = await this.postModel.aggregate([
       {
