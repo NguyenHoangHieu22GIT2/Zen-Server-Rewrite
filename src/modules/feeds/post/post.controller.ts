@@ -20,24 +20,31 @@ import {
   storeFiles,
   createImageObjectsToSave,
 } from 'src/common/utils/index';
-import {
-  PostRedisStableService,
-  PostServiceUnstable,
-} from './services/post.service.index';
+import { PostRedisStableService } from './services/stable/post.redis.stable.service';
+import { PostServiceUnstable } from './services/unstable/post.unstable.service';
 import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/post.aggregation';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 import { Post as PostEntity } from './entities/post.entity';
+import { FindPostDto } from './dto/find-post.dto';
 
 @ApiTags('Post')
 @Controller('posts')
+@UseGuards(LoggedInGuard)
 export class PostController {
   constructor(
     private readonly postUnstableService: PostServiceUnstable,
     private readonly postRedisStableService: PostRedisStableService,
   ) {}
 
+  @Get(':postId')
+  async getPost(@Req() req: RequestUser, @Query() findPostDto: FindPostDto) {
+    const post = await this.postUnstableService.findPost(findPostDto);
+    await this.postRedisStableService.savePosts([post]);
+    return post;
+  }
+
   @Get('recommend')
-  async getPosts(
+  async getRecommendedPosts(
     @Req() req: RequestUser,
     @Query() query: QueryLimitSkip,
   ): Promise<PostAggregation[]> {
@@ -51,7 +58,6 @@ export class PostController {
   }
 
   @Post()
-  @UseGuards(LoggedInGuard)
   @UseInterceptors(FilesInterceptor('files'))
   async createPost(
     @Body() createPostDto: CreatePostDto,
