@@ -10,7 +10,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { EnduserServiceStable } from './services/enduser.stable.service';
+import { EnduserServiceStable } from './services/stable/enduser.stable.service';
 import { SerializeDecorator } from 'src/cores/interceptors/Serialize.interceptor';
 import { EndUserSerializeDto } from './dto/enduser.serialize.dto';
 import { FindByIdEndUserDto } from './dto/find-one.dto';
@@ -18,11 +18,10 @@ import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
 import { FindOneEndUserSwaggerAPIDecorators } from 'src/documents/swagger-api/endusers/find-one.api';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ChangeInformationDto } from './dto/change-information.dto';
-import { Request } from 'express';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
-import { checkToConvertToMongoIdOrThrowError  } from 'src/common/utils/convertToMongodbId';
+import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/convertToMongodbId';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
-import { EnduserServiceUnstable } from './services/enduser.unstable.service';
+import { EnduserServiceUnstable } from './services/unstable/enduser.unstable.service';
 
 @ApiTags('End User')
 @Controller('endusers')
@@ -47,7 +46,7 @@ export class EnduserController {
     @UploadedFile() file: Express.Multer.File,
     @Req() req: RequestUser,
   ) {
-    const userId = checkToConvertToMongoIdOrThrowError <EndUserId>({
+    const userId = checkToConvertToMongoIdOrThrowError<EndUserId>({
       id: req.user._id,
       returnError: true,
     });
@@ -62,7 +61,7 @@ export class EnduserController {
     @Body() changeInformationDto: ChangeInformationDto,
     @Req() req: RequestUser,
   ) {
-    const userId = checkToConvertToMongoIdOrThrowError <EndUserId>({
+    const userId = checkToConvertToMongoIdOrThrowError<EndUserId>({
       id: req.user._id,
       returnError: true,
     });

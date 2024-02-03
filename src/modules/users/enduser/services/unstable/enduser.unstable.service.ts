@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { EndUser } from '../entities/enduser.entity';
+import { EndUser } from '../../entities/enduser.entity';
 import { Model } from 'mongoose';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
-import { checkImageTypeToThrowErrors } from 'src/common/utils/checkImageType';
+import { checkImageTypeToThrowError } from 'src/common/utils/index';
 import { createImageName } from 'src/common/utils/createImageName';
 import { storeFile } from 'src/common/utils/storeFile';
-import { deleteFile } from 'src/common/utils/removeFile';
-import { EnduserServiceStable } from './enduser.stable.service';
-import { ChangeInformationDto } from '../dto/change-information.dto';
+import { removeFile } from 'src/common/utils/index';
+import { EnduserServiceStable } from '../stable/enduser.stable.service';
+import { ChangeInformationDto } from '../../dto/change-information.dto';
 @Injectable()
 export class EnduserServiceUnstable {
   constructor(
@@ -28,11 +28,11 @@ export class EnduserServiceUnstable {
     file: Express.Multer.File;
     userId: EndUserId;
   }) {
-    checkImageTypeToThrowErrors(file);
+    checkImageTypeToThrowError(file);
     const fileName = createImageName(file.originalname);
     const user = await this.enduserServiceStable.findById(userId);
     storeFile({ fileName, file });
-    deleteFile(user.avatar);
+    removeFile(user.avatar);
     user.avatar = fileName;
     return user.save();
   }

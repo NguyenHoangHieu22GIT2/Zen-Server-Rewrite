@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePostDto } from '../dto/create-post.dto';
-
 import { PostServiceStable } from '../stable/post.stable.service';
-import { FindPostDto } from '../dto/find-post.dto';
-import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
-import { ModifyPostDto } from '../dto/modify-post.dto';
 
+import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
 import { PipelineStage } from 'mongoose';
+import { CreatePostDto } from '../../dto/create-post.dto';
+import { FindPostDto } from '../../dto/find-post.dto';
+import { ModifyPostDto } from '../../dto/modify-post.dto';
 
 @Injectable()
 export class PostServiceUnstable {
@@ -46,6 +45,7 @@ export class PostServiceUnstable {
 
   public async getRecommendedPosts({
     queryLimitSkip,
+    //TODO: will use endUserId when we have recommendation system.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     endUserId,
   }: {
@@ -59,6 +59,7 @@ export class PostServiceUnstable {
         queryLimitSkip,
         queryAggregation,
       });
+
       return posts;
     } catch (error) {
       throw error;
