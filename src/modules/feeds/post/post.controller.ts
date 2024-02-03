@@ -9,7 +9,6 @@ import {
   UploadedFiles,
   Query,
 } from '@nestjs/common';
-import { PostServiceUnstable } from './unstable/post.unstable.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
 import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
@@ -21,26 +20,34 @@ import {
   storeFiles,
   createImageObjectsToSave,
 } from 'src/common/utils/index';
-import { PostServiceStable } from './stable/post.stable.service';
-import { PostRedisStableService } from './stable/post.redis.stable.service';
+import {
+  PostRedisStableService,
+  PostServiceUnstable,
+} from './services/post.service.index';
+import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/post.aggregation';
+import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
+import { Post as PostEntity } from './entities/post.entity';
 
 @ApiTags('Post')
 @Controller('posts')
 export class PostController {
   constructor(
     private readonly postUnstableService: PostServiceUnstable,
-    private readonly postStableService: PostServiceStable,
     private readonly postRedisStableService: PostRedisStableService,
   ) {}
 
-  @Get()
-  async getPosts(@Req() req: RequestUser, @Query() query: QueryLimitSkip) {
-    const posts = await this.postUnstableService.getPosts({
+  @Get('recommend')
+  async getPosts(
+    @Req() req: RequestUser,
+    @Query() query: QueryLimitSkip,
+  ): Promise<PostAggregation[]> {
+    const posts = await this.postUnstableService.getRecommendedPosts({
       endUserId: req.user._id,
       queryLimitSkip: query,
     });
 
     await this.postRedisStableService.savePosts(posts);
+    return posts;
   }
 
   @Post()
@@ -50,7 +57,7 @@ export class PostController {
     @Body() createPostDto: CreatePostDto,
     @Req() req: RequestUser,
     @UploadedFiles() images: Express.Multer.File[],
-  ) {
+  ): Promise<DocumentMongodbType<PostEntity>> {
     checkImagesTypeToThrowError(images);
 
     const { createdImageObjects, imageNames } =

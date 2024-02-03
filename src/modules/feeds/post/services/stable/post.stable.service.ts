@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePostDto } from '../dto/create-post.dto';
+import { CreatePostDto } from '../../../post/dto/create-post.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage } from 'mongoose';
-import { Post } from '../entities/post.entity';
-import { FindPostDto } from '../dto/find-post.dto';
+import { Post } from '../../../post/entities/post.entity';
+import { FindPostDto } from '../../../post/dto/find-post.dto';
 import { nameOfCollections } from 'src/common/constants/name-of-collections';
 import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/post.aggregation';
 import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
-import { ModifyPostDto } from '../dto/modify-post.dto';
+import { ModifyPostDto } from '../../../post/dto/modify-post.dto';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
-import checkAuthorized from 'src/common/utils/checkAuthorized';
+import { checkAuthorized } from 'src/common/utils/checkAuthorized';
 
 @Injectable()
 export class PostServiceStable {
@@ -43,7 +43,6 @@ export class PostServiceStable {
 
   public async getPostsAggregation({
     queryLimitSkip,
-    //TODO: endUserId will be used to filter out which post that user should see
     queryAggregation,
   }: {
     queryLimitSkip: QueryLimitSkip;

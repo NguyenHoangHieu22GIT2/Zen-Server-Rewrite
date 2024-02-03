@@ -1,17 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EnduserController } from './enduser.controller';
-import { EnduserServiceUnstable } from './services/enduser.unstable.service';
+import { EnduserServiceUnstable } from './services/unstable/enduser.unstable.service';
 import mongoose from 'mongoose';
 import { EndUser, EndUserSchema } from './entities/enduser.entity';
 
 import { connect } from 'mongoose';
 import { MongooseModule } from '@nestjs/mongoose';
-import { v4 } from 'uuid';
-import { EnduserServiceStable } from './services/enduser.stable.service';
+import { EnduserServiceStable } from './services/stable/enduser.stable.service';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
 import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/convertToMongodbId';
 import { readFileSync } from 'fs';
-import path, { join } from 'path';
+import { join } from 'path';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
 import { ChangeInformationDto } from './dto/change-information.dto';
 
@@ -19,7 +18,7 @@ import { faker } from '@faker-js/faker';
 describe('EnduserController', () => {
   let controller: EnduserController;
   let mongod: typeof mongoose;
-  let id: string;
+  // let id: string;
   let userToTest: Partial<EndUser>;
   let fakeRequestUser: Partial<RequestUser>;
 
@@ -30,7 +29,7 @@ describe('EnduserController', () => {
     userToTest = (await mongod.connection.db
       .collection('endusers')
       .findOne()) as any;
-    id = v4();
+    // id = v4();
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EnduserController],
       providers: [EnduserServiceUnstable, EnduserServiceStable],
