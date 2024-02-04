@@ -7,6 +7,7 @@ import { PipelineStage } from 'mongoose';
 import { CreatePostDto } from '../../dto/create-post.dto';
 import { FindPostDto } from '../../dto/find-post.dto';
 import { ModifyPostDto } from '../../dto/modify-post.dto';
+import { GetUserPostsDto } from '../../dto/get-user-posts.dto';
 
 @Injectable()
 export class PostServiceUnstable {
@@ -41,6 +42,22 @@ export class PostServiceUnstable {
     } catch (error) {
       throw error;
     }
+  }
+
+  public async getUserPosts({
+    endUserId,
+    getUserPostsDto,
+  }: {
+    endUserId: EndUserId;
+    getUserPostsDto: GetUserPostsDto;
+  }) {
+    try {
+      const posts = await this.postServiceStable.getPostsAggregation({
+        queryLimitSkip: getUserPostsDto,
+        queryAggregation: [{ $match: { _id: endUserId } }],
+      });
+      return posts;
+    } catch (error) {}
   }
 
   public async getRecommendedPosts({

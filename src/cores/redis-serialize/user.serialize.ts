@@ -1,3 +1,5 @@
+// DEPRECATED: NOW USE ConvertObjectToHash
+
 import { ObjectToHashType } from 'src/common/types/redisTypes/ObjectToHash.redis.type';
 import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
 
