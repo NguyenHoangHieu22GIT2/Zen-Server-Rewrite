@@ -26,6 +26,7 @@ import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 import { Post as PostEntity } from './entities/post.entity';
 import { FindPostDto } from './dto/find-post.dto';
+import { GetUserPostsDto } from './dto/get-user-posts.dto';
 
 @ApiTags('Post')
 @Controller('posts')
@@ -41,6 +42,20 @@ export class PostController {
     const post = await this.postUnstableService.findPost(findPostDto);
     await this.postRedisStableService.savePosts([post]);
     return post;
+  }
+
+  @Get()
+  async getUserPosts(
+    @Req() req: RequestUser,
+    @Query() getUserPostsDto: GetUserPostsDto,
+  ) {
+    const posts = await this.postUnstableService.getUserPosts({
+      endUserId: req.user._id,
+      getUserPostsDto,
+    });
+
+    await this.postRedisStableService.savePosts(posts);
+    return posts;
   }
 
   @Get('recommend')

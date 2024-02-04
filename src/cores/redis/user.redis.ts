@@ -9,13 +9,13 @@ import {
 import { Injectable } from '@nestjs/common';
 import { userDeserialize } from '../redis-deserialize/user.deserialize';
 import { ObjectToHashType } from 'src/common/types/redisTypes/ObjectToHash.redis.type';
-import { userSerialize } from '../redis-serialize/user.serialize';
+import { ConvertObjectToHash } from 'src/common/utils';
 
 @Injectable()
 export class UserRedis {
   //HASH
   static async userConvertToRedisTypeThenHSET(email: string, endUser: EndUser) {
-    const convertedUser = userSerialize(endUser);
+    const convertedUser = ConvertObjectToHash<EndUser>(endUser);
     return RedisClient.HSET(userKey(email), convertedUser);
   }
 

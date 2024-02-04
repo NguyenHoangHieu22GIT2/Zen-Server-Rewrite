@@ -49,11 +49,11 @@ export class PostServiceStable {
     queryAggregation: PipelineStage[];
   }) {
     const postsAggregation: PostAggregation[] = await this.postModel.aggregate([
+      ...queryAggregation,
       {
         $limit: queryLimitSkip.limit,
         $skip: queryLimitSkip.skip,
       },
-      ...queryAggregation,
       ...this.lookupUserAggregation,
     ]);
     return postsAggregation;
