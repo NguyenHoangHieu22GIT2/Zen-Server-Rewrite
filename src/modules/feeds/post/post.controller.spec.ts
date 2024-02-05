@@ -1,20 +1,78 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostController } from './post.controller';
 import { PostServiceUnstable } from './services/unstable/post.unstable.service';
+import mongoose, { connect } from 'mongoose';
+import { Post, PostSchema } from './entities/post.entity';
+import { PostServiceStable } from './services/stable/post.stable.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { faker } from '@faker-js/faker';
+import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
+import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
+import { createFakeImage } from 'src/common/utils/createFakeImage';
 
 describe('PostController', () => {
   let controller: PostController;
+  let mongod: typeof mongoose;
+  // let id: string;
+  let userToTest: Partial<EndUser>;
+  let fakeRequestUser: Partial<RequestUser>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
+    mongod = await connect('mongodb://127.0.0.1:27017/', {
+      dbName: 'Zen-Test',
+    });
+    userToTest = (await mongod.connection.db
+      .collection('users')
+      .findOne()) as any;
+    // id = v4();
+    fakeRequestUser = {
+      user: {
+        _id: userToTest._id,
+        avatar: userToTest.avatar,
+        username: userToTest.username,
+      },
+    };
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PostController],
-      providers: [PostServiceUnstable],
+      providers: [PostServiceUnstable, PostServiceStable],
+      imports: [
+        MongooseModule.forRoot('mongodb://127.0.0.1:27017/', {
+          dbName: 'Zen-Test',
+        }),
+        MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
+      ],
     }).compile();
 
     controller = module.get<PostController>(PostController);
   });
 
+  afterAll(() => {
+    // mongod.connection.db.dropDatabase();
+  });
+
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  it('should create a post', async () => {
+    const image = createFakeImage();
+    const post = await controller.createPost(
+      {
+        title: faker.lorem.sentence(100),
+        body: faker.lorem.paragraph(15),
+      },
+      fakeRequestUser as any,
+      [image],
+    );
+    expect(post).toBeDefined();
+  });
+
+  it("should get user's posts", async () => {
+    const posts = await controller.getUserPosts(fakeRequestUser as any, {
+      endUserId: userToTest._id,
+      limit: 10,
+      skip: 0,
+    });
+    expect(posts).toBeDefined();
   });
 });
