@@ -9,12 +9,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { EnduserServiceStable } from './services/stable/enduser.stable.service';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
 import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/convertToMongodbId';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
 import { ChangeInformationDto } from './dto/change-information.dto';
 
 import { faker } from '@faker-js/faker';
+import { createFakeImage } from 'src/common/utils/createFakeImage';
 describe('EnduserController', () => {
   let controller: EnduserController;
   let mongod: typeof mongoose;
@@ -75,18 +74,8 @@ describe('EnduserController', () => {
   });
 
   it("should change user's avatar", async () => {
-    const fileBuffer = readFileSync(
-      join(__dirname, '../../../../assets/image1.jpg'),
-    );
-    const image: Partial<Express.Multer.File> = {
-      originalname: 'file.jpg',
-      mimetype: 'image/jpeg',
-      buffer: fileBuffer,
-    };
-    const user = await controller.changeAvatar(
-      image as any,
-      fakeRequestUser as any,
-    );
+    const image = createFakeImage();
+    const user = await controller.changeAvatar(image, fakeRequestUser as any);
     expect(user).toBeDefined();
   });
 
