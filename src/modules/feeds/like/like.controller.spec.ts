@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LikeController } from './like.controller';
-import { LikeService } from './like.service';
+import { LikeService } from './services/unstable/like.unstable.service';
 
 describe('LikeController', () => {
   let controller: LikeController;
