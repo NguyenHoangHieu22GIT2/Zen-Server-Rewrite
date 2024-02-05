@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { LikeService } from './like.service';
+import { LikeService } from './services/unstable/like.unstable.service';
 import { LikeController } from './like.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Like, LikeSchema } from './entities/like.entity';

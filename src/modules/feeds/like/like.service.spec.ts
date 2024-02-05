@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { LikeService } from './like.service';
+import { LikeServiceUnstable } from './services/unstable/like.unstable.service';
 
 describe('LikeService', () => {
-  let service: LikeService;
+  let service: LikeServiceUnstable;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [LikeService],
+      providers: [LikeServiceUnstable],
     }).compile();
 
-    service = module.get<LikeService>(LikeService);
+    service = module.get<LikeServiceUnstable>(LikeServiceUnstable);
   });
 
   it('should be defined', () => {
