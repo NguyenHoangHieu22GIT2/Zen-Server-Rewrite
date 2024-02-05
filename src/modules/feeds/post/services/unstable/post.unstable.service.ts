@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PostServiceStable } from '../stable/post.stable.service';
 
 import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
@@ -30,7 +30,7 @@ export class PostServiceUnstable {
       });
       return createdPost;
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -40,7 +40,7 @@ export class PostServiceUnstable {
         await this.postServiceStable.findPostAggregation(findPostDto);
       return post;
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -57,7 +57,9 @@ export class PostServiceUnstable {
         queryAggregation: [{ $match: { _id: endUserId } }],
       });
       return posts;
-    } catch (error) {}
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   public async getRecommendedPosts({
@@ -79,25 +81,28 @@ export class PostServiceUnstable {
 
       return posts;
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(error);
     }
   }
 
   public async modifyPost({
     endUserId,
     modifyPostDto,
+    images,
   }: {
     modifyPostDto: ModifyPostDto;
     endUserId: EndUserId;
+    images: string[];
   }) {
     try {
       const post = await this.postServiceStable.modifyPost({
         modifyPostDto,
         endUserId,
+        images,
       });
       return post;
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -115,7 +120,7 @@ export class PostServiceUnstable {
       });
       return post;
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(error);
     }
   }
 }

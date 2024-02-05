@@ -1,15 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { RegisterEndUserDto } from '../dto/register-end-user.dto';
 import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
 
 import { AuthServiceStable } from '../stable/auth.stable.service';
 import { LoginEndUserDto } from '../dto/login-end-user.dto';
-import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 import { v4 } from 'uuid';
-import { ChangeForgottonPasswordDto } from '../dto/change-forgotton-password.dto';
 import { checkingToConvertToObjectFromDocument } from 'src/common/utils/convertToObjectMongodb';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 
@@ -34,7 +34,7 @@ export class AuthServiceUnstable {
 
       return createdAccount;
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -46,13 +46,13 @@ export class AuthServiceUnstable {
 
       return activatedAccount.save();
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(error);
     }
   }
 
   async loginAccount(loginEndUserDto: LoginEndUserDto) {
     try {
-      let existedAccount =
+      const existedAccount =
         await this.authServiceStable.checkLoginAccount(loginEndUserDto);
 
       if (existedAccount.activationToken) {
@@ -71,7 +71,7 @@ export class AuthServiceUnstable {
 
       return convertedExistedAccount;
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -83,7 +83,7 @@ export class AuthServiceUnstable {
 
       return savedUser;
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(error);
     }
   }
 
@@ -100,7 +100,7 @@ export class AuthServiceUnstable {
 
       return existedAccount.save();
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException(error);
     }
   }
 }

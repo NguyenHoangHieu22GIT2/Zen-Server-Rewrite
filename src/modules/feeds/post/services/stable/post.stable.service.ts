@@ -97,9 +97,11 @@ export class PostServiceStable {
   public async modifyPost({
     endUserId,
     modifyPostDto,
+    images,
   }: {
     modifyPostDto: ModifyPostDto;
     endUserId: EndUserId;
+    images: string[];
   }): Promise<DocumentMongodbType<Post>> {
     const post = await this.findPost({ postId: modifyPostDto.postId });
 
@@ -108,13 +110,17 @@ export class PostServiceStable {
       userHasPostId: post.endUserId,
     });
 
-    // Do this so we don't need to keep changing if we add some new properties
+    //DEPRECATED: BECAUSE WE HAVE TO FIND AGAIN, THE
+    // NEXT CODES IS FASTER BECAUSE WE JUST NEED TO SAVE
 
-    const modifiedPost = await this.postModel.findByIdAndUpdate(
-      modifyPostDto.postId,
-      modifyPostDto,
-    );
-    return modifiedPost;
+    // Do this so we don't need to keep changing if we add some new properties
+    // const modifiedPost = await this.postModel.findByIdAndUpdate(
+    //   modifyPostDto.postId,
+    //   modifyPostDto,
+    // );
+
+    const modifiedPost = Object.assign(post, { ...modifyPostDto, images });
+    return modifiedPost.save();
   }
 
   public async deletePost({
