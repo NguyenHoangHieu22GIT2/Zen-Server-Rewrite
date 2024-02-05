@@ -11,9 +11,9 @@ export class EnduserServiceStable {
   ) {}
 
   public async findById(
-    userId: EndUserId,
+    endUserId: EndUserId,
   ): Promise<DocumentMongodbType<EndUser>> {
-    const user = await this.EndUserModel.findById(userId);
+    const user = await this.EndUserModel.findById(endUserId);
     return user;
   }
 }

@@ -13,7 +13,7 @@ export class Friend {
     ref: nameOfCollections.EndUser,
     index: { unique: true },
   })
-  userId: EndUserId;
+  endUserId: EndUserId;
 
   @Prop({
     required: true,
