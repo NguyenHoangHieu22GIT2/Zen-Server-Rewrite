@@ -8,6 +8,10 @@ import {
   UseInterceptors,
   UploadedFiles,
   Query,
+  Param,
+  Patch,
+  Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
@@ -27,6 +31,12 @@ import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongo
 import { Post as PostEntity } from './entities/post.entity';
 import { FindPostDto } from './dto/find-post.dto';
 import { GetUserPostsDto } from './dto/get-user-posts.dto';
+import { ModifyPostDto } from './dto/modify-post.dto';
+import { CreatePostSwaggerAPIDecorators } from 'src/documents/swagger-api/posts/create-post.api';
+import { GetPostsSwaggerAPIDecorators } from 'src/documents/swagger-api/posts/get-posts';
+import { GetPostSwaggerAPIDecorators } from 'src/documents/swagger-api/posts/get-post';
+import { ModifyPostsSwaggerAPIDecorators } from 'src/documents/swagger-api/posts/modify-post';
+import { DeletePostsSwaggerAPIDecorators } from 'src/documents/swagger-api/posts/delete-post';
 
 @ApiTags('Post')
 @Controller('posts')
@@ -37,14 +47,8 @@ export class PostController {
     private readonly postRedisStableService: PostRedisStableService,
   ) {}
 
-  @Get(':postId')
-  async getPost(@Req() req: RequestUser, @Query() findPostDto: FindPostDto) {
-    const post = await this.postUnstableService.findPost(findPostDto);
-    await this.postRedisStableService.savePosts([post]);
-    return post;
-  }
-
-  @Get()
+  @Get('/user')
+  @GetPostsSwaggerAPIDecorators()
   async getUserPosts(
     @Req() req: RequestUser,
     @Query() getUserPostsDto: GetUserPostsDto,
@@ -59,6 +63,7 @@ export class PostController {
   }
 
   @Get('recommend')
+  @GetPostsSwaggerAPIDecorators()
   async getRecommendedPosts(
     @Req() req: RequestUser,
     @Query() query: QueryLimitSkip,
@@ -72,8 +77,20 @@ export class PostController {
     return posts;
   }
 
+  @Get(':postId')
+  @GetPostSwaggerAPIDecorators()
+  async getPost(@Req() req: RequestUser, @Param() findPostDto: FindPostDto) {
+    const post = await this.postUnstableService.findPost(findPostDto);
+    if (!post) {
+      throw new NotFoundException('No Post was found!');
+    }
+    await this.postRedisStableService.savePosts([post]);
+    return post;
+  }
+
   @Post()
   @UseInterceptors(FilesInterceptor('files'))
+  @CreatePostSwaggerAPIDecorators()
   async createPost(
     @Body() createPostDto: CreatePostDto,
     @Req() req: RequestUser,
@@ -92,6 +109,40 @@ export class PostController {
       imageNames,
     });
 
+    return post;
+  }
+
+  @Patch()
+  @UseInterceptors(FilesInterceptor('files'))
+  @ModifyPostsSwaggerAPIDecorators()
+  async modifyPost(
+    @Req() req: RequestUser,
+    @Body() modifyPostDto: ModifyPostDto,
+    @UploadedFiles() images: Express.Multer.File[],
+  ) {
+    checkImagesTypeToThrowError(images);
+
+    const { createdImageObjects, imageNames } =
+      createImageObjectsToSave(images);
+
+    storeFiles(createdImageObjects);
+
+    const modifiedPost = await this.postUnstableService.modifyPost({
+      endUserId: req.user._id,
+      modifyPostDto: modifyPostDto,
+      images: imageNames,
+    });
+
+    return modifiedPost;
+  }
+
+  @Delete('/:postId')
+  @DeletePostsSwaggerAPIDecorators()
+  async deletePost(@Req() req: RequestUser, @Param() findPostDto: FindPostDto) {
+    const post = await this.postUnstableService.deletePost({
+      endUserId: req.user._id,
+      postId: findPostDto.postId,
+    });
     return post;
   }
 }

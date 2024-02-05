@@ -6,7 +6,7 @@ import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/convertToM
 @Injectable()
 export class AuthorizationMiddleware implements NestMiddleware {
   use(req: RequestUser, _res: any, next: (error?: any) => void) {
-    if (req.user._id) {
+    if (req.user && req.user._id) {
       req.user._id = checkToConvertToMongoIdOrThrowError<EndUserId>({
         id: req.user._id,
         returnError: true,
