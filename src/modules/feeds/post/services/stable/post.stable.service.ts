@@ -52,8 +52,8 @@ export class PostServiceStable {
       ...queryAggregation,
       {
         $limit: queryLimitSkip.limit,
-        $skip: queryLimitSkip.skip,
       },
+      { $skip: queryLimitSkip.skip },
       ...this.lookupUserAggregation,
     ]);
     return postsAggregation;

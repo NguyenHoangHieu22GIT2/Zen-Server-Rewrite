@@ -31,7 +31,7 @@ class BasePost {
 export class Post extends BasePost {
   @Prop({
     required: false,
-    type: String,
+    type: [String],
     default: [],
   })
   images: string[];
