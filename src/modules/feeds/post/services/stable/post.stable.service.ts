@@ -37,7 +37,7 @@ export class PostServiceStable {
       },
     },
     {
-      $unset: ['$userFull'],
+      $unset: ['userFull'],
     },
   ];
 
