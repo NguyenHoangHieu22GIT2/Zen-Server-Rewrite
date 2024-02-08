@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LikeController } from './like.controller';
-import { LikeService } from './services/unstable/like.unstable.service';
+import { LikeServiceUnstable } from './services/unstable/like.unstable.service';
 
 describe('LikeController', () => {
   let controller: LikeController;
@@ -8,7 +8,7 @@ describe('LikeController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [LikeController],
-      providers: [LikeService],
+      providers: [LikeServiceUnstable],
     }).compile();
 
     controller = module.get<LikeController>(LikeController);
