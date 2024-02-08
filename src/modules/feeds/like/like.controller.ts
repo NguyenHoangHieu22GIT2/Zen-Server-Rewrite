@@ -17,6 +17,8 @@ import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
 import { GetNumberOfLikesSwaggerAPIDecorators } from 'src/documents/swagger-api/likes/get-number-of-likes.api';
 import { GetLikesSwaggerAPIDecorators } from 'src/documents/swagger-api/likes/get-likes.api';
+import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
+import { Like } from './entities/like.entity';
 
 @Controller('like')
 @ApiTags('Like')
@@ -26,7 +28,10 @@ export class LikeController {
 
   @Post()
   @ToggleLikeSwaggerAPIDecorators()
-  async toggleLike(@Req() req: RequestUser, @Body() findPostDto: FindPostDto) {
+  async toggleLike(
+    @Req() req: RequestUser,
+    @Body() findPostDto: FindPostDto,
+  ): Promise<DocumentMongodbType<Like>> {
     return this.likeServiceUnstable.toggleLike({
       endUserId: req.user._id,
       postId: findPostDto.postId,
