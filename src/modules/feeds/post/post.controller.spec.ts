@@ -20,6 +20,7 @@ describe('PostController', () => {
   let postToTest: Post;
 
   beforeAll(async () => {
+    //TODO: APPLY UTIL FUNCTION WHEN LIKE BRANCH MERGE
     mongod = await connect('mongodb://127.0.0.1:27017/', {
       dbName: 'Zen-Test',
     });
