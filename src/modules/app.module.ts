@@ -43,7 +43,6 @@ import { AuthorizationMiddleware } from 'src/cores/middlewares/Authorization.mid
         },
       },
     }),
-
     //Modules
     EnduserModule,
     AdminModule,
