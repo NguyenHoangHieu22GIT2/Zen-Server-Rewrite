@@ -11,8 +11,8 @@ export function ChangeAvatarSwaggerAPIDecorators(): MethodDecorator {
       description: 'No User Found',
     }),
     ApiResponse({
-        status: 401,
-        description: 'No User Found',
-      }),
+      status: 401,
+      description: 'No User Found',
+    }),
   );
 }
