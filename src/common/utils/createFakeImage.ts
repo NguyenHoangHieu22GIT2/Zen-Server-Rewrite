@@ -7,7 +7,7 @@ export function createFakeImage(): Express.Multer.File {
     join(__dirname, '../../../assets/image1.jpg'),
   );
   const image: Partial<Express.Multer.File> = {
-    originalname: faker.person.firstName('male'),
+    originalname: faker.person.firstName('male') + '.jpeg',
     mimetype: 'image/jpeg',
     buffer: fileBuffer,
   };

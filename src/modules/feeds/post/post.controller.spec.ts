@@ -10,6 +10,7 @@ import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
 import { createFakeImage } from 'src/common/utils/createFakeImage';
 import { PostRedisStableService } from './services/stable/post.redis.stable.service';
+import { removeFile } from 'src/common/utils';
 
 describe('PostController', () => {
   let controller: PostController;
@@ -20,6 +21,7 @@ describe('PostController', () => {
   let postToTest: Post;
 
   beforeAll(async () => {
+    //TODO: APPLY UTIL FUNCTION WHEN LIKE BRANCH MERGE
     mongod = await connect('mongodb://127.0.0.1:27017/', {
       dbName: 'Zen-Test',
     });
@@ -71,6 +73,8 @@ describe('PostController', () => {
       [image],
     );
     postToTest = post;
+    removeFile(post.images[0]);
+
     expect(post).toBeDefined();
   });
 
@@ -111,13 +115,24 @@ describe('PostController', () => {
       },
       [image],
     );
+    removeFile(post.images[0]);
     expect(post.title).toEqual(title);
   });
 
   it('should delete a post', async () => {
-    const post = await controller.deletePost(fakeRequestUser as any, {
-      postId: postToTest._id,
+    const image = createFakeImage();
+    const post = await controller.createPost(
+      {
+        title: faker.lorem.sentence(100),
+        body: faker.lorem.paragraph(15),
+      },
+      fakeRequestUser as any,
+      [image],
+    );
+    const deletedPost = await controller.deletePost(fakeRequestUser as any, {
+      postId: post._id,
     });
-    expect(post).toBeDefined();
+    removeFile(post.images[0]);
+    expect(deletedPost).toBeDefined();
   });
 });

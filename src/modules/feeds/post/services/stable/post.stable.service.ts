@@ -37,7 +37,7 @@ export class PostServiceStable {
       },
     },
     {
-      $unset: ['$userFull'],
+      $unset: ['userFull'],
     },
   ];
 
@@ -109,15 +109,6 @@ export class PostServiceStable {
       userActionId: endUserId,
       userHasPostId: post.endUserId,
     });
-
-    //DEPRECATED: BECAUSE WE HAVE TO FIND AGAIN, THE
-    // NEXT CODES IS FASTER BECAUSE WE JUST NEED TO SAVE
-
-    // Do this so we don't need to keep changing if we add some new properties
-    // const modifiedPost = await this.postModel.findByIdAndUpdate(
-    //   modifyPostDto.postId,
-    //   modifyPostDto,
-    // );
 
     const modifiedPost = Object.assign(post, { ...modifyPostDto, images });
     return modifiedPost.save();
