@@ -44,4 +44,11 @@ describe('LikeController', () => {
     });
     expect(like).toBeDefined();
   });
+
+  it('should get the numbers of like', async () => {
+    const likeNumber = await controller.getNumberOfLikes({
+      postId: postToTest._id,
+    });
+    expect(likeNumber).toBeGreaterThanOrEqual(0);
+  });
 });

@@ -38,7 +38,9 @@ export class LikeController {
     });
   }
 
-  // THIS IS FOR TESTING, NO USE IN PRODUCTION
+  /**
+   * THIS IS FOR TESTING, NO USE IN PRODUCTION
+   * */
   @Get('number/:postId')
   @GetNumberOfLikesSwaggerAPIDecorators()
   async getNumberOfLikes(@Param() findPostDto: FindPostDto) {
