@@ -11,35 +11,13 @@ import { ModifyPostDto } from '../../../post/dto/modify-post.dto';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
 import { checkAuthorized } from 'src/common/utils/checkAuthorized';
+import { LookUpEndUserAggregate } from 'src/common/constants/lookup-enduser.aggregate';
 
 @Injectable()
 export class PostServiceStable {
   constructor(
     @InjectModel(Post.name) private readonly postModel: Model<Post>,
   ) {}
-
-  private lookupUserAggregation: PipelineStage[] = [
-    {
-      $lookup: {
-        from: nameOfCollections.EndUser,
-        localField: 'endUserId',
-        foreignField: '_id',
-        as: 'userFull',
-      },
-    },
-    {
-      $set: {
-        user: {
-          _id: '$userFull._id',
-          username: '$userFull.username',
-          avatar: '$userFull.avatar',
-        },
-      },
-    },
-    {
-      $unset: ['userFull'],
-    },
-  ];
 
   public async getPostsAggregation({
     queryLimitSkip,
@@ -54,7 +32,7 @@ export class PostServiceStable {
         $limit: queryLimitSkip.limit,
       },
       { $skip: queryLimitSkip.skip },
-      ...this.lookupUserAggregation,
+      ...LookUpEndUserAggregate,
     ]);
     return postsAggregation;
   }
@@ -64,7 +42,7 @@ export class PostServiceStable {
       {
         $match: { _id: findPostDto.postId },
       },
-      ...this.lookupUserAggregation,
+      ...LookUpEndUserAggregate,
     ]);
     const postAggregation = postsAggregation[0];
     return postAggregation;

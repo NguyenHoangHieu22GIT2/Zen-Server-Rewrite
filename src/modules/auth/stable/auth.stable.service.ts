@@ -18,7 +18,7 @@ export class AuthServiceStable {
 
   public async create(
     accountInfo: Partial<EndUser>,
-  ): Promise<DocumentMongodbType<EndUser>>   {
+  ): Promise<DocumentMongodbType<EndUser>> {
     return this.EndUserModel.create(accountInfo);
   }
 

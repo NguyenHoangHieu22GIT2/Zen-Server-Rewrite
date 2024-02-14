@@ -1,10 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsOptional, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { CommentId, PostId } from 'src/common/types/utilTypes/Brand';
 import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils';
 
-export class CreateCommentDto {
+export class ModifyCommentDto {
+  @ApiProperty({
+    type: String,
+    required: true,
+    name: 'Comment Id',
+  })
+  @IsString()
+  @Transform((opts) => {
+    const commentId = checkToConvertToMongoIdOrThrowError<CommentId>({
+      id: opts.value,
+      returnError: true,
+    });
+    return commentId;
+  })
+  commentId: CommentId;
+
   @ApiProperty({
     type: String,
     required: true,
@@ -26,20 +41,4 @@ export class CreateCommentDto {
     return postId;
   })
   postId: PostId;
-
-  @ApiProperty({
-    type: String,
-    required: false,
-    name: 'Comment Id',
-  })
-  @IsString()
-  @IsOptional()
-  @Transform((opts) => {
-    const commentId = checkToConvertToMongoIdOrThrowError<CommentId>({
-      id: opts.value,
-      returnError: false,
-    });
-    return commentId;
-  })
-  parentCommentId: CommentId;
 }
