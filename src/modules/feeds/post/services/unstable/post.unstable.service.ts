@@ -52,9 +52,21 @@ export class PostServiceUnstable {
     return tryCatchModified(async () => {
       const posts = await this.postServiceStable.getPostsAggregation({
         queryLimitSkip: getUserPostsDto,
-        queryAggregation: [{ $match: { _id: endUserId } }],
+        queryAggregation: [{ $match: { endUserId } }],
       });
       return posts;
+    });
+  }
+
+  public async getPostsAggregation(
+    queryLimitSkip: QueryLimitSkip,
+    pipelineStages: PipelineStage[],
+  ) {
+    return tryCatchModified(async () => {
+      return this.postServiceStable.getPostsAggregation({
+        queryAggregation: pipelineStages,
+        queryLimitSkip,
+      });
     });
   }
 
