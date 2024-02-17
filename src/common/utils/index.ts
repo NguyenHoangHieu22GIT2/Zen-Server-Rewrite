@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-export * from './checkAuthorized';
+export * from './CompareId';
 export * from './checkImageTypeToThrowError';
 export * from './checkImagesTypeToThrowError';
 export * from './ExecuteIfRedisAvailable';
