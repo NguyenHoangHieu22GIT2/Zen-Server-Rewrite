@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/post.aggregation';
+import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/feeds';
 import { ExecuteIfRedisAvailable } from 'src/common/utils';
 import { PostRedis } from 'src/cores/redis/post.redis';
 

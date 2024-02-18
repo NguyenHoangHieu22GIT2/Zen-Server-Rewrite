@@ -2,7 +2,7 @@ import { RedisClient } from './client.redis';
 import { likesKey, postKey, viewsKey } from '../redisKeys/post.redis.keys';
 import { Types } from 'mongoose';
 import { ConvertObjectToHash } from 'src/common/utils/convertObjectToHash';
-import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/post.aggregation';
+import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/feeds';
 
 export class PostRedis {
   //HASH
