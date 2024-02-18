@@ -1,1 +1,1 @@
-export * from './ObjectToHash.redis.type';
+export type * from './ObjectToHash.redis.type';

@@ -1,3 +1,3 @@
-export * from './DocumentMongodbType';
-export * from './aggregationTypes/community';
-export * from './aggregationTypes/feeds';
+export type * from './DocumentMongodbType';
+export type * from './aggregationTypes/community';
+export type * from './aggregationTypes/feeds';

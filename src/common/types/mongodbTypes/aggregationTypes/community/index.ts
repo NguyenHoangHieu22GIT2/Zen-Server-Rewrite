@@ -1,1 +1,1 @@
-export * from './community';
+export type * from './community';

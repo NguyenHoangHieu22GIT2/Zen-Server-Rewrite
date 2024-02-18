@@ -1,1 +1,1 @@
-export * from './user-minimal.type';
+export type * from './user-minimal.type';
