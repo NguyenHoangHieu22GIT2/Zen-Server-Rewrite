@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
-import { Like } from '../../entities/like.entity';
+import { Model, PipelineStage } from 'mongoose';
+import { Like } from '../../entities/';
 import { InjectModel } from '@nestjs/mongoose';
 import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
@@ -12,17 +12,38 @@ export class LikeServiceStable {
     @InjectModel(Like.name) private readonly likeModel: Model<Like>,
   ) {}
 
+  async createLike({
+    postId,
+    endUserId,
+  }: {
+    postId: PostId;
+    endUserId: EndUserId;
+  }) {
+    return this.likeModel.create({ endUserId, postId });
+  }
+
+  async findLike({
+    postId,
+    endUserId,
+  }: {
+    postId: PostId;
+    endUserId: EndUserId;
+  }) {
+    return this.likeModel.findOne({ postId, endUserId });
+  }
+
   async getNumberOfLikes(postId: PostId): Promise<number> {
-    const likesNumber = await this.likeModel.countDocuments({ postId });
-    return likesNumber;
+    return this.likeModel.countDocuments({ postId });
   }
 
   async getLikes({
     postId,
     queryLimitSkip,
+    pipelineStages,
   }: {
     postId: PostId;
     queryLimitSkip: QueryLimitSkip;
+    pipelineStages?: PipelineStage[];
   }): Promise<DocumentMongodbType<Like>[]> {
     const likes = await this.likeModel.aggregate([
       { $match: { postId } },
@@ -32,25 +53,8 @@ export class LikeServiceStable {
       {
         $limit: queryLimitSkip.limit,
       },
+      ...pipelineStages,
     ]);
     return likes;
-  }
-
-  async toggleLike({
-    postId,
-    endUserId,
-  }: {
-    postId: PostId;
-    endUserId: EndUserId;
-  }): Promise<DocumentMongodbType<Like>> {
-    let isLiked = await this.likeModel.findOne({ endUserId, postId });
-
-    if (!isLiked) {
-      isLiked = await this.likeModel.create({ endUserId, postId });
-    } else {
-      await isLiked.deleteOne();
-    }
-
-    return isLiked;
   }
 }

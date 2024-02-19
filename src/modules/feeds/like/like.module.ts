@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
-import { LikeServiceUnstable } from './services/unstable/like.unstable.service';
-import { LikeServiceStable } from './services/stable/like.stable.service';
-import { LikeController } from './like.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Like, LikeSchema } from './entities/like.entity';
+
+import {
+  LikeServiceUnstable,
+  LikeServiceStable,
+  LikeController,
+  Like,
+  LikeSchema,
+} from './';
 
 @Module({
   controllers: [LikeController],
