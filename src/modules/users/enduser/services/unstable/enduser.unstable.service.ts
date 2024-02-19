@@ -3,10 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { EndUser } from '../../entities/enduser.entity';
 import { Model } from 'mongoose';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
-import { checkImageTypeToThrowError } from 'src/common/utils/index';
+import { checkImageTypeToThrowError } from 'src/common/utils/checkImageTypeToThrowError';
 import { createImageName } from 'src/common/utils/createImageName';
 import { storeFile } from 'src/common/utils/storeFile';
-import { removeFile } from 'src/common/utils/index';
+import { removeFile } from 'src/common/utils/removeFile';
 import { EnduserServiceStable } from '../stable/enduser.stable.service';
 import { ChangeInformationDto } from '../../dto/change-information.dto';
 @Injectable()

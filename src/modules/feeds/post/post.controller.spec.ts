@@ -6,7 +6,7 @@ import { Post, PostSchema } from './entities/post.entity';
 import { PostServiceStable } from './services/stable/post.stable.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { faker } from '@faker-js/faker';
-import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
+import { EndUser } from 'src/modules/users/enduser/';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
 import { createFakeImage } from 'src/common/utils/createFakeImage';
 import { PostRedisStableService } from './services/stable/post.redis.stable.service';

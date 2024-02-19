@@ -12,6 +12,8 @@ export type FriendId = Brand<Types.ObjectId, 'FriendId'>;
 
 export type PostId = Brand<Types.ObjectId, 'PostId'>;
 
+export type GroupPostId = Brand<Types.ObjectId, 'GroupPostId'>;
+
 export type GroupId = Brand<Types.ObjectId, 'GroupId'>;
 
 export type CommentId = Brand<Types.ObjectId, 'CommentId'>;
