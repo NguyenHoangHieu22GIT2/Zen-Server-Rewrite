@@ -10,15 +10,17 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { CommentServiceUnstable } from './services/unstable/comment.unstable.service';
-import { GetCommentsDto } from './dto/get-comments.dto';
-import { FindCommentDto } from './dto/find-comment.dto';
-import { TcommentsLookUpEndUser } from './types/comment.type';
+import { CommentServiceUnstable } from './services/unstable/';
+import {
+  ModifyCommentDto,
+  GetCommentsDto,
+  FindCommentDto,
+  CreateCommentDto,
+} from './dto/';
+import { TcommentsLookUpEndUser } from './types/';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
-import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
-import { ModifyCommentDto } from './dto/modify-comment.dto';
+import { LoggedInGuard } from 'src/modules/auth/passport/';
+import { RequestUser } from 'src/common/types/utilTypes/';
 
 @ApiTags('Comment')
 @Controller('comment')
