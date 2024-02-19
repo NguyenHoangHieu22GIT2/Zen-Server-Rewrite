@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { RedisClient } from 'src/cores/redis/';
+import { RedisClient } from 'src/cores/redis/client.redis';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import RedisStore from 'connect-redis';

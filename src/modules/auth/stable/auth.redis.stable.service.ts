@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { ExecuteIfRedisAvailable } from 'src/common/utils';
+import { ExecuteIfRedisAvailable } from 'src/common/utils/index';
 import { UserRedis } from 'src/cores/redis/user.redis';
 import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
 
