@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { EndUserId } from 'src/common/types/utilTypes/Brand';
-import { BaseUser } from 'src/cores/base-user/entity/base-user.entity';
+import { EndUserId } from 'src/common/types/utilTypes/';
+import { BaseUser } from 'src/cores/base-user/entity/';
 
 class EndUserDeprecated_one extends BaseUser {
   _id: EndUserId;

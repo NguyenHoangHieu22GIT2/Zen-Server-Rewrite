@@ -1,19 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EnduserController } from './enduser.controller';
-import { EnduserServiceUnstable } from './services/unstable/enduser.unstable.service';
+import { EnduserController } from './';
+import { EnduserServiceUnstable } from './services/unstable/';
 import mongoose from 'mongoose';
-import { EndUser, EndUserSchema } from './entities/enduser.entity';
-
+import { EndUser, EndUserSchema } from './';
 import { connect } from 'mongoose';
 import { MongooseModule } from '@nestjs/mongoose';
-import { EnduserServiceStable } from './services/stable/enduser.stable.service';
-import { EndUserId } from 'src/common/types/utilTypes/Brand';
-import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/convertToMongodbId';
-import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
-import { ChangeInformationDto } from './dto/change-information.dto';
+import { EnduserServiceStable } from './services/stable/';
+import {
+  checkToConvertToMongoIdOrThrowError,
+  createFakeImage,
+} from 'src/common/utils/';
+import { RequestUser, EndUserId } from 'src/common/types/utilTypes/';
+import { ChangeInformationDto } from './dto/';
 
 import { faker } from '@faker-js/faker';
-import { createFakeImage } from 'src/common/utils/createFakeImage';
 describe('EnduserController', () => {
   let controller: EnduserController;
   let mongod: typeof mongoose;
