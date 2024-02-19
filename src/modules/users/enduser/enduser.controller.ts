@@ -10,18 +10,17 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { EnduserServiceStable } from './services/stable/enduser.stable.service';
-import { SerializeDecorator } from 'src/cores/interceptors/Serialize.interceptor';
-import { EndUserSerializeDto } from './dto/enduser.serialize.dto';
-import { FindByIdEndUserDto } from './dto/find-one.dto';
+import { EnduserServiceStable } from './services/stable/';
+import { SerializeDecorator } from 'src/cores/interceptors/';
+import { EndUserSerializeDto, FindByIdEndUserDto } from './dto/';
 import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
-import { FindOneEndUserSwaggerAPIDecorators } from 'src/documents/swagger-api/endusers/find-one.api';
+import { FindOneEndUserSwaggerAPIDecorators } from 'src/documents/swagger-api/endusers/';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ChangeInformationDto } from './dto/change-information.dto';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
-import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/convertToMongodbId';
-import { EndUserId } from 'src/common/types/utilTypes/Brand';
-import { EnduserServiceUnstable } from './services/unstable/enduser.unstable.service';
+import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/';
+import { EndUserId } from 'src/common/types/utilTypes/';
+import { EnduserServiceUnstable } from './services/unstable/';
 
 @ApiTags('End User')
 @Controller('endusers')

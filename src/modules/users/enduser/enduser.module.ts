@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { EnduserServiceUnstable } from './services/unstable/enduser.unstable.service';
-import { EnduserController } from './enduser.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { EndUser, EndUserSchema } from './entities/enduser.entity';
-import { EnduserServiceStable } from './services/stable/enduser.stable.service';
+import {
+  EndUser,
+  EndUserSchema,
+  EnduserServiceStable,
+  EnduserController,
+  EnduserServiceUnstable,
+} from './';
 
 @Module({
   controllers: [EnduserController],

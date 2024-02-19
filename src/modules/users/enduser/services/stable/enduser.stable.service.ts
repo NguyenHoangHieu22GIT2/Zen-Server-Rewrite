@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { EndUser } from '../../entities/enduser.entity';
+import { EndUser } from '../../entities/';
 import { Model } from 'mongoose';
-import { EndUserId } from 'src/common/types/utilTypes/Brand';
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
+import { EndUserId } from 'src/common/types/utilTypes/';
+import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
 @Injectable()
 export class EnduserServiceStable {
   constructor(
