@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, Types } from 'mongoose';
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
-import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
+import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
+import { EndUser } from 'src/modules/users/enduser/';
 import * as bcrypt from 'bcryptjs';
-import { LoginEndUserDto } from '../dto/login-end-user.dto';
+import { LoginEndUserDto } from '../dto/';
 
 @Injectable()
 export class AuthServiceStable {
@@ -67,7 +67,7 @@ export class AuthServiceStable {
   public async checkLoginAccount(
     loginEndUserDto: LoginEndUserDto,
   ): Promise<EndUser | DocumentMongodbType<EndUser>> {
-    let existedAccount = await this.checkAccountIfNotExistThenThrowError({
+    const existedAccount = await this.checkAccountIfNotExistThenThrowError({
       filterQuery: { email: loginEndUserDto.email },
       message: 'Invalid Email!',
     });

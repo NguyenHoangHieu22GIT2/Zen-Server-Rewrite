@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { GroupPost } from '../../entities/group-post.entity';
 import { Model, PipelineStage } from 'mongoose';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
-import { GroupPostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/community/community';
+import { GroupPostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/community';
 import { LookUpEndUserAggregate } from 'src/common/constants/lookup-enduser.aggregate';
 import { FindGroupPostDto } from '../../dto/find-group-post.dto';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';

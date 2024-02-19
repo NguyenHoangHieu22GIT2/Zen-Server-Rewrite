@@ -9,7 +9,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { userDeserialize } from '../redis-deserialize/user.deserialize';
 import { ObjectToHashType } from 'src/common/types/redisTypes/ObjectToHash.redis.type';
-import { ConvertObjectToHash } from 'src/common/utils';
+import { ConvertObjectToHash } from 'src/common/utils/index';
 
 @Injectable()
 export class UserRedis {
