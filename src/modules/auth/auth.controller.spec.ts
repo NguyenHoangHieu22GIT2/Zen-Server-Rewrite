@@ -1,19 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
-import { AuthServiceStable } from './stable/auth.stable.service';
-import { AuthServiceUnstable } from './unstable/auth.unstable.service';
-import { connect } from 'mongoose';
 import {
-  EndUser,
-  EndUserSchema,
-} from '../users/enduser/entities/enduser.entity';
+  AuthServiceUnstable,
+  AuthServiceStable,
+  AuthController,
+  AuthRedisStableService,
+} from './';
+import { connect } from 'mongoose';
+import { EndUser, EndUserSchema } from 'src/modules/users/enduser/';
 import { MongooseModule } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { v4 } from 'uuid';
-import { AuthRedisStableService } from './stable/auth.redis.stable.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
+  // Did get used down there but doesn't get recognized by eslint :(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let mongod: typeof mongoose;
   let id: string;
   let userToTest: Partial<EndUser>;
