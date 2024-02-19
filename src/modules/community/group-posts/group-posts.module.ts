@@ -1,12 +1,16 @@
 import { Module } from '@nestjs/common';
-import { GroupPostsService } from './group-posts.service';
-import { GroupPostsController } from './group-posts.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { GroupPost, GroupPostSchema } from './entities/group-post.entity';
+import {
+  GroupPost,
+  GroupPostSchema,
+  GroupPostsServiceUnstable,
+  GroupPostServiceStable,
+  GroupPostsController,
+} from './';
 
 @Module({
   controllers: [GroupPostsController],
-  providers: [GroupPostsService],
+  providers: [GroupPostsServiceUnstable, GroupPostServiceStable],
   imports: [
     MongooseModule.forFeature([
       { name: GroupPost.name, schema: GroupPostSchema },

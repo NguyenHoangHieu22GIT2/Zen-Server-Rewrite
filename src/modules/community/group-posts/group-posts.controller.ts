@@ -1,34 +1,32 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { GroupPostsService } from './group-posts.service';
-import { CreateGroupPostDto } from './dto/create-group-post.dto';
-import { UpdateGroupPostDto } from './dto/update-group-post.dto';
+import { Controller, Get, Req, UseGuards, Query } from '@nestjs/common';
+import { RequestUser } from 'src/common/types/utilTypes/';
+import { LoggedInGuard } from 'src/modules/auth/passport/';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('group-posts')
+import { GetPostsSwaggerAPIDecorators } from 'src/documents/swagger-api/posts/get-posts';
+import { GroupPostsServiceUnstable } from './services/';
+import { GetUserGroupPostsDto } from './dto/';
+
+@ApiTags('Post')
+@Controller('posts')
+@UseGuards(LoggedInGuard)
 export class GroupPostsController {
-  constructor(private readonly groupPostsService: GroupPostsService) {}
+  constructor(
+    private readonly postUnstableService: GroupPostsServiceUnstable,
+  ) {}
 
-  @Post()
-  create(@Body() createGroupPostDto: CreateGroupPostDto) {
-    return this.groupPostsService.create(createGroupPostDto);
-  }
+  @Get('/user')
+  @GetPostsSwaggerAPIDecorators()
+  async getUserPosts(
+    @Req() req: RequestUser,
+    @Query() getUserGroupPostsDto: GetUserGroupPostsDto,
+  ) {
+    const posts = await this.postUnstableService.getUserGroupPosts({
+      endUserId: req.user._id,
+      getUserGroupPostsDto,
+    });
 
-  @Get()
-  findAll() {
-    return this.groupPostsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.groupPostsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGroupPostDto: UpdateGroupPostDto) {
-    return this.groupPostsService.update(+id, updateGroupPostDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.groupPostsService.remove(+id);
+    // await this.postRedisStableService.savePosts(posts);
+    return posts;
   }
 }
