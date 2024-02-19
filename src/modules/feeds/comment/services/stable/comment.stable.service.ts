@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Comment } from '../../entities/comment.entity';
+import { Comment } from '../../entities/';
 import { Model, PipelineStage } from 'mongoose';
-import { GetCommentsDto } from '../../dto/get-comments.dto';
-import { FindCommentDto } from '../../dto/find-comment.dto';
-import { CreateCommentDto } from '../../dto/create-comment.dto';
-import { CommentId, EndUserId } from 'src/common/types/utilTypes/Brand';
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
+import { GetCommentsDto, FindCommentDto, CreateCommentDto } from '../../dto/';
+import { CommentId, EndUserId } from 'src/common/types/utilTypes/';
+import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
 
 @Injectable()
 export class CommentServiceStable {
