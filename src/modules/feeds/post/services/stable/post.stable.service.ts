@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage } from 'mongoose';
 import { Post } from '../../../post/entities/post.entity';
 import { FindPostDto } from '../../../post/dto/find-post.dto';
-import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/post.aggregation';
+import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/feeds';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';

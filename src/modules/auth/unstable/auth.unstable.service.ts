@@ -4,14 +4,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { RegisterEndUserDto } from '../dto/register-end-user.dto';
-import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
-
-import { AuthServiceStable } from '../stable/auth.stable.service';
-import { LoginEndUserDto } from '../dto/login-end-user.dto';
+import { LoginEndUserDto, RegisterEndUserDto } from '../dto/';
+import { EndUser } from 'src/modules/users/enduser/';
+import { AuthServiceStable } from '../stable/';
 import { v4 } from 'uuid';
-import { checkingToConvertToObjectFromDocument } from 'src/common/utils/convertToObjectMongodb';
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
+import { checkingToConvertToObjectFromDocument } from 'src/common/utils/';
+import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
 
 @Injectable()
 export class AuthServiceUnstable {

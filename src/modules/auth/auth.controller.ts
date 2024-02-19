@@ -1,22 +1,24 @@
 import { Controller, Post, Body, Patch, UseGuards, Req } from '@nestjs/common';
-import { AuthServiceUnstable } from './unstable/auth.unstable.service';
-import { RegisterEndUserDto } from './dto/register-end-user.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { RegisterAccountSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/registerAccount.api';
-import { LoginAccountSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/loginAccount.api';
-import { LocalGuard } from './passport/local.guard';
-import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { ForgotPasswordSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/forgot-password.api';
-import { ActivateAccountDto } from './dto/activate-account.dto';
-import { ActivateAccountSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/activate-account.api';
-import { ChangeForgottonPasswordDto } from './dto/change-forgotton-password.dto';
-import { SerializeDecorator } from 'src/cores/interceptors/Serialize.interceptor';
-import { EndUserSerializeDto } from '../users/enduser/dto/enduser.serialize.dto';
 import { Request } from 'express';
-import { ChangeForgottonPasswordSwaggerAPIDecorators } from 'src/documents/swagger-api/auth/change-forgotten-password.api';
-
-import { AuthRedisStableService } from './stable/auth.redis.stable.service';
-import { AuthServiceStable } from './stable/auth.stable.service';
+import { SerializeDecorator } from 'src/cores/interceptors/';
+import { EndUserSerializeDto } from 'src/modules/users/enduser/';
+import { AuthServiceUnstable } from './unstable/';
+import { AuthRedisStableService, AuthServiceStable } from './stable/';
+import {
+  RegisterAccountSwaggerAPIDecorators,
+  ActivateAccountSwaggerAPIDecorators,
+  LoginAccountSwaggerAPIDecorators,
+  ForgotPasswordSwaggerAPIDecorators,
+  ChangeForgottonPasswordSwaggerAPIDecorators,
+} from 'src/documents/swagger-api/auth/';
+import {
+  RegisterEndUserDto,
+  ActivateAccountDto,
+  ForgotPasswordDto,
+  ChangeForgottonPasswordDto,
+} from './dto/';
+import { LocalGuard } from './passport/';
 
 @ApiTags('Authentication/Authorization')
 @SerializeDecorator(EndUserSerializeDto)

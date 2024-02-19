@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { GroupPostsController } from './group-posts.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { GroupPost, GroupPostSchema } from './entities/group-post.entity';
-import { GroupPostsServiceUnstable } from './services/unstable/group-posts.unstable.service';
-import { GroupPostServiceStable } from './services/stable/group-posts.stable.service';
+import {
+  GroupPost,
+  GroupPostSchema,
+  GroupPostsServiceUnstable,
+  GroupPostServiceStable,
+  GroupPostsController,
+} from './';
 
 @Module({
   controllers: [GroupPostsController],

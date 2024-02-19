@@ -1,11 +1,11 @@
 import { Controller, Get, Req, UseGuards, Query } from '@nestjs/common';
-import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
-import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
+import { RequestUser } from 'src/common/types/utilTypes/';
+import { LoggedInGuard } from 'src/modules/auth/passport/';
 import { ApiTags } from '@nestjs/swagger';
 
 import { GetPostsSwaggerAPIDecorators } from 'src/documents/swagger-api/posts/get-posts';
-import { GroupPostsServiceUnstable } from './services/unstable/group-posts.unstable.service';
-import { GetUserGroupPostsDto } from './dto/get-user-group-posts.dto';
+import { GroupPostsServiceUnstable } from './services/';
+import { GetUserGroupPostsDto } from './dto/';
 
 @ApiTags('Post')
 @Controller('posts')
