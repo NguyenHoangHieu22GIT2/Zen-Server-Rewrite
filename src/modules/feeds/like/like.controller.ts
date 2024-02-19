@@ -8,17 +8,20 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { LikeServiceUnstable } from './services/unstable/like.unstable.service';
-import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
-import { FindPostDto } from '../post/dto/find-post.dto';
-import { ToggleLikeSwaggerAPIDecorators } from 'src/documents/swagger-api/likes/toggle-like.api';
 import { ApiTags } from '@nestjs/swagger';
-import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
-import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
-import { GetNumberOfLikesSwaggerAPIDecorators } from 'src/documents/swagger-api/likes/get-number-of-likes.api';
-import { GetLikesSwaggerAPIDecorators } from 'src/documents/swagger-api/likes/get-likes.api';
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
-import { Like } from './entities/like.entity';
+
+import { LikeServiceUnstable } from './services/unstable/';
+import { RequestUser } from 'src/common/types/utilTypes/';
+import { FindPostDto } from '../post/dto/';
+import {
+  ToggleLikeSwaggerAPIDecorators,
+  GetNumberOfLikesSwaggerAPIDecorators,
+  GetLikesSwaggerAPIDecorators,
+} from 'src/documents/swagger-api/likes/';
+import { LoggedInGuard } from 'src/modules/auth/passport/';
+import { QueryLimitSkip } from 'src/cores/global-dtos/';
+import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
+import { Like } from './entities/';
 
 @Controller('like')
 @ApiTags('Like')

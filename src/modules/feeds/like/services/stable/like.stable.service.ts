@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Model, PipelineStage } from 'mongoose';
-import { Like } from '../../entities/like.entity';
+import { Like } from '../../entities/';
 import { InjectModel } from '@nestjs/mongoose';
 import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
