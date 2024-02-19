@@ -13,30 +13,37 @@ import {
   Delete,
   NotFoundException,
 } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
-import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
-import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
+import { RequestUser } from 'src/common/types/utilTypes/';
+import { LoggedInGuard } from 'src/modules/auth/';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
+import { QueryLimitSkip } from 'src/cores/global-dtos/';
 import {
   checkImagesTypeToThrowError,
   storeFiles,
   createImageObjectsToSave,
 } from 'src/common/utils/index';
-import { PostRedisStableService } from './services/stable/post.redis.stable.service';
-import { PostServiceUnstable } from './services/unstable/post.unstable.service';
-import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/feeds';
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
-import { Post as PostEntity } from './entities/post.entity';
-import { FindPostDto } from './dto/find-post.dto';
-import { GetUserPostsDto } from './dto/get-user-posts.dto';
-import { ModifyPostDto } from './dto/modify-post.dto';
-import { CreatePostSwaggerAPIDecorators } from 'src/documents/swagger-api/posts/create-post.api';
-import { GetPostsSwaggerAPIDecorators } from 'src/documents/swagger-api/posts/get-posts';
-import { GetPostSwaggerAPIDecorators } from 'src/documents/swagger-api/posts/get-post';
-import { ModifyPostsSwaggerAPIDecorators } from 'src/documents/swagger-api/posts/modify-post';
-import { DeletePostsSwaggerAPIDecorators } from 'src/documents/swagger-api/posts/delete-post';
+import { PostRedisStableService } from './services/stable/';
+import { PostServiceUnstable } from './services/unstable/';
+import {
+  DocumentMongodbType,
+  PostAggregation,
+} from 'src/common/types/mongodbTypes/';
+import { Post as PostEntity } from './entities/';
+import {
+  FindPostDto,
+  GetUserPostsDto,
+  ModifyPostDto,
+  CreatePostDto,
+} from './dto/';
+
+import {
+  CreatePostSwaggerAPIDecorators,
+  GetPostsSwaggerAPIDecorators,
+  GetPostSwaggerAPIDecorators,
+  ModifyPostsSwaggerAPIDecorators,
+  DeletePostsSwaggerAPIDecorators,
+} from 'src/documents/swagger-api/posts/';
 
 @ApiTags('Post')
 @Controller('posts')
