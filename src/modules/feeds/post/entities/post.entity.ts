@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
-import { nameOfCollections } from 'src/common/constants/name-of-collections';
-import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
+import { nameOfCollections } from 'src/common/constants/';
+import { EndUserId, PostId } from 'src/common/types/utilTypes/';
 
 class BasePost {
   _id: PostId;
