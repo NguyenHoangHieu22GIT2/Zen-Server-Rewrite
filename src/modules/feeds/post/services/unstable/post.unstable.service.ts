@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PostServiceStable } from '../stable/post.stable.service';
 
 import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
@@ -8,6 +8,8 @@ import { CreatePostDto } from '../../dto/create-post.dto';
 import { FindPostDto } from '../../dto/find-post.dto';
 import { ModifyPostDto } from '../../dto/modify-post.dto';
 import { GetUserPostsDto } from '../../dto/get-user-posts.dto';
+import { tryCatchModified } from 'src/common/utils/tryCatchModified';
+import { CompareId } from 'src/common/utils/index';
 
 @Injectable()
 export class PostServiceUnstable {
@@ -22,26 +24,22 @@ export class PostServiceUnstable {
     endUserId: EndUserId;
     imageNames: string[];
   }) {
-    try {
+    return tryCatchModified(async () => {
       const createdPost = await this.postServiceStable.createPost({
         createPostDto,
         endUserId,
         imageNames,
       });
       return createdPost;
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    });
   }
 
   public async findPost(findPostDto: FindPostDto) {
-    try {
+    return tryCatchModified(async () => {
       const post =
         await this.postServiceStable.findPostAggregation(findPostDto);
       return post;
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    });
   }
 
   public async getUserPosts({
@@ -51,15 +49,25 @@ export class PostServiceUnstable {
     endUserId: EndUserId;
     getUserPostsDto: GetUserPostsDto;
   }) {
-    try {
+    return tryCatchModified(async () => {
       const posts = await this.postServiceStable.getPostsAggregation({
         queryLimitSkip: getUserPostsDto,
-        queryAggregation: [{ $match: { _id: endUserId } }],
+        queryAggregation: [{ $match: { endUserId } }],
       });
       return posts;
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    });
+  }
+
+  public async getPostsAggregation(
+    queryLimitSkip: QueryLimitSkip,
+    pipelineStages: PipelineStage[],
+  ) {
+    return tryCatchModified(async () => {
+      return this.postServiceStable.getPostsAggregation({
+        queryAggregation: pipelineStages,
+        queryLimitSkip,
+      });
+    });
   }
 
   public async getRecommendedPosts({
@@ -71,7 +79,7 @@ export class PostServiceUnstable {
     queryLimitSkip: QueryLimitSkip;
     endUserId: EndUserId;
   }) {
-    try {
+    return tryCatchModified(async () => {
       const queryAggregation: PipelineStage[] = [];
 
       const posts = await this.postServiceStable.getPostsAggregation({
@@ -80,9 +88,7 @@ export class PostServiceUnstable {
       });
 
       return posts;
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    });
   }
 
   public async modifyPost({
@@ -94,16 +100,14 @@ export class PostServiceUnstable {
     endUserId: EndUserId;
     images: string[];
   }) {
-    try {
-      const post = await this.postServiceStable.modifyPost({
-        modifyPostDto,
-        endUserId,
-        images,
+    return tryCatchModified(async () => {
+      const post = await this.postServiceStable.findPostById({
+        postId: modifyPostDto.postId,
       });
-      return post;
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+      CompareId(post.endUserId, endUserId);
+      Object.assign(post, { ...modifyPostDto, images });
+      return post.save();
+    });
   }
 
   public async deletePost({
@@ -113,14 +117,14 @@ export class PostServiceUnstable {
     endUserId: EndUserId;
     postId: PostId;
   }) {
-    try {
-      const post = await this.postServiceStable.deletePost({
+    return tryCatchModified(async () => {
+      const post = await this.postServiceStable.findPostById({
         postId,
-        endUserId,
       });
+      CompareId(post.endUserId, endUserId);
+
+      await post.deleteOne();
       return post;
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    });
   }
 }

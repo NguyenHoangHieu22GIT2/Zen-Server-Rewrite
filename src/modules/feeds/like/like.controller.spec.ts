@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LikeController } from './like.controller';
 import { LikeServiceUnstable } from './services/unstable/like.unstable.service';
 import { LikeServiceStable } from './services/stable/like.stable.service';
-import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
+import { EndUser } from 'src/modules/users/enduser/';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
 import { Post } from '../post/entities/post.entity';
 import { FindOneForTest } from 'src/common/tests/findOneForTest';

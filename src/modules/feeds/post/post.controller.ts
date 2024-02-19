@@ -26,7 +26,7 @@ import {
 } from 'src/common/utils/index';
 import { PostRedisStableService } from './services/stable/post.redis.stable.service';
 import { PostServiceUnstable } from './services/unstable/post.unstable.service';
-import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/post.aggregation';
+import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/feeds';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 import { Post as PostEntity } from './entities/post.entity';
 import { FindPostDto } from './dto/find-post.dto';

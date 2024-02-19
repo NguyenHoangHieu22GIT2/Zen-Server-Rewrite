@@ -4,7 +4,7 @@ import { ObjectToHashType } from '../types/redisTypes/ObjectToHash.redis.type';
 // THIS FUNCTION NOW IS ALREADY IN USED (CAN BE CHANGED IF WE USE A NEW TYPE FOR OUR ENTITY)
 // IT WILL REPLACE THE WHOLE SERIALIZE FOLDER IN (src/cores/redis-serialize)
 export function ConvertObjectToHash<T extends object>(
-  objectToConvert: object,
+  objectToConvert: T,
 ): ObjectToHashType<T> {
   const convertedObject = {} as ObjectToHashType<T>;
   for (const key in objectToConvert) {
