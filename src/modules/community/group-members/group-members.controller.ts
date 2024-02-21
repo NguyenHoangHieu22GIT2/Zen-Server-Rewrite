@@ -1,34 +1,72 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { GroupMembersService } from './group-members.service';
-import { CreateGroupMemberDto } from './dto/create-group-member.dto';
-import { UpdateGroupMemberDto } from './dto/update-group-member.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { GroupMembersServiceUnstable } from './services';
+import { RequestUser } from 'src/common/types/utilTypes';
+import { LoggedInGuard } from 'src/modules/auth';
+import { FindGroupDto } from './dto/find-group.dto';
+import { GetGroupMembers } from './dto/get-group-members.dto';
+import { DeleteGroupMember } from './dto/delete-group-member.dto';
 
 @Controller('group-members')
 export class GroupMembersController {
-  constructor(private readonly groupMembersService: GroupMembersService) {}
+  constructor(
+    private readonly groupMembersService: GroupMembersServiceUnstable,
+  ) {}
 
   @Post()
-  create(@Body() createGroupMemberDto: CreateGroupMemberDto) {
-    return this.groupMembersService.create(createGroupMemberDto);
+  @UseGuards(LoggedInGuard)
+  async userJoinIn(
+    @Req() req: RequestUser,
+    @Body() findGroupDto: FindGroupDto,
+  ) {
+    const groupMember = await this.groupMembersService.addGroupMember({
+      groupId: findGroupDto.groupId,
+      endUserId: req.user._id,
+    });
+    return groupMember;
   }
 
   @Get()
-  findAll() {
-    return this.groupMembersService.findAll();
+  @UseGuards(LoggedInGuard)
+  async getGroupMembers(@Param() params: GetGroupMembers) {
+    const groupMembers = await this.groupMembersService.getGroupMembers(params);
+    return groupMembers;
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.groupMembersService.findOne(+id);
+  @Get(':endUserId')
+  @UseGuards(LoggedInGuard)
+  async findGroupMember(
+    @Param() params: FindGroupDto,
+    @Req() req: RequestUser,
+  ) {
+    const groupMember = await this.groupMembersService.findGroupMember({
+      endUserId: req.user._id,
+      groupId: params.groupId,
+    });
+    return groupMember;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGroupMemberDto: UpdateGroupMemberDto) {
-    return this.groupMembersService.update(+id, updateGroupMemberDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.groupMembersService.remove(+id);
+  @Delete(':endUserId')
+  @UseGuards(LoggedInGuard)
+  async deleteGroupMember(
+    @Req() req: RequestUser,
+    @Param() params: DeleteGroupMember,
+  ) {
+    const groupMember = await this.groupMembersService.deleteGroupMember(
+      req.user._id,
+      {
+        endUserId: params.endUserId,
+        groupId: params.groupId,
+      },
+    );
+    return groupMember;
   }
 }

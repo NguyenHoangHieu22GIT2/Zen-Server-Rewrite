@@ -24,7 +24,7 @@ export class Group {
     type: Types.ObjectId,
     ref: nameOfCollections.EndUser,
   })
-  userId: EndUserId;
+  endUserId: EndUserId;
 
   createdAt: Date;
 
