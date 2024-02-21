@@ -1,5 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
+import { apiResponseInternalServerError } from 'src/common/constants';
 import { LoginEndUserDto } from 'src/modules/auth/dto/login-end-user.dto';
 
 export function LoginAccountSwaggerAPIDecorators(): MethodDecorator {
@@ -14,5 +15,6 @@ export function LoginAccountSwaggerAPIDecorators(): MethodDecorator {
       status: 401,
       description: 'Unauthorized (has not activate the account)',
     }),
+    apiResponseInternalServerError,
   );
 }

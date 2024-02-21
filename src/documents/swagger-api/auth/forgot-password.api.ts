@@ -1,5 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
+import { apiResponseInternalServerError } from 'src/common/constants';
 import { ForgotPasswordDto } from 'src/modules/auth/dto/forgot-password.dto';
 
 export function ForgotPasswordSwaggerAPIDecorators(): MethodDecorator {
@@ -13,5 +14,6 @@ export function ForgotPasswordSwaggerAPIDecorators(): MethodDecorator {
       status: 404,
       description: 'No Account Found from this email address!',
     }),
+    apiResponseInternalServerError,
   );
 }
