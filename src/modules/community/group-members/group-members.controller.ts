@@ -14,6 +14,12 @@ import { LoggedInGuard } from 'src/modules/auth';
 import { FindGroupDto } from './dto/find-group.dto';
 import { GetGroupMembers } from './dto/get-group-members.dto';
 import { DeleteGroupMember } from './dto/delete-group-member.dto';
+import { userJoinInSwaggerAPIDecorators } from 'src/documents/swagger-api/group-members/user-join-in.api';
+import {
+  findGroupMemberSwaggerAPIDecorators,
+  getGroupMembersSwaggerAPIDecorators,
+} from 'src/documents/swagger-api/group-members';
+import { DeleteGroupMemberSwaggerAPIDecorators } from 'src/documents/swagger-api/group-members/delete-group-member.api';
 
 @Controller('group-members')
 export class GroupMembersController {
@@ -23,6 +29,7 @@ export class GroupMembersController {
 
   @Post()
   @UseGuards(LoggedInGuard)
+  @userJoinInSwaggerAPIDecorators()
   async userJoinIn(
     @Req() req: RequestUser,
     @Body() findGroupDto: FindGroupDto,
@@ -36,6 +43,7 @@ export class GroupMembersController {
 
   @Get()
   @UseGuards(LoggedInGuard)
+  @getGroupMembersSwaggerAPIDecorators()
   async getGroupMembers(@Param() params: GetGroupMembers) {
     const groupMembers = await this.groupMembersService.getGroupMembers(params);
     return groupMembers;
@@ -43,6 +51,7 @@ export class GroupMembersController {
 
   @Get(':endUserId')
   @UseGuards(LoggedInGuard)
+  @findGroupMemberSwaggerAPIDecorators()
   async findGroupMember(
     @Param() params: FindGroupDto,
     @Req() req: RequestUser,
@@ -56,6 +65,7 @@ export class GroupMembersController {
 
   @Delete(':endUserId')
   @UseGuards(LoggedInGuard)
+  @DeleteGroupMemberSwaggerAPIDecorators()
   async deleteGroupMember(
     @Req() req: RequestUser,
     @Param() params: DeleteGroupMember,

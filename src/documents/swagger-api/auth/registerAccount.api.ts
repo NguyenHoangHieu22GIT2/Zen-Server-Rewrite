@@ -1,5 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiBody, ApiResponse } from '@nestjs/swagger';
+import { apiResponseInternalServerError } from 'src/common/constants';
 import { RegisterEndUserDto } from 'src/modules/auth/dto/register-end-user.dto';
 
 export function RegisterAccountSwaggerAPIDecorators(): MethodDecorator {
@@ -14,5 +15,6 @@ export function RegisterAccountSwaggerAPIDecorators(): MethodDecorator {
       status: 409,
       description: 'This email is already in used. Try another one',
     }),
+    apiResponseInternalServerError,
   );
 }
