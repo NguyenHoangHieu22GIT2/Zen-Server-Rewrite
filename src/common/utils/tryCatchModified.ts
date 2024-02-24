@@ -7,14 +7,17 @@ import { HttpException, InternalServerErrorException } from '@nestjs/common';
  * on what kind of error it is (Purely instance of HttpException), or if it's an error coming from codes
  * then it will be the default one (Internal Server Error)
  * */
-export function tryCatchModified<T>(fn: () => T) {
+export async function tryCatchModified<T>(fn: () => Promise<T>) {
   try {
-    return fn();
-  } catch (error) {
+    const result = await fn();
+    return result;
+  } catch (error: unknown) {
     if (error instanceof HttpException) {
-      throw error;
+      const HttpExceptionError = error as HttpException;
+      throw HttpExceptionError;
     } else {
-      throw new InternalServerErrorException(error);
+      const serverError = error as Error;
+      throw new InternalServerErrorException(serverError.message);
     }
   }
 }
