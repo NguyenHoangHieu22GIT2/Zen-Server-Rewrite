@@ -1,34 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { GroupService } from './group.service';
-import { CreateGroupDto } from './dto/create-group.dto';
-import { UpdateGroupDto } from './dto/update-group.dto';
+import { Body, Controller, Post, Req } from '@nestjs/common';
+import { GroupServiceUnstable } from './services';
+import { RequestUser } from 'src/common/types/utilTypes';
+import { CreateGroupDto } from './dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Group')
 @Controller('group')
 export class GroupController {
-  constructor(private readonly groupService: GroupService) {}
+  constructor(private readonly groupService: GroupServiceUnstable) {}
 
   @Post()
-  create(@Body() createGroupDto: CreateGroupDto) {
-    return this.groupService.create(createGroupDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.groupService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.groupService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGroupDto: UpdateGroupDto) {
-    return this.groupService.update(+id, updateGroupDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.groupService.remove(+id);
+  async createGroup(
+    @Req() req: RequestUser,
+    @Body() createGroupDto: CreateGroupDto,
+  ) {
+    const group = await this.groupService.createGroup(
+      req.user._id,
+      createGroupDto,
+    );
+    return group;
   }
 }
