@@ -1,13 +1,19 @@
-import { tryCatchModified } from 'src/common/utils';
-
-export const TryCatchAllMethods = (): ClassDecorator => {
-  return (target: any) => {
-    // target.prototyp meaning we get the whole class that we decorated with
+import { HttpException, InternalServerErrorException } from '@nestjs/common';
+/**
+ * This decorator is used to replace TryCatchModified function
+ * To make the codes cleaner, Please use this on unstable services.
+ * @returns void
+ */
+export const TryCatchForServiceClass = (): ClassDecorator => {
+  // type target as function because a class is a `special function`
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  return (target: Function) => {
+    // target.prototyp meaning we get the whole class's methods that we decorated with
     const prototype = target.prototype;
     // Get all the property names (function | method) in the class
     const propertyNames = Object.getOwnPropertyNames(prototype);
-
-    // We loop to each function in the class
+    console.log(propertyNames);
+    // We loop to each function name in the class
     propertyNames.forEach((propertyName) => {
       // We get the descriptor of the function by targeting
       // to the prototype and the propertyName, so that we
@@ -17,7 +23,6 @@ export const TryCatchAllMethods = (): ClassDecorator => {
         propertyName,
       );
       // We check if the propertyDescriptor is a function or not
-      // I don't why we check this to be honest, CHATGPT tells me so.
       if (
         propertyDescriptor &&
         typeof propertyDescriptor.value === 'function'
@@ -28,9 +33,19 @@ export const TryCatchAllMethods = (): ClassDecorator => {
         // The cool thing is it automatically gets the args from the function
         // and I don't know how it does that, JS MAGIC
         propertyDescriptor.value = async function (...args: any[]) {
-          console.log(...args);
           // Then we use the tryCatchModified to call the originalMethod
-          return tryCatchModified(() => originalMethod.apply(this, args));
+          try {
+            const result = await originalMethod.apply(this, args);
+            return result;
+          } catch (error: unknown) {
+            if (error instanceof HttpException) {
+              const HttpExceptionError = error as HttpException;
+              throw HttpExceptionError;
+            } else {
+              const serverError = error as Error;
+              throw new InternalServerErrorException(serverError.message);
+            }
+          }
         };
         // Then we define the property again to the prototype when we changed it.
         Object.defineProperty(prototype, propertyName, propertyDescriptor);
