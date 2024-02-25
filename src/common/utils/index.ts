@@ -1,6 +1,6 @@
 export * from './checkImagesTypeToThrowError';
 export * from './checkImageTypeToThrowError';
-export * from './CompareId';
+export * from './CompareIdToThrowError';
 export * from './convertFilesToArrayOfNamesString';
 export * from './convertObjectToHash';
 export * from './convertToBooleanBasedOnStringMeaning';

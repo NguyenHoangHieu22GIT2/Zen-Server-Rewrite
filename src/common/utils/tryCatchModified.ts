@@ -6,6 +6,7 @@ import { HttpException, InternalServerErrorException } from '@nestjs/common';
  * Enviroment, so it will catch error and throw error based
  * on what kind of error it is (Purely instance of HttpException), or if it's an error coming from codes
  * then it will be the default one (Internal Server Error)
+ * @deprecated
  * */
 export async function tryCatchModified<T>(fn: () => Promise<T>) {
   try {

@@ -9,7 +9,7 @@ import { FindPostDto } from '../../dto/find-post.dto';
 import { ModifyPostDto } from '../../dto/modify-post.dto';
 import { GetUserPostsDto } from '../../dto/get-user-posts.dto';
 import { tryCatchModified } from 'src/common/utils/tryCatchModified';
-import { CompareId } from 'src/common/utils/index';
+import { CompareIdToThrowError } from 'src/common/utils/index';
 
 @Injectable()
 export class PostServiceUnstable {
@@ -104,7 +104,7 @@ export class PostServiceUnstable {
       const post = await this.postServiceStable.findPostById({
         postId: modifyPostDto.postId,
       });
-      CompareId(post.endUserId, endUserId);
+      CompareIdToThrowError(post.endUserId, endUserId);
       Object.assign(post, { ...modifyPostDto, images });
       return post.save();
     });
@@ -121,7 +121,7 @@ export class PostServiceUnstable {
       const post = await this.postServiceStable.findPostById({
         postId,
       });
-      CompareId(post.endUserId, endUserId);
+      CompareIdToThrowError(post.endUserId, endUserId);
 
       await post.deleteOne();
       return post;

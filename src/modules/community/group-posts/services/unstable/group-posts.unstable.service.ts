@@ -11,7 +11,7 @@ import { FindGroupPostDto } from '../../dto/find-group-post.dto';
 import { GetUserGroupPostsDto } from '../../dto/get-user-group-posts.dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
 import { ModifyGroupPostDto } from '../../dto/modify-group-post.dto';
-import { CompareId } from 'src/common/utils';
+import { CompareIdToThrowError } from 'src/common/utils';
 
 @Injectable()
 export class GroupPostsServiceUnstable {
@@ -93,7 +93,7 @@ export class GroupPostsServiceUnstable {
       const post = await this.groupPostServiceStable.findPostById({
         groupPostId: modifyGroupPostDto.groupPostId,
       });
-      CompareId(post.endUserId, endUserId);
+      CompareIdToThrowError(post.endUserId, endUserId);
       Object.assign(post, { ...modifyGroupPostDto, images });
       return post.save();
     });
@@ -110,7 +110,7 @@ export class GroupPostsServiceUnstable {
       const post = await this.groupPostServiceStable.findPostById({
         groupPostId,
       });
-      CompareId(post.endUserId, endUserId);
+      CompareIdToThrowError(post.endUserId, endUserId);
 
       await post.deleteOne();
       return post;
