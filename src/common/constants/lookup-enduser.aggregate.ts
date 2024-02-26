@@ -12,7 +12,7 @@ export const LookUpEndUserAggregate: PipelineStage[] = [
   },
   {
     $set: {
-      user: {
+      endUser: {
         _id: '$userFull._id',
         username: '$userFull.username',
         avatar: '$userFull.avatar',

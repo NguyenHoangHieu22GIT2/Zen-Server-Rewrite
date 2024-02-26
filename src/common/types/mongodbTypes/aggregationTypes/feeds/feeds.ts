@@ -1,15 +1,10 @@
-import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
+import { EndUserId } from 'src/common/types/utilTypes/Brand';
+import { Post } from 'src/modules/feeds/post';
 
 export type PostAggregation = {
-  _id: PostId;
-  title: string;
-  body: string;
-  views: number;
-  user: {
+  endUser: {
     _id: EndUserId;
     username: string;
     avatar: string;
   };
-  createdAt: Date;
-  updatedAt: Date;
-};
+} & Omit<Post, 'endUserId'>;
