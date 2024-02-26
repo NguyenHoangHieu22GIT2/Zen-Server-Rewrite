@@ -1,15 +1,40 @@
-import { Body, Controller, Post, Req } from '@nestjs/common';
-import { GroupServiceUnstable } from './services';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { RequestUser } from 'src/common/types/utilTypes';
-import { CreateGroupDto } from './dto';
+import { CreateGroupDto, ModifyGroupDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
+import { TryCatchForServiceClass } from 'src/cores/decorators/TryCatchForServiceClass.decorator';
+import { LoggedInGuard } from 'src/modules/auth';
+import {
+  IGroupServiceUnstable,
+  IGroupServiceUnstableString,
+} from './services/unstable/group.unstable.interface';
+import { FindGroupDto } from '../group-members';
+import { QueryLimitSkip } from 'src/cores/global-dtos';
+import { SearchGroupsDto } from './dto/search-groups.dto';
 
 @ApiTags('Group')
 @Controller('group')
+@TryCatchForServiceClass()
 export class GroupController {
-  constructor(private readonly groupService: GroupServiceUnstable) {}
+  constructor(
+    @Inject(IGroupServiceUnstableString)
+    private readonly groupService: IGroupServiceUnstable,
+  ) {}
 
   @Post()
+  @UseGuards(LoggedInGuard)
   async createGroup(
     @Req() req: RequestUser,
     @Body() createGroupDto: CreateGroupDto,
@@ -19,5 +44,32 @@ export class GroupController {
       createGroupDto,
     );
     return group;
+  }
+
+  @Get(':groupId')
+  findGroup(@Param() Param: FindGroupDto) {
+    return this.groupService.findGroup(Param.groupId);
+  }
+
+  @Get()
+  getGroups(@Query() query: QueryLimitSkip) {
+    return this.groupService.getGroups(query);
+  }
+
+  @Get('/search')
+  searchGroups(@Query() query: SearchGroupsDto) {
+    return this.groupService.searchGroups(query);
+  }
+
+  @Delete(':groupId')
+  @UseGuards(LoggedInGuard)
+  deleteGroup(@Req() req: RequestUser, @Param() param: FindGroupDto) {
+    return this.groupService.deleteGroup(req.user._id, param.groupId);
+  }
+
+  @Patch()
+  @UseGuards(LoggedInGuard)
+  modifyGroup(@Req() req: RequestUser, modifyGroupDto: ModifyGroupDto) {
+    return this.groupService.modifyGroup(req.user._id, modifyGroupDto);
   }
 }
