@@ -1,5 +1,5 @@
 import { UnauthorizedException } from '@nestjs/common';
-import { EndUserId } from '../types/utilTypes/Brand';
+import { EndUserId } from '../../types/utilTypes/Brand';
 
 export function CompareIdToThrowError(
   userIdOne: EndUserId,

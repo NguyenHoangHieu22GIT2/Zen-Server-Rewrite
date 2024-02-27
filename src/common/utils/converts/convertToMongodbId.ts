@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import mongoose, { Types } from 'mongoose';
-import { EndUserId } from '../types/utilTypes/Brand';
+import { EndUserId } from '../../types/utilTypes/Brand';
 
 export function checkToConvertToMongoIdOrThrowError<TType>({
   id,

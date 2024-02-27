@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { EndUserId } from 'src/common/types/utilTypes/Brand';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
-import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/convertToMongodbId';
+import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/';
 
 @Injectable()
 export class AuthorizationMiddleware implements NestMiddleware {
