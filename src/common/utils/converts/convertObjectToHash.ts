@@ -1,4 +1,4 @@
-import { ObjectToHashType } from '../types/redisTypes/ObjectToHash.redis.type';
+import { ObjectToHashType } from '../../types/redisTypes/ObjectToHash.redis.type';
 
 //DEPRECATED :DEPRECATED FOR NOW 2024-01-14
 // THIS FUNCTION NOW IS ALREADY IN USED (CAN BE CHANGED IF WE USE A NEW TYPE FOR OUR ENTITY)

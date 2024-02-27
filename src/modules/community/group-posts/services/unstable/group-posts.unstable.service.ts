@@ -6,7 +6,7 @@ import {
   GroupId,
   GroupPostId,
 } from 'src/common/types/utilTypes/Brand';
-import { tryCatchModified } from 'src/common/utils/tryCatchModified';
+import { tryCatchModified } from 'src/common/utils/';
 import { FindGroupPostDto } from '../../dto/find-group-post.dto';
 import { GetUserGroupPostsDto } from '../../dto/get-user-group-posts.dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';

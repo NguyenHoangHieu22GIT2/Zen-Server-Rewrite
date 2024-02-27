@@ -8,7 +8,7 @@ import { CreatePostDto } from '../../dto/create-post.dto';
 import { FindPostDto } from '../../dto/find-post.dto';
 import { ModifyPostDto } from '../../dto/modify-post.dto';
 import { GetUserPostsDto } from '../../dto/get-user-posts.dto';
-import { tryCatchModified } from 'src/common/utils/tryCatchModified';
+import { tryCatchModified } from 'src/common/utils/';
 import { CompareIdToThrowError } from 'src/common/utils/index';
 
 @Injectable()

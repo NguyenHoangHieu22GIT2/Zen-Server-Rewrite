@@ -9,7 +9,7 @@ import {
   groupPostsKey,
 } from '../redisKeys/group.redis.keys';
 import { Event } from 'src/modules/community/event/entities/event.entity';
-import { ConvertObjectToHash } from 'src/common/utils/convertObjectToHash';
+import { ConvertObjectToHash } from 'src/common/utils/';
 
 export class GroupRedis {
   // HASH

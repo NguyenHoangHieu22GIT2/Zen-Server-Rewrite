@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { DB_NAME_TEST, DB_URL } from '../constants/env-development';
+import { DB_NAME_TEST, DB_URL } from '../../constants/env-development';
 import { MongooseModule } from '@nestjs/mongoose';
 
 export function importMongooseModuleForTesting(

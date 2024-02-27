@@ -1,5 +1,5 @@
 import { unlink, writeFile } from 'fs';
-import { createPathImage } from './createPathImage';
+import { createPathImage } from '../creates/createPathImage';
 
 type Parameters = {
   file: Express.Multer.File;

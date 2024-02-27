@@ -1,6 +1,8 @@
 import { ObjectToHashType } from 'src/common/types/redisTypes/ObjectToHash.redis.type';
-import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/convertToMongodbId';
-import { convertToBooleanBasedOnStringMeaning } from 'src/common/utils/convertToBooleanBasedOnStringMeaning';
+import {
+  convertToBooleanBasedOnStringMeaning,
+  checkToConvertToMongoIdOrThrowError,
+} from 'src/common/utils/';
 import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
 
 export function userDeserialize(endUser: ObjectToHashType<EndUser>): EndUser {
