@@ -23,10 +23,10 @@ import {
 import { FindGroupDto } from '../group-members';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { SearchGroupsDto } from './dto/search-groups.dto';
-import { tryCatchModified } from 'src/common/utils';
 
 @ApiTags('Group')
 @Controller('group')
+@TryCatchForServiceClass()
 export class GroupController {
   constructor(
     @Inject(IGroupServiceUnstableString)
