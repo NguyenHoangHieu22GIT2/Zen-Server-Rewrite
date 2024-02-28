@@ -12,10 +12,10 @@ export function ConvertObjectToHash<T extends object>(
     // If Date, then convert to Unix time then turn it into string
     if (propertyInObjectToConvert instanceof Date)
       convertedObject[key] = propertyInObjectToConvert.getTime().toString();
-    if (propertyInObjectToConvert instanceof Array) {
-      convertedObject[key] = JSON.stringify(propertyInObjectToConvert);
-    }
-    if (propertyInObjectToConvert instanceof Object) {
+    else if (
+      propertyInObjectToConvert instanceof Array ||
+      propertyInObjectToConvert instanceof Object
+    ) {
       convertedObject[key] = JSON.stringify(propertyInObjectToConvert);
     } else {
       convertedObject[key] = propertyInObjectToConvert.toString();

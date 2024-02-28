@@ -10,7 +10,7 @@ export class PostRedis {
     postId: Types.ObjectId,
     post: PostAggregation,
   ) {
-    const convertedPost = ConvertObjectToHash<PostAggregation>(post);
+    const convertedPost = ConvertObjectToHash(post);
     return RedisClient.HSET(postKey(postId), convertedPost);
   }
 

@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
+import { nameOfCollections } from 'src/common/constants';
+import { EndUserId } from 'src/common/types/utilTypes';
 
 @Schema({ timestamps: true })
 export class Event {
@@ -16,6 +18,13 @@ export class Event {
 
   @Prop({ required: true, type: Date })
   endAt: Date;
+
+  @Prop({
+    required: true,
+    type: Types.ObjectId,
+    ref: nameOfCollections.EndUser,
+  })
+  endUserId: EndUserId;
 
   @Prop({ required: true, type: String })
   wallpaper: string;

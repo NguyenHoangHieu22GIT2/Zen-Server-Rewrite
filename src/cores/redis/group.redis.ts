@@ -17,7 +17,7 @@ export class GroupRedis {
     groupId: Types.ObjectId,
     group: Group,
   ) {
-    const convertedGroup = ConvertObjectToHash<Group>(group);
+    const convertedGroup = ConvertObjectToHash(group);
     return RedisClient.HSET(groupKey(groupId), convertedGroup);
   }
 
@@ -25,7 +25,7 @@ export class GroupRedis {
     eventId: Types.ObjectId,
     event: Event,
   ) {
-    const convertedEvent = ConvertObjectToHash<Event>(event);
+    const convertedEvent = ConvertObjectToHash(event);
     return RedisClient.HSET(EventKey(eventId), convertedEvent);
   }
 

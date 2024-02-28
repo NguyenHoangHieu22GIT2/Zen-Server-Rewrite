@@ -3,10 +3,19 @@ import { EventServiceUnstable } from './services/unstable/event.unstable.service
 import { EventController } from './event.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Event, EventSchema } from './entities/event.entity';
+import { IEventServiceUnstableString } from './services/unstable/event.unstable.interface';
+import { EventServiceStable } from './services';
+import { IEventServiceStableString } from './services/stable/event.stable.interface';
 
 @Module({
   controllers: [EventController],
-  providers: [EventServiceUnstable],
+  providers: [
+    { useClass: EventServiceUnstable, provide: IEventServiceUnstableString },
+    {
+      useClass: EventServiceStable,
+      provide: IEventServiceStableString,
+    },
+  ],
   imports: [
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
   ],
