@@ -1,4 +1,28 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateEventDto } from './create-event.dto';
+import { Transform } from 'class-transformer';
+import { IsDate, IsOptional, IsString } from 'class-validator';
+import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils';
+import { FindEventDto } from './find-event.dto';
 
-export class ModifyEventDto extends PartialType(CreateEventDto) {}
+export class ModifyEventDto extends FindEventDto {
+  @IsString()
+  @IsOptional()
+  name: string;
+
+  @IsString()
+  @IsOptional()
+  description: string;
+
+  @IsDate()
+  @Transform((opts) => {
+    return new Date(opts.value);
+  })
+  @IsOptional()
+  startAt: Date;
+
+  @IsDate()
+  @Transform((opts) => {
+    return new Date(opts.value);
+  })
+  @IsOptional()
+  endAt: Date;
+}
