@@ -19,5 +19,12 @@ import { IEventServiceStableString } from './services/stable/event.stable.interf
   imports: [
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
   ],
+  exports: [
+    { useClass: EventServiceUnstable, provide: IEventServiceUnstableString },
+    {
+      useClass: EventServiceStable,
+      provide: IEventServiceStableString,
+    },
+  ],
 })
 export class EventModule {}

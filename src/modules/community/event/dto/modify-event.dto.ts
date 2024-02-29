@@ -1,6 +1,5 @@
 import { Transform } from 'class-transformer';
 import { IsDate, IsOptional, IsString } from 'class-validator';
-import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils';
 import { FindEventDto } from './find-event.dto';
 
 export class ModifyEventDto extends FindEventDto {
