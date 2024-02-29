@@ -2,7 +2,7 @@ import { ObjectToHashType } from 'src/common/types/redisTypes/ObjectToHash.redis
 import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/';
 import { Like } from 'src/modules/feeds/like';
 
-export function userDeserialize(like: ObjectToHashType<Like>): Like {
+export function likeDeserialize(like: ObjectToHashType<Like>): Like {
   return {
     ...like,
     _id: checkToConvertToMongoIdOrThrowError({
