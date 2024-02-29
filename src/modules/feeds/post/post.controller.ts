@@ -44,7 +44,6 @@ import {
   ModifyPostsSwaggerAPIDecorators,
   DeletePostsSwaggerAPIDecorators,
 } from 'src/documents/swagger-api/posts/';
-
 @ApiTags('Post')
 @Controller('posts')
 @UseGuards(LoggedInGuard)
@@ -103,12 +102,17 @@ export class PostController {
     @Req() req: RequestUser,
     @UploadedFiles() images: Express.Multer.File[],
   ): Promise<DocumentMongodbType<PostEntity>> {
-    checkImagesTypeToThrowError(images);
+    const imageNames: string[] = [];
+    if (images) {
+      checkImagesTypeToThrowError(images);
 
-    const { createdImageObjects, imageNames } =
-      createImageObjectsToSave(images);
+      const { createdImageObjects, imageNames: imgNames } =
+        createImageObjectsToSave(images);
 
-    storeFiles(createdImageObjects);
+      imageNames.push(...imgNames);
+
+      storeFiles(createdImageObjects);
+    }
 
     const post = await this.postUnstableService.createPost({
       endUserId: req.user._id,
@@ -127,12 +131,15 @@ export class PostController {
     @Body() modifyPostDto: ModifyPostDto,
     @UploadedFiles() images: Express.Multer.File[],
   ) {
-    checkImagesTypeToThrowError(images);
+    const imageNames: string[] = [];
+    if (images) {
+      checkImagesTypeToThrowError(images);
 
-    const { createdImageObjects, imageNames } =
-      createImageObjectsToSave(images);
-
-    storeFiles(createdImageObjects);
+      const { createdImageObjects, imageNames: imgNames } =
+        createImageObjectsToSave(images);
+      imageNames.push(...imgNames);
+      storeFiles(createdImageObjects);
+    }
 
     const modifiedPost = await this.postUnstableService.modifyPost({
       endUserId: req.user._id,

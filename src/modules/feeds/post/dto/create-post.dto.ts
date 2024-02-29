@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Min } from 'class-validator';
+import { IsString, MinLength } from 'class-validator';
 import { Post } from '../entities/post.entity';
 
 export class CreatePostDto implements Partial<Post> {
@@ -9,7 +9,7 @@ export class CreatePostDto implements Partial<Post> {
     example: 'Today I have a lovely day!',
   })
   @IsString()
-  @Min(1)
+  @MinLength(1)
   title: string;
 
   @ApiProperty({
@@ -18,6 +18,6 @@ export class CreatePostDto implements Partial<Post> {
     example: 'I love coding, and I will always code :) please stay tuned',
   })
   @IsString()
-  @Min(1)
+  @MinLength(1)
   body: string;
 }

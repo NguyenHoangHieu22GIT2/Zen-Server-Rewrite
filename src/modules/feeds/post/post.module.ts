@@ -15,5 +15,6 @@ import { MongooseModule } from '@nestjs/mongoose';
   imports: [
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
   ],
+  exports: [PostServiceUnstable, PostServiceStable],
 })
 export class PostModule {}

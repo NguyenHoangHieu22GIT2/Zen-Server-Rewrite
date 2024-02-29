@@ -10,7 +10,7 @@ import {
 } from 'src/common/types/mongodbTypes';
 import { Event } from '../../entities';
 import { EndUserId, EventId } from 'src/common/types/utilTypes';
-import { CreateEventDto, ModifyEventDto } from '../../dto';
+import { ModifyEventDto } from '../../dto';
 import { CompareIdToThrowError, PopulateSkipAndLimit } from 'src/common/utils';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { LookUpEndUserAggregate } from 'src/common/constants';
