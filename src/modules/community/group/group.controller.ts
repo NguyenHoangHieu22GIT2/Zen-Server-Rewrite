@@ -14,7 +14,7 @@ import {
 import { RequestUser } from 'src/common/types/utilTypes';
 import { CreateGroupDto, ModifyGroupDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
-import { TryCatchForServiceClass } from 'src/cores/decorators/TryCatchForServiceClass.decorator';
+import { TryCatchDecorator } from 'src/cores/decorators/TryCatchDecorator.decorator';
 import { LoggedInGuard } from 'src/modules/auth';
 import {
   IGroupServiceUnstable,
@@ -26,7 +26,7 @@ import { SearchGroupsDto } from './dto/search-groups.dto';
 
 @ApiTags('Group')
 @Controller('group')
-@TryCatchForServiceClass()
+@TryCatchDecorator()
 export class GroupController {
   constructor(
     @Inject(IGroupServiceUnstableString)
