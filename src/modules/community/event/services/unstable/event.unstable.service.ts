@@ -1,5 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IEventServiceUnstable } from './event.unstable.interface';
+import {
+  CreateEventParams,
+  IEventServiceUnstable,
+} from './event.unstable.interface';
 import {
   IEventServiceStable,
   IEventServiceStableString,
@@ -21,6 +24,24 @@ export class EventServiceUnstable implements IEventServiceUnstable {
     @Inject(IEventServiceStableString)
     private readonly eventServiceStable: IEventServiceStable,
   ) {}
+
+  async findEvent(eventId: EventId): Promise<DocumentMongodbType<Event>> {
+    const event = await this.eventServiceStable.findEvent(eventId);
+    return event;
+  }
+
+  async createEvent({
+    endUserId,
+    createEventDto,
+  }: CreateEventParams): Promise<DocumentMongodbType<Event>> {
+    CompareIdToThrowError(endUserId, createEventDto.endUserId);
+
+    const event = await this.eventServiceStable.createEvent(
+      endUserId,
+      createEventDto,
+    );
+    return event;
+  }
 
   async getEvents(queryLimitSkip: QueryLimitSkip) {
     const events = await this.eventServiceStable.getEvents<EventAggregation>([

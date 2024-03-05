@@ -1,5 +1,8 @@
-import { Controller } from '@nestjs/common';
-import { IEventServiceUnstable } from './services/unstable/event.unstable.interface';
+import { Controller, Inject } from '@nestjs/common';
+import {
+  IEventServiceUnstable,
+  IEventServiceUnstableString,
+} from './services/unstable/event.unstable.interface';
 import { ApiTags } from '@nestjs/swagger';
 import { TryCatchForServiceClass } from 'src/cores/decorators/TryCatchForServiceClass.decorator';
 
@@ -7,5 +10,8 @@ import { TryCatchForServiceClass } from 'src/cores/decorators/TryCatchForService
 @ApiTags('Event')
 @TryCatchForServiceClass()
 export class EventController {
-  constructor(private readonly eventService: IEventServiceUnstable) {}
+  constructor(
+    @Inject(IEventServiceUnstableString)
+    private readonly eventService: IEventServiceUnstable,
+  ) {}
 }
