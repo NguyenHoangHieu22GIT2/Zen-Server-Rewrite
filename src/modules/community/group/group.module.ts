@@ -14,5 +14,8 @@ import { GroupServiceStable, IGroupServiceUnstableString } from './services';
   imports: [
     MongooseModule.forFeature([{ name: Group.name, schema: GroupSchema }]),
   ],
+  exports: [
+    { provide: IGroupServiceUnstableString, useClass: GroupServiceUnstable },
+  ],
 })
 export class GroupModule {}
