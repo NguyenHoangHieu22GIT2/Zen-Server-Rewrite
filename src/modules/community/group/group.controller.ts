@@ -14,7 +14,7 @@ import {
 import { RequestUser } from 'src/common/types/utilTypes';
 import { CreateGroupDto, ModifyGroupDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
-import { TryCatchDecorator } from 'src/cores/decorators/TryCatchDecorator.decorator';
+import { TryCatchDecorator } from 'src/cores/decorators/';
 import { LoggedInGuard } from 'src/modules/auth';
 import {
   IGroupServiceUnstable,

@@ -9,6 +9,8 @@ import RedisStore from 'connect-redis';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+
   //Set Global prefix for each version
   app.setGlobalPrefix('v1');
 
