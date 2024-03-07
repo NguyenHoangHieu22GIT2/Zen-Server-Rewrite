@@ -21,7 +21,7 @@ import {
 } from 'src/documents/swagger-api/group-members';
 import { DeleteGroupMemberSwaggerAPIDecorators } from 'src/documents/swagger-api/group-members/delete-group-member.api';
 import { FindGroupMemberDto } from './dto/find-group-member.dto';
-import { TryCatchDecorator } from 'src/cores/decorators/TryCatchDecorator.decorator';
+import { TryCatchDecorator } from 'src/cores/decorators/TryCatch.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import {
   IGroupMembersServiceUnstable,
