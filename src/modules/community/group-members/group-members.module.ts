@@ -6,14 +6,35 @@ import {
   GroupMembersServiceStable,
   GroupMembersServiceUnstable,
 } from './services';
+import { IGroupMembersServiceStableString } from './services/stable/group-member.interface';
+import { IGroupMembersServiceUnstableString } from './services/unstable/group-members.interface';
 
 @Module({
   controllers: [GroupMembersController],
-  providers: [GroupMembersServiceUnstable, GroupMembersServiceStable],
+  providers: [
+    {
+      provide: IGroupMembersServiceStableString,
+      useClass: GroupMembersServiceStable,
+    },
+    {
+      provide: IGroupMembersServiceUnstableString,
+      useClass: GroupMembersServiceUnstable,
+    },
+  ],
   imports: [
     MongooseModule.forFeature([
       { name: GroupMember.name, schema: GroupMemberSchema },
     ]),
+  ],
+  exports: [
+    {
+      provide: IGroupMembersServiceStableString,
+      useClass: GroupMembersServiceStable,
+    },
+    {
+      provide: IGroupMembersServiceUnstableString,
+      useClass: GroupMembersServiceUnstable,
+    },
   ],
 })
 export class GroupMembersModule {}
