@@ -3,12 +3,12 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { GroupMembersServiceUnstable } from './services';
 import { RequestUser } from 'src/common/types/utilTypes';
 import { LoggedInGuard } from 'src/modules/auth';
 import { FindGroupDto } from './dto/find-group.dto';
@@ -21,11 +21,20 @@ import {
 } from 'src/documents/swagger-api/group-members';
 import { DeleteGroupMemberSwaggerAPIDecorators } from 'src/documents/swagger-api/group-members/delete-group-member.api';
 import { FindGroupMemberDto } from './dto/find-group-member.dto';
+import { TryCatchDecorator } from 'src/cores/decorators/TryCatchDecorator.decorator';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  IGroupMembersServiceUnstable,
+  IGroupMembersServiceUnstableString,
+} from './services/unstable/group-members.interface';
 
 @Controller('group-members')
+@TryCatchDecorator()
+@ApiTags('Group Member')
 export class GroupMembersController {
   constructor(
-    private readonly groupMembersService: GroupMembersServiceUnstable,
+    @Inject(IGroupMembersServiceUnstableString)
+    private readonly groupMembersService: IGroupMembersServiceUnstable,
   ) {}
 
   @Post()
