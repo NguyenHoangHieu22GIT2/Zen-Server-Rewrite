@@ -30,6 +30,11 @@ import {
 } from '../group-members/services/unstable/group-members.interface';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { FindGroupDto } from '../group-members';
+import { createEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/create-event.api';
+import { getEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/get-events.api';
+import { findEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/find-event.api';
+import { modifyEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/modify-event.dto';
+import { deleteEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/delete-event.api';
 
 @Controller('event')
 @ApiTags('Event')
@@ -47,6 +52,7 @@ export class EventController {
   ) { }
 
   @Post()
+  @createEventSwaggerAPIDecorators()
   async createEvent(
     @Req() req: RequestUser,
     @Body() createEventDto: CreateEventDto,
@@ -61,6 +67,7 @@ export class EventController {
   }
 
   @Get(':groupId')
+  @getEventSwaggerAPIDecorators()
   async getEvents(
     @Query() query: QueryLimitSkip,
     @Param() param: FindGroupDto,
@@ -77,6 +84,7 @@ export class EventController {
   }
 
   @Get(':eventId')
+  @findEventSwaggerAPIDecorators()
   async findEvent(@Param() param: FindEventDto, @Req() req: RequestUser) {
     const event = await this.eventService.findEvent(param.eventId);
 
@@ -93,11 +101,13 @@ export class EventController {
   }
 
   @Delete(':eventId')
+  @deleteEventSwaggerAPIDecorators()
   async deleteEvent(@Param() param: FindEventDto, @Req() req: RequestUser) {
     return this.eventService.deleteEvent(req.user._id, param.eventId);
   }
 
   @Patch()
+  @modifyEventSwaggerAPIDecorators()
   async modifyEvent(
     @Req() req: RequestUser,
     @Body() modifyEventDto: ModifyEventDto,
