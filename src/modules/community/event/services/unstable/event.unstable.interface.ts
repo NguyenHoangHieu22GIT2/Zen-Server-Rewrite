@@ -3,7 +3,7 @@ import {
   EventAggregation,
 } from 'src/common/types/mongodbTypes';
 import { Event } from '../../entities';
-import { EndUserId, EventId } from 'src/common/types/utilTypes';
+import { EndUserId, EventId, GroupId } from 'src/common/types/utilTypes';
 import { CreateEventDto, ModifyEventDto } from '../../dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 
@@ -21,7 +21,10 @@ export interface IEventServiceUnstable {
 
   findEvent(eventId: EventId): Promise<DocumentMongodbType<Event>>;
 
-  getEvents(queryLimitSkip: QueryLimitSkip): Promise<EventAggregation[]>;
+  getEvents(
+    queryLimitSkip: QueryLimitSkip,
+    groupId: GroupId,
+  ): Promise<EventAggregation[]>;
 
   modifyEvent(
     endUserId: EndUserId,

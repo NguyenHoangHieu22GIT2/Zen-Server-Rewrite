@@ -7,6 +7,7 @@ import { EventServiceStable } from './services';
 import { IEventServiceStableString } from './services/stable/event.stable.interface';
 import { IEventServiceUnstableString } from './services/unstable/event.unstable.interface';
 import { GroupModule } from '../group';
+import { GroupMembersModule } from '../group-members';
 
 @Module({
   controllers: [EventController],
@@ -23,6 +24,7 @@ import { GroupModule } from '../group';
   imports: [
     MongooseModule.forFeature([{ name: Event.name, schema: EventSchema }]),
     GroupModule,
+    GroupMembersModule,
   ],
   exports: [
     {
