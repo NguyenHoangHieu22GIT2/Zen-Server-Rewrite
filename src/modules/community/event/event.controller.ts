@@ -16,7 +16,6 @@ import {
   IEventServiceUnstableString,
 } from './services/unstable/event.unstable.interface';
 import { ApiTags } from '@nestjs/swagger';
-import { TryCatchDecorator } from 'src/cores/decorators/TryCatch.decorator';
 import {
   IGroupServiceUnstable,
   IGroupServiceUnstableString,
@@ -38,7 +37,6 @@ import { deleteEventSwaggerAPIDecorators } from 'src/documents/swagger-api/event
 
 @Controller('event')
 @ApiTags('Event')
-@TryCatchDecorator()
 export class EventController {
   constructor(
     @Inject(IEventServiceUnstableString)
@@ -49,7 +47,7 @@ export class EventController {
 
     @Inject(IGroupMembersServiceUnstableString)
     private readonly groupMembersService: IGroupMembersServiceUnstable,
-  ) { }
+  ) {}
 
   @Post()
   @createEventSwaggerAPIDecorators()

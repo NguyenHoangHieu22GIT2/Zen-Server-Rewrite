@@ -17,8 +17,10 @@ import { ModifyEventDto } from '../../dto';
 import { CompareIdToThrowError, PopulateSkipAndLimit } from 'src/common/utils';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { LookUpEndUserAggregate } from 'src/common/constants';
+import { TryCatchDecorator } from 'src/cores/decorators';
 
 @Injectable()
+@TryCatchDecorator()
 export class EventServiceUnstable implements IEventServiceUnstable {
   constructor(
     @Inject(IEventServiceStableString)

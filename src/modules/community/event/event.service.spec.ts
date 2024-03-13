@@ -1,15 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EventService } from './services/unstable/event.unstable.service';
+import { EventServiceUnstable, EventServiceStable } from './services/';
+import { IEventServiceStableString } from './services/stable/event.stable.interface';
 
 describe('EventService', () => {
-  let service: EventService;
+  let service: EventServiceUnstable;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [EventService],
+      providers: [
+        EventServiceUnstable,
+        {
+          provide: IEventServiceStableString,
+          useClass: EventServiceStable,
+        },
+      ],
     }).compile();
 
-    service = module.get<EventService>(EventService);
+    service = module.get<EventServiceUnstable>(EventServiceUnstable);
   });
 
   it('should be defined', () => {
