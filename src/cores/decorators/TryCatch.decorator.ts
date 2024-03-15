@@ -12,8 +12,7 @@ export const TryCatchDecorator = (): ClassDecorator => {
     const prototype = target.prototype;
     // Get all the property names (function | method) in the class
     const propertyNames = Object.getOwnPropertyNames(prototype);
-    console.log(propertyNames);
-    // We loop to each function name in the class
+
     propertyNames.forEach((propertyName) => {
       // We get the descriptor of the function by targeting
       // to the prototype and the propertyName, so that we
@@ -43,6 +42,7 @@ export const TryCatchDecorator = (): ClassDecorator => {
               throw HttpExceptionError;
             } else {
               const serverError = error as Error;
+              console.log(serverError);
               throw new InternalServerErrorException(serverError.message);
             }
           }

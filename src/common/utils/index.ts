@@ -18,3 +18,4 @@ export * from './files/removeFile';
 export * from './files/storeFile';
 export * from './files/storeFiles';
 export * from './checks/tryCatchModified';
+export * from './checks/checkIfUndefined';

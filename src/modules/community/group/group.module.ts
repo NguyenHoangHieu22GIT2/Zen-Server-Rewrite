@@ -4,12 +4,13 @@ import { GroupController } from './group.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Group, GroupSchema } from './entities/group.entity';
 import { GroupServiceStable, IGroupServiceUnstableString } from './services';
+import { IGroupMembersServiceStableString } from '../group-members/services/stable/group-member.interface';
 
 @Module({
   controllers: [GroupController],
   providers: [
     { provide: IGroupServiceUnstableString, useClass: GroupServiceUnstable },
-    GroupServiceStable,
+    { provide: IGroupMembersServiceStableString, useClass: GroupServiceStable },
   ],
   imports: [
     MongooseModule.forFeature([{ name: Group.name, schema: GroupSchema }]),
