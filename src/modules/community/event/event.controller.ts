@@ -49,7 +49,7 @@ export class EventController {
 
     @Inject(IGroupMembersServiceUnstableString)
     private readonly groupMembersService: IGroupMembersServiceUnstable,
-  ) { }
+  ) {}
 
   @Post()
   @createEventSwaggerAPIDecorators()

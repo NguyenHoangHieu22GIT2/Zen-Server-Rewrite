@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { nameOfCollections } from 'src/common/constants';
-import { EndUserId, GroupId } from 'src/common/types/utilTypes';
+import { EndUserId } from 'src/common/types/utilTypes';
+>>>>>>>>> Temporary merge branch 2
 
 @Schema({ timestamps: true })
 export class Event {
@@ -26,9 +27,7 @@ export class Event {
   })
   endUserId: EndUserId;
 
-  @Prop({ required: true, type: Types.ObjectId, ref: nameOfCollections.Group })
-  groupId: GroupId;
-
+>>>>>>>>> Temporary merge branch 2
   @Prop({ required: true, type: String })
   wallpaper: string;
 
