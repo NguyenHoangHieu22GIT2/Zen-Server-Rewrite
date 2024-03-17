@@ -14,7 +14,7 @@ import {
 import { Event } from '../../entities';
 import { EndUserId, EventId, GroupId } from 'src/common/types/utilTypes';
 import { ModifyEventDto } from '../../dto';
-import { CompareIdToThrowError, PopulateSkipAndLimit } from 'src/common/utils';
+import { isIdsEqual, PopulateSkipAndLimit } from 'src/common/utils';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { LookUpEndUserAggregate } from 'src/common/constants';
 
@@ -57,7 +57,7 @@ export class EventServiceUnstable implements IEventServiceUnstable {
     eventId: EventId,
   ): Promise<DocumentMongodbType<Event>> {
     const event = await this.eventServiceStable.findEvent(eventId);
-    CompareIdToThrowError(endUserId, event.endUserId);
+    isIdsEqual(endUserId, event.endUserId);
     await event.deleteOne();
     return event;
   }
@@ -69,7 +69,7 @@ export class EventServiceUnstable implements IEventServiceUnstable {
     const event = await this.eventServiceStable.findEvent(
       modifyEventDto.eventId,
     );
-    CompareIdToThrowError(endUserId, event.endUserId);
+    isIdsEqual(endUserId, event.endUserId);
 
     Object.assign(event, modifyEventDto);
     return event.save();

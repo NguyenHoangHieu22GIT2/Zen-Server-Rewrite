@@ -4,7 +4,7 @@ import { EndUser } from '../../entities/';
 import { Model } from 'mongoose';
 import { EndUserId } from 'src/common/types/utilTypes/';
 import {
-  checkImageTypeToThrowError,
+  isImageTheRightType,
   createImageName,
   storeFile,
   removeFile,
@@ -31,7 +31,7 @@ export class EnduserServiceUnstable {
     file: Express.Multer.File;
     userId: EndUserId;
   }) {
-    checkImageTypeToThrowError(file);
+    isImageTheRightType(file);
     const fileName = createImageName(file.originalname);
     const user = await this.enduserServiceStable.findById(userId);
     storeFile({ fileName, file });

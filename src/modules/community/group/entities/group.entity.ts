@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { nameOfCollections } from 'src/common/constants/name-of-collections';
-import { EndUserId } from 'src/common/types/utilTypes/Brand';
+import { EndUserId, GroupId } from 'src/common/types/utilTypes/Brand';
 
 @Schema({ timestamps: true })
 export class Group {
-  _id: Types.ObjectId;
+  _id: GroupId;
 
   @Prop({ required: true, type: String })
   name: string;

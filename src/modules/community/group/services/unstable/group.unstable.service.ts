@@ -3,9 +3,9 @@ import { EndUserId, GroupId } from 'src/common/types/utilTypes';
 import { CreateGroupDto, ModifyGroupDto } from '../../dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import {
-  CompareIdToThrowError,
-  PopulateSkipAndLimit,
   checkIfUndefined,
+  isIdsEqual,
+  PopulateSkipAndLimit,
 } from 'src/common/utils';
 import { SearchGroupsDto } from '../../dto/search-groups.dto';
 import { IGroupServiceUnstable } from './group.unstable.interface';
@@ -65,7 +65,7 @@ export class GroupServiceUnstable implements IGroupServiceUnstable {
     if (checkIfUndefined(group)) {
       throw new NotFoundException('No Group Found');
     }
-    CompareIdToThrowError(endUserId, group.endUserId);
+    isIdsEqual(endUserId, group.endUserId);
     await this.groupServiceStable.deleteGroup(groupId);
     return group;
   }
@@ -77,7 +77,7 @@ export class GroupServiceUnstable implements IGroupServiceUnstable {
     if (checkIfUndefined(group)) {
       throw new NotFoundException('No Group Found');
     }
-    CompareIdToThrowError(endUserId, group.endUserId);
+    isIdsEqual(endUserId, group.endUserId);
     await this.groupServiceStable.saveGroup(
       modifyGroupDto.groupId,
       modifyGroupDto,
