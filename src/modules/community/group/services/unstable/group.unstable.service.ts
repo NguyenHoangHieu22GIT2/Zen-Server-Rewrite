@@ -3,7 +3,7 @@ import { GroupServiceStable } from '../stable/group.stable.service';
 import { EndUserId, GroupId } from 'src/common/types/utilTypes';
 import { CreateGroupDto, ModifyGroupDto } from '../../dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
-import { CompareIdToThrowError, PopulateSkipAndLimit } from 'src/common/utils';
+import { isIdsEqual, PopulateSkipAndLimit } from 'src/common/utils';
 import { SearchGroupsDto } from '../../dto/search-groups.dto';
 import { IGroupServiceUnstable } from './group.unstable.interface';
 import { GroupAggregation } from 'src/common/types/mongodbTypes';
@@ -45,7 +45,7 @@ export class GroupServiceUnstable implements IGroupServiceUnstable {
 
   async deleteGroup(endUserId: EndUserId, groupId: GroupId) {
     const group = await this.groupServiceStable.findGroup(groupId);
-    CompareIdToThrowError(endUserId, group.endUserId);
+    isIdsEqual(endUserId, group.endUserId);
     await group.deleteOne();
     return group;
   }
@@ -54,7 +54,7 @@ export class GroupServiceUnstable implements IGroupServiceUnstable {
     const group = await this.groupServiceStable.findGroup(
       modifyGroupDto.groupId,
     );
-    CompareIdToThrowError(endUserId, group.endUserId);
+    isIdsEqual(endUserId, group.endUserId);
     Object.assign(group, modifyGroupDto);
     return group.save();
   }

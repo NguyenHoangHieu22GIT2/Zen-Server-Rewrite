@@ -19,7 +19,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { QueryLimitSkip } from 'src/cores/global-dtos/';
 import {
-  checkImagesTypeToThrowError,
+  isImagesTheRightType,
   storeFiles,
   createImageObjectsToSave,
 } from 'src/common/utils/index';
@@ -104,7 +104,7 @@ export class PostController {
   ): Promise<DocumentMongodbType<PostEntity>> {
     const imageNames: string[] = [];
     if (images) {
-      checkImagesTypeToThrowError(images);
+      isImagesTheRightType(images);
 
       const { createdImageObjects, imageNames: imgNames } =
         createImageObjectsToSave(images);
@@ -133,7 +133,7 @@ export class PostController {
   ) {
     const imageNames: string[] = [];
     if (images) {
-      checkImagesTypeToThrowError(images);
+      isImagesTheRightType(images);
 
       const { createdImageObjects, imageNames: imgNames } =
         createImageObjectsToSave(images);
