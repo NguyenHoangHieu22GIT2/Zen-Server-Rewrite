@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { EndUserId, GroupId } from 'src/common/types/utilTypes';
 import { CreateGroupDto, ModifyGroupDto } from '../../dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
@@ -65,7 +70,9 @@ export class GroupServiceUnstable implements IGroupServiceUnstable {
     if (checkIfUndefined(group)) {
       throw new NotFoundException('No Group Found');
     }
-    isIdsEqual(endUserId, group.endUserId);
+    if (isIdsEqual(endUserId, group.endUserId)) {
+      throw new BadRequestException("You don't have access to this!");
+    }
     await this.groupServiceStable.deleteGroup(groupId);
     return group;
   }

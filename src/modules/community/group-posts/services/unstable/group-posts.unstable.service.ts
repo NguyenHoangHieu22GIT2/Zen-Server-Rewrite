@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { GroupPostServiceStable } from '../stable/group-posts.stable.service';
 import { CreateGroupPostDto } from '../../dto/create-group-post.dto';
 import {
@@ -93,7 +93,9 @@ export class GroupPostsServiceUnstable {
       const post = await this.groupPostServiceStable.findPostById({
         groupPostId: modifyGroupPostDto.groupPostId,
       });
-      isIdsEqual(post.endUserId, endUserId);
+      if (isIdsEqual(post.endUserId, endUserId)) {
+        throw new BadRequestException("You don't have access to this!");
+      }
       Object.assign(post, { ...modifyGroupPostDto, images });
       return post.save();
     });
@@ -110,7 +112,9 @@ export class GroupPostsServiceUnstable {
       const post = await this.groupPostServiceStable.findPostById({
         groupPostId,
       });
-      isIdsEqual(post.endUserId, endUserId);
+      if (isIdsEqual(post.endUserId, endUserId)) {
+        throw new BadRequestException("You don't have access to this!");
+      }
 
       await post.deleteOne();
       return post;

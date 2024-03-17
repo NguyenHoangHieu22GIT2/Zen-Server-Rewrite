@@ -1,9 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { GetGroupMembers } from '../../dto/get-group-members.dto';
 import { EndUserId } from 'src/common/types/utilTypes';
 import { Group } from 'src/modules/community/group/entities';
 import { IGroupMembersServiceUnstable } from './group-members.interface';
-import { CompareIdToThrowError } from 'src/common/utils';
+import { isIdsEqual } from 'src/common/utils';
 import {
   GroupIdAndUserIdObject,
   IGroupMembersServiceStable,
@@ -49,11 +49,9 @@ export class GroupMembersServiceUnstable
       path: 'groupId',
       select: 'endUserId',
     })) as Group & { groupId: Pick<Group, 'endUserId'> };
-    CompareIdToThrowError(
-      hostId,
-      groupPopulatedInGroupMember.endUserId,
-      'You are not the admin of the group to remove this user',
-    );
+    if (isIdsEqual(hostId, groupPopulatedInGroupMember.endUserId)) {
+      throw new BadRequestException("You don't have access to this!");
+    }
     groupMember.deleteOne();
     return groupMember;
   }

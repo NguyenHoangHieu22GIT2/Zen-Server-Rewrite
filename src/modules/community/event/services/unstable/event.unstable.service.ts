@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import {
   CreateEventParams,
   IEventServiceUnstable,
@@ -34,7 +34,9 @@ export class EventServiceUnstable implements IEventServiceUnstable {
     endUserId,
     createEventDto,
   }: CreateEventParams): Promise<DocumentMongodbType<Event>> {
-    CompareIdToThrowError(endUserId, createEventDto.endUserId);
+    if (isIdsEqual(endUserId, createEventDto.endUserId)) {
+      throw new BadRequestException("You don't have access to this!");
+    }
 
     const event = await this.eventServiceStable.createEvent(
       endUserId,
@@ -57,7 +59,9 @@ export class EventServiceUnstable implements IEventServiceUnstable {
     eventId: EventId,
   ): Promise<DocumentMongodbType<Event>> {
     const event = await this.eventServiceStable.findEvent(eventId);
-    isIdsEqual(endUserId, event.endUserId);
+    if (isIdsEqual(endUserId, event.endUserId)) {
+      throw new BadRequestException("You don't have access to this!");
+    }
     await event.deleteOne();
     return event;
   }
@@ -69,7 +73,9 @@ export class EventServiceUnstable implements IEventServiceUnstable {
     const event = await this.eventServiceStable.findEvent(
       modifyEventDto.eventId,
     );
-    isIdsEqual(endUserId, event.endUserId);
+    if (isIdsEqual(endUserId, event.endUserId)) {
+      throw new BadRequestException("You don't have access to this!");
+    }
 
     Object.assign(event, modifyEventDto);
     return event.save();
