@@ -23,7 +23,7 @@ export class EventServiceUnstable implements IEventServiceUnstable {
   constructor(
     @Inject(IEventServiceStableString)
     private readonly eventServiceStable: IEventServiceStable,
-  ) { }
+  ) {}
 
   async findEvent(eventId: EventId): Promise<DocumentMongodbType<Event>> {
     const event = await this.eventServiceStable.findEvent(eventId);
