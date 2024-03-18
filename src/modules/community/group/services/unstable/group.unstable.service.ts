@@ -8,7 +8,7 @@ import { EndUserId, GroupId } from 'src/common/types/utilTypes';
 import { CreateGroupDto, ModifyGroupDto } from '../../dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import {
-  checkIfUndefined,
+  isUndefined,
   isIdsEqual,
   PopulateSkipAndLimit,
 } from 'src/common/utils';
@@ -67,7 +67,7 @@ export class GroupServiceUnstable implements IGroupServiceUnstable {
   async deleteGroup(endUserId: EndUserId, groupId: GroupId) {
     const group: DocumentMongodbType<Group> | undefined =
       await this.groupServiceStable.findGroup(groupId);
-    if (checkIfUndefined(group)) {
+    if (isUndefined(group)) {
       throw new NotFoundException('No Group Found');
     }
     if (isIdsEqual(endUserId, group.endUserId)) {
@@ -81,7 +81,7 @@ export class GroupServiceUnstable implements IGroupServiceUnstable {
     const group = await this.groupServiceStable.findGroup(
       modifyGroupDto.groupId,
     );
-    if (checkIfUndefined(group)) {
+    if (isUndefined(group)) {
       throw new NotFoundException('No Group Found');
     }
     isIdsEqual(endUserId, group.endUserId);

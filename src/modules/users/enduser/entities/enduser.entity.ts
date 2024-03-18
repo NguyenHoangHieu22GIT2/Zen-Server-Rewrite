@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { EndUserId } from 'src/common/types/utilTypes/';
 import { BaseUser } from 'src/cores/base-user/entity/';
-
-class EndUserDeprecated_one extends BaseUser {
+@Schema({ timestamps: true })
+export class EndUser extends BaseUser {
   _id: EndUserId;
 
   @Prop({ required: true, type: String, index: 'text' })
@@ -20,15 +20,6 @@ class EndUserDeprecated_one extends BaseUser {
   createdAt: Date;
 
   updatedAt: Date;
-}
-
-/**
- * When Follow SOLID Principle (the O - Open - closed Principle in this case)
- * It will not work, and for some reason, change Schema place from EndUserDeprecated_one to EndUser solve the issue that the properties
- * in EndUser didn't get recoginize, but only the EndUserDeprecated_one
- * */
-@Schema({ timestamps: true })
-export class EndUser extends EndUserDeprecated_one {
   //Token for activate the account when first try to login
   @Prop({ required: false, type: String })
   activationToken: string;

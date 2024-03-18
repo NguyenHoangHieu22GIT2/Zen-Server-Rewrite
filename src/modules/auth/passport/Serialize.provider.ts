@@ -1,13 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PassportSerializer } from '@nestjs/passport';
 
-import { AuthServiceStable } from '../stable/auth.stable.service';
 import { userMinimalType } from 'src/common/types/objectTypes/user-minimal.type';
 import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
+import {
+  IAuthServiceStable,
+  IAuthServiceStableString,
+} from '../stable/auth.stable.interface';
 
 @Injectable()
 export class AuthSerializer extends PassportSerializer {
-  constructor(private readonly authServiceStable: AuthServiceStable) {
+  constructor(
+    @Inject(IAuthServiceStableString)
+    private readonly authServiceStable: IAuthServiceStable,
+  ) {
     super();
   }
   serializeUser(

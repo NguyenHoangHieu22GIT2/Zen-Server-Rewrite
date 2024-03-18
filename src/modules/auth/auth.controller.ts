@@ -1,10 +1,17 @@
-import { Controller, Post, Body, Patch, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Patch,
+  UseGuards,
+  Req,
+  Inject,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { SerializeDecorator } from 'src/cores/interceptors/';
 import { EndUserSerializeDto } from 'src/modules/users/enduser/';
-import { AuthServiceUnstable } from './unstable/';
-import { AuthRedisStableService, AuthServiceStable } from './stable/';
+import { AuthRedisStableService } from './stable/';
 import {
   RegisterAccountSwaggerAPIDecorators,
   ActivateAccountSwaggerAPIDecorators,
@@ -19,15 +26,25 @@ import {
   ChangeForgottonPasswordDto,
 } from './dto/';
 import { LocalGuard } from './passport/';
+import {
+  IAuthServiceStable,
+  IAuthServiceStableString,
+} from './stable/auth.stable.interface';
+import {
+  IAuthUnstableService,
+  IAuthUnstableServiceString,
+} from './unstable/auth.unstable.interface';
 
 @ApiTags('Authentication/Authorization')
 @SerializeDecorator(EndUserSerializeDto)
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authServiceUnstable: AuthServiceUnstable,
+    @Inject(IAuthUnstableServiceString)
+    private readonly authServiceUnstable: IAuthUnstableService,
     private readonly authRedisStableService: AuthRedisStableService,
-    private readonly authServiceStable: AuthServiceStable,
+    @Inject(IAuthServiceStableString)
+    private readonly authServiceStable: IAuthServiceStable,
   ) {}
 
   @RegisterAccountSwaggerAPIDecorators()
@@ -57,14 +74,8 @@ export class AuthController {
 
   @ActivateAccountSwaggerAPIDecorators()
   @Patch('activate-account')
-  async activateAccount(@Body() { activationToken }: ActivateAccountDto) {
-    const inactivateAccount =
-      await this.authServiceStable.checkAccountIfNotExistThenThrowError({
-        filterQuery: { activationToken },
-        message: 'We found no account with this token!',
-      });
-
-    return this.authServiceUnstable.activateAccount(inactivateAccount);
+  async activateAccount(@Body() activateAccountDto: ActivateAccountDto) {
+    return this.authServiceUnstable.activateAccount(activateAccountDto);
   }
 
   @LoginAccountSwaggerAPIDecorators()
@@ -77,13 +88,8 @@ export class AuthController {
   @ForgotPasswordSwaggerAPIDecorators()
   @Patch('forgot-password')
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
-    const user =
-      await this.authServiceStable.checkAccountIfNotExistThenThrowError({
-        filterQuery: { email: forgotPasswordDto.email },
-        message: 'Check your Input carefully please!',
-      });
-
-    const result = await this.authServiceUnstable.forgotPassword(user);
+    const result =
+      await this.authServiceUnstable.forgotPassword(forgotPasswordDto);
     // await this.mailerService.sendMail(
     //   forgotPasswordMail(result.email, result.token),
     // );
@@ -95,14 +101,8 @@ export class AuthController {
   async changeForgottonPassword(
     @Body() changeForgottonPasswordDto: ChangeForgottonPasswordDto,
   ) {
-    const existedAccount =
-      await this.authServiceStable.checkAccountIfNotExistThenThrowError({
-        filterQuery: { modifyToken: changeForgottonPasswordDto.modifyToken },
-        message: 'This is not the right place for you to be. Get out.',
-      });
-
     const user = await this.authServiceUnstable.changeForgottonPassword(
-      existedAccount,
+      changeForgottonPasswordDto,
       changeForgottonPasswordDto.password,
     );
 

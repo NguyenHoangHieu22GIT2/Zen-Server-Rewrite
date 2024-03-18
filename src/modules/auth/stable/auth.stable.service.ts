@@ -4,14 +4,15 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
 import { EndUser } from 'src/modules/users/enduser/';
-import * as bcrypt from 'bcryptjs';
 import { LoginEndUserDto } from '../dto/';
+import { IAuthServiceStable } from './auth.stable.interface';
+import { EndUserId } from 'src/common/types/utilTypes';
 
 @Injectable()
-export class AuthServiceStable {
+export class AuthServiceStable implements IAuthServiceStable {
   constructor(
     @InjectModel(EndUser.name) private readonly EndUserModel: Model<EndUser>,
   ) {}
@@ -23,7 +24,7 @@ export class AuthServiceStable {
   }
 
   // Checks
-  private async checkAccountIfAlreadyExist(
+  async checkAccountIfAlreadyExist(
     filterQuery: FilterQuery<EndUser>,
   ): Promise<DocumentMongodbType<EndUser>> | null {
     const user = await this.EndUserModel.findOne(filterQuery);
@@ -59,38 +60,24 @@ export class AuthServiceStable {
   }
 
   public async findAccountById(
-    _id: Types.ObjectId,
+    endUserId: EndUserId,
   ): Promise<DocumentMongodbType<EndUser>> {
-    return this.checkAccountIfAlreadyExist({ _id });
+    return this.checkAccountIfAlreadyExist({ _id: endUserId });
   }
 
   public async checkLoginAccount(
     loginEndUserDto: LoginEndUserDto,
-  ): Promise<EndUser | DocumentMongodbType<EndUser>> {
+  ): Promise<DocumentMongodbType<EndUser>> {
     const existedAccount = await this.checkAccountIfNotExistThenThrowError({
       filterQuery: { email: loginEndUserDto.email },
       message: 'Invalid Email!',
     });
     return existedAccount;
   }
-  public async checkRegisteredAccount(email: string, message: string) {
+  async checkRegisteredAccount(email: string, message: string) {
     await this.checkAccountIfAlreadyExistThenThrowError({
       filterQuery: { email },
       message,
     });
-  }
-
-  // Handle functions
-
-  async checkPasswordAndThrowErrorIfNotMatch(
-    password: string,
-    hashedPassword: string,
-  ) {
-    const isMatchedPassword = await bcrypt.compare(password, hashedPassword);
-
-    if (!isMatchedPassword) {
-      throw new UnauthorizedException('Invalid Password');
-    }
-    return isMatchedPassword;
   }
 }

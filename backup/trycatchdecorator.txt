@@ -1,0 +1,53 @@
+import { HttpException, InternalServerErrorException } from '@nestjs/common';
+/**
+ * This decorator is used to replace TryCatchModified function
+ * To make the codes cleaner, Please use this on unstable services.
+ * @returns void
+ */
+export const TryCatchDecorator = (): ClassDecorator => {
+  // type target as function because a class is a `special function`
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  return (target: Function) => {
+    // target.prototyp meaning we get the whole class's methods that we decorated with
+    const prototype = target.prototype;
+    // Get all the property names (function | method) in the class
+    const propertyNames = Object.getOwnPropertyNames(prototype);
+    propertyNames.forEach((propertyName) => {
+      // We get the descriptor of the function by targeting
+      // to the prototype and the propertyName, so that we
+      // can get the descriptor for the function
+      const propertyDescriptor = Object.getOwnPropertyDescriptor(
+        prototype,
+        propertyName,
+      );
+      // We check if the propertyDescriptor is a function or not
+      if (
+        propertyDescriptor &&
+        typeof propertyDescriptor.value === 'function'
+      ) {
+        // We store the originalMethod (meaning the methods in the class
+        // we decorated with )
+        const originalMethod = propertyDescriptor.value;
+        // The cool thing is it automatically gets the args from the function
+        // and I don't know how it does that, JS MAGIC
+        propertyDescriptor.value = async function (...args: any[]) {
+          // Then we use the tryCatchModified to call the originalMethod
+          try {
+            const result = await originalMethod.apply(this, args);
+            return result;
+          } catch (error: unknown) {
+            if (error instanceof HttpException) {
+              const HttpExceptionError = error as HttpException;
+              throw HttpExceptionError;
+            } else {
+              const serverError = error as Error;
+              throw new InternalServerErrorException(serverError.message);
+            }
+          }
+        };
+        // Then we define the property again to the prototype when we changed it.
+        Object.defineProperty(prototype, propertyName, propertyDescriptor);
+      }
+    });
+  };
+};
