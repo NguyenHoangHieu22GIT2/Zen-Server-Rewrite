@@ -13,5 +13,5 @@ export class FindByIdEndUserDto {
   @Transform((opts) => {
     return checkToConvertToMongoIdOrThrowError<EndUserId>(opts.value);
   })
-  id: EndUserId;
+  endUserId: EndUserId;
 }
