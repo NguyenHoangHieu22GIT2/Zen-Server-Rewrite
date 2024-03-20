@@ -36,7 +36,7 @@ export class EnduserController {
   @ApiParam({ name: 'id', required: true })
   @FindOneEndUserSwaggerAPIDecorators()
   async findOne(@Param() params: FindByIdEndUserDto) {
-    return this.enduserServiceUnstable.findById(params.id);
+    return this.enduserServiceUnstable.findById(params.endUserId);
   }
 
   @Patch('/change-avatar')
