@@ -175,5 +175,39 @@ describe('Auth Service Unstable', () => {
     });
   });
 
-  describe('');
+  describe('change forgotton password', () => {
+    it('will success', async () => {
+      mockupStableService.checkAccountIfNotExistThenThrowError.mockResolvedValue(
+        testEndUser,
+      );
+      const endUser = await service.changeForgottonPassword({
+        modifyToken: testEndUser.modifyToken,
+        password: 'newPasswrod',
+      });
+      expect(
+        mockupStableService.checkAccountIfNotExistThenThrowError,
+      ).toHaveBeenCalled();
+
+      expect(endUser).toBe(testEndUser);
+    });
+
+    it('will fail', async () => {
+      await tryCatchForTest(async () => {
+        mockupStableService.checkAccountIfNotExistThenThrowError.mockResolvedValue(
+          undefined,
+        );
+
+        const endUser = await service.changeForgottonPassword({
+          modifyToken: testEndUser.modifyToken,
+          password: 'newPasswrod',
+        });
+
+        expect(
+          mockupStableService.checkAccountIfNotExistThenThrowError,
+        ).toHaveBeenCalled();
+
+        expect(endUser).toBe(testEndUser);
+      });
+    });
+  });
 });

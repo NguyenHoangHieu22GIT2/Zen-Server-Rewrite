@@ -27,6 +27,5 @@ export interface IAuthUnstableService {
 
   changeForgottonPassword(
     changeForgottonPasswordDto: ChangeForgottonPasswordDto,
-    newPassword: string,
   ): Promise<DocumentMongodbType<EndUser>>;
 }

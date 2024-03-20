@@ -4,7 +4,7 @@ export async function tryCatchForTest(fn: any) {
   try {
     await fn();
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     if (
       error instanceof HttpException &&
       !(error instanceof InternalServerErrorException)

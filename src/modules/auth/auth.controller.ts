@@ -102,7 +102,6 @@ export class AuthController {
   ) {
     const user = await this.authServiceUnstable.changeForgottonPassword(
       changeForgottonPasswordDto,
-      changeForgottonPasswordDto.password,
     );
 
     await this.authRedisStableService.userConvertToRedisTypeThenHSET(

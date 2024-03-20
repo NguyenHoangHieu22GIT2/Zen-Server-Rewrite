@@ -102,7 +102,6 @@ export class AuthServiceUnstable implements IAuthUnstableService {
 
   async changeForgottonPassword(
     changeForgottonPasswordDto: ChangeForgottonPasswordDto,
-    newPassword: string,
   ) {
     const existedAccount =
       await this.authServiceStable.checkAccountIfNotExistThenThrowError({
@@ -110,9 +109,12 @@ export class AuthServiceUnstable implements IAuthUnstableService {
         message: 'This is not the right place for you to be. Get out.',
       });
 
+    if (!existedAccount) {
+      throw new UnauthorizedException("You don't have access to this!");
+    }
     existedAccount.modifyToken = undefined;
     existedAccount.password = await bcrypt.hash(
-      newPassword,
+      changeForgottonPasswordDto.password,
       +process.env.BCRYPT_HASH,
     );
 
