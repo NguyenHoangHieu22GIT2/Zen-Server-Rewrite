@@ -7,6 +7,7 @@ export const TryCatchDecorator = ClassMethodsDecorator(
       const result = await originalMethod.apply(this, args);
       return result;
     } catch (error: unknown) {
+      console.log(error);
       if (error instanceof HttpException) {
         const HttpExceptionError = error as HttpException;
         throw HttpExceptionError;

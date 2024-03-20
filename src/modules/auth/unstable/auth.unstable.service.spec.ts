@@ -48,6 +48,7 @@ describe('Auth Service Unstable', () => {
       findAccountById: jest.fn(),
       checkAccountIfAlreadyExist: jest.fn(),
     };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthServiceUnstable,
@@ -173,4 +174,6 @@ describe('Auth Service Unstable', () => {
       });
     });
   });
+
+  describe('');
 });

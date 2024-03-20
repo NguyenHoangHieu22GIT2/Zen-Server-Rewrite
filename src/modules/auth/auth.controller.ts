@@ -52,9 +52,8 @@ export class AuthController {
   async registerAccount(@Body() registerEndUserDto: RegisterEndUserDto) {
     const message = 'This email is already in used. Try another one';
 
-    await this.authRedisStableService.checkRegisteredAccount(
+    await this.authRedisStableService.isEmailAlreadyRegistered(
       registerEndUserDto.email,
-      message,
     );
     await this.authServiceStable.checkRegisteredAccount(
       registerEndUserDto.email,
@@ -66,7 +65,7 @@ export class AuthController {
 
     // await this.mailerService.sendMail(registerMail(result.email, result.token));
 
-    await this.authRedisStableService.usersHaveRegisteredPFADD(
+    await this.authRedisStableService.addUserRegisteredToRedis(
       registerEndUserDto.email,
     );
     return result;

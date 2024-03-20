@@ -48,6 +48,7 @@ export class GroupController {
       req.user._id,
       createGroupDto,
     );
+
     return group;
   }
 

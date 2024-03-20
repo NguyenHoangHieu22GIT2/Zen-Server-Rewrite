@@ -17,11 +17,9 @@ import {
   IAuthServiceStable,
   IAuthServiceStableString,
 } from '../stable/auth.stable.interface';
-import { TryCatchDecorator } from 'src/cores/decorators';
 import { IAuthUnstableService } from './auth.unstable.interface';
 
 @Injectable()
-@TryCatchDecorator()
 export class AuthServiceUnstable implements IAuthUnstableService {
   constructor(
     @Inject(IAuthServiceStableString)

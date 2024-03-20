@@ -40,12 +40,12 @@ export class UserRedis {
     return RedisClient.PFCOUNT(usersRecentlyLoginKey());
   }
 
-  static async usersHaveRegisteredPFADD(email: string) {
-    return RedisClient.PFADD(usersHaveRegisteredKey(), email);
+  static async usersHaveRegisteredSADD(email: string) {
+    return RedisClient.SADD(usersHaveRegisteredKey(), email);
   }
 
-  static async usersHaveRegisteredPFCOUNT() {
-    return RedisClient.PFCOUNT(usersHaveRegisteredKey());
+  static async usersHaveRegisteredSISMEMBER(email: string) {
+    return RedisClient.SISMEMBER(usersHaveRegisteredKey(), email);
   }
 
   static async userFriendsPFADD(
