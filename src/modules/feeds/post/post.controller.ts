@@ -44,6 +44,7 @@ import {
   ModifyPostsSwaggerAPIDecorators,
   DeletePostsSwaggerAPIDecorators,
 } from 'src/documents/swagger-api/posts/';
+import { FindByIdEndUserDto } from 'src/modules/users/enduser';
 @ApiTags('Post')
 @Controller('posts')
 @UseGuards(LoggedInGuard)
@@ -52,47 +53,6 @@ export class PostController {
     private readonly postUnstableService: PostServiceUnstable,
     private readonly postRedisStableService: PostRedisStableService,
   ) {}
-
-  @Get('/user')
-  @GetPostsSwaggerAPIDecorators()
-  async getUserPosts(
-    @Req() req: RequestUser,
-    @Query() getUserPostsDto: GetUserPostsDto,
-  ) {
-    const posts = await this.postUnstableService.getUserPosts({
-      endUserId: req.user._id,
-      getUserPostsDto,
-    });
-
-    await this.postRedisStableService.savePosts(posts);
-    return posts;
-  }
-
-  @Get('recommend')
-  @GetPostsSwaggerAPIDecorators()
-  async getRecommendedPosts(
-    @Req() req: RequestUser,
-    @Query() query: QueryLimitSkip,
-  ): Promise<PostAggregation[]> {
-    const posts = await this.postUnstableService.getRecommendedPosts({
-      endUserId: req.user._id,
-      queryLimitSkip: query,
-    });
-
-    await this.postRedisStableService.savePosts(posts);
-    return posts;
-  }
-
-  @Get(':postId')
-  @GetPostSwaggerAPIDecorators()
-  async getPost(@Req() req: RequestUser, @Param() findPostDto: FindPostDto) {
-    const post = await this.postUnstableService.findPost(findPostDto);
-    if (!post) {
-      throw new NotFoundException('No Post was found!');
-    }
-    await this.postRedisStableService.savePosts([post]);
-    return post;
-  }
 
   @Post()
   @UseInterceptors(FilesInterceptor('files'))
@@ -120,6 +80,53 @@ export class PostController {
       imageNames,
     });
 
+    return post;
+  }
+
+  @Get('/:endUserId')
+  @GetPostsSwaggerAPIDecorators()
+  async getUserPosts(
+    @Param() param: FindByIdEndUserDto,
+    @Query() getUserPostsDto: GetUserPostsDto,
+  ) {
+    const posts = await this.postUnstableService.getUserPosts({
+      endUserId: param.endUserId,
+      getUserPostsDto,
+    });
+
+    await this.postRedisStableService.savePosts(posts);
+    return posts;
+  }
+
+  @Get('recommend')
+  @GetPostsSwaggerAPIDecorators()
+  async getRecommendedPosts(
+    @Req() req: RequestUser,
+    @Query() query: QueryLimitSkip,
+  ): Promise<PostAggregation[]> {
+    const posts = await this.postUnstableService.getRecommendedPosts({
+      endUserId: req.user._id,
+      queryLimitSkip: query,
+    });
+
+    await this.postRedisStableService.savePosts(posts);
+    return posts;
+  }
+
+  @Get(':postId')
+  @GetPostSwaggerAPIDecorators()
+  async getPost(@Req() req: RequestUser, @Param() findPostDto: FindPostDto) {
+    const postCached = await this.postRedisStableService.getPost(
+      findPostDto.postId,
+    );
+    if (postCached) {
+      return postCached;
+    }
+    const post = await this.postUnstableService.findPost(findPostDto);
+    if (!post) {
+      throw new NotFoundException('No Post was found!');
+    }
+    await this.postRedisStableService.savePosts([post]);
     return post;
   }
 
