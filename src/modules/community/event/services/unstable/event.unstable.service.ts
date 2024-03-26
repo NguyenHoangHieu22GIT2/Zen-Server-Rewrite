@@ -1,5 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { IEventServiceUnstable } from './event.unstable.interface';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  CreateEventParams,
+  IEventServiceUnstable,
+} from './event.unstable.interface';
 import {
   IEventServiceStable,
   IEventServiceStableString,
@@ -9,21 +12,44 @@ import {
   EventAggregation,
 } from 'src/common/types/mongodbTypes';
 import { Event } from '../../entities';
-import { EndUserId, EventId } from 'src/common/types/utilTypes';
+import { EndUserId, EventId, GroupId } from 'src/common/types/utilTypes';
 import { ModifyEventDto } from '../../dto';
-import { CompareIdToThrowError, PopulateSkipAndLimit } from 'src/common/utils';
+import { isIdsEqual, PopulateSkipAndLimit } from 'src/common/utils';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { LookUpEndUserAggregate } from 'src/common/constants';
+import { TryCatchDecorator } from 'src/cores/decorators';
 
 @Injectable()
+@TryCatchDecorator()
 export class EventServiceUnstable implements IEventServiceUnstable {
   constructor(
     @Inject(IEventServiceStableString)
     private readonly eventServiceStable: IEventServiceStable,
   ) {}
 
-  async getEvents(queryLimitSkip: QueryLimitSkip) {
+  async findEvent(eventId: EventId): Promise<DocumentMongodbType<Event>> {
+    const event = await this.eventServiceStable.findEvent(eventId);
+    return event;
+  }
+
+  async createEvent({
+    endUserId,
+    createEventDto,
+  }: CreateEventParams): Promise<DocumentMongodbType<Event>> {
+    if (isIdsEqual(endUserId, createEventDto.endUserId)) {
+      throw new BadRequestException("You don't have access to this!");
+    }
+
+    const event = await this.eventServiceStable.createEvent(
+      endUserId,
+      createEventDto,
+    );
+    return event;
+  }
+
+  async getEvents(queryLimitSkip: QueryLimitSkip, groupId: GroupId) {
     const events = await this.eventServiceStable.getEvents<EventAggregation>([
+      { $match: { groupId } },
       ...PopulateSkipAndLimit(queryLimitSkip),
       ...LookUpEndUserAggregate,
     ]);
@@ -35,7 +61,9 @@ export class EventServiceUnstable implements IEventServiceUnstable {
     eventId: EventId,
   ): Promise<DocumentMongodbType<Event>> {
     const event = await this.eventServiceStable.findEvent(eventId);
-    CompareIdToThrowError(endUserId, event.endUserId);
+    if (isIdsEqual(endUserId, event.endUserId)) {
+      throw new BadRequestException("You don't have access to this!");
+    }
     await event.deleteOne();
     return event;
   }
@@ -47,7 +75,9 @@ export class EventServiceUnstable implements IEventServiceUnstable {
     const event = await this.eventServiceStable.findEvent(
       modifyEventDto.eventId,
     );
-    CompareIdToThrowError(endUserId, event.endUserId);
+    if (isIdsEqual(endUserId, event.endUserId)) {
+      throw new BadRequestException("You don't have access to this!");
+    }
 
     Object.assign(event, modifyEventDto);
     return event.save();

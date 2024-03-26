@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { GroupPostServiceStable } from '../stable/group-posts.stable.service';
 import { CreateGroupPostDto } from '../../dto/create-group-post.dto';
 import {
@@ -11,7 +11,7 @@ import { FindGroupPostDto } from '../../dto/find-group-post.dto';
 import { GetUserGroupPostsDto } from '../../dto/get-user-group-posts.dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
 import { ModifyGroupPostDto } from '../../dto/modify-group-post.dto';
-import { CompareIdToThrowError } from 'src/common/utils';
+import { isIdsEqual } from 'src/common/utils';
 
 @Injectable()
 export class GroupPostsServiceUnstable {
@@ -93,7 +93,9 @@ export class GroupPostsServiceUnstable {
       const post = await this.groupPostServiceStable.findPostById({
         groupPostId: modifyGroupPostDto.groupPostId,
       });
-      CompareIdToThrowError(post.endUserId, endUserId);
+      if (isIdsEqual(post.endUserId, endUserId)) {
+        throw new BadRequestException("You don't have access to this!");
+      }
       Object.assign(post, { ...modifyGroupPostDto, images });
       return post.save();
     });
@@ -110,7 +112,9 @@ export class GroupPostsServiceUnstable {
       const post = await this.groupPostServiceStable.findPostById({
         groupPostId,
       });
-      CompareIdToThrowError(post.endUserId, endUserId);
+      if (isIdsEqual(post.endUserId, endUserId)) {
+        throw new BadRequestException("You don't have access to this!");
+      }
 
       await post.deleteOne();
       return post;

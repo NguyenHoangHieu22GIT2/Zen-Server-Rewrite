@@ -9,12 +9,14 @@ import {
   AuthServiceUnstable,
   AuthController,
 } from './';
+import { IAuthServiceStableString } from './stable/auth.stable.interface';
+import { IAuthUnstableServiceString } from './unstable/auth.unstable.interface';
 
 @Module({
   controllers: [AuthController],
   providers: [
-    AuthServiceStable,
-    AuthServiceUnstable,
+    { useClass: AuthServiceStable, provide: IAuthServiceStableString },
+    { useClass: AuthServiceUnstable, provide: IAuthUnstableServiceString },
     LocalStrategy,
     AuthSerializer,
     AuthRedisStableService,

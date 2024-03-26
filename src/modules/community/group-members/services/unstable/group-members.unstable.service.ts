@@ -1,63 +1,58 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import {
-  GroupIdAndUserIdObject,
-  GroupMembersServiceStable,
-} from '../stable/group-members.stable.service';
-import { tryCatchModified } from 'src/common/utils';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { GetGroupMembers } from '../../dto/get-group-members.dto';
 import { EndUserId } from 'src/common/types/utilTypes';
 import { Group } from 'src/modules/community/group/entities';
+import { IGroupMembersServiceUnstable } from './group-members.interface';
+import { isIdsEqual } from 'src/common/utils';
+import {
+  GroupIdAndUserIdObject,
+  IGroupMembersServiceStable,
+  IGroupMembersServiceStableString,
+} from '../stable/group-member.interface';
 
 @Injectable()
-export class GroupMembersServiceUnstable {
+export class GroupMembersServiceUnstable
+  implements IGroupMembersServiceUnstable
+{
   constructor(
-    private readonly groupMembersServiceStable: GroupMembersServiceStable,
+    @Inject(IGroupMembersServiceStableString)
+    private readonly groupMembersServiceStable: IGroupMembersServiceStable,
   ) {}
 
   async addGroupMember(groupIdAndUserIdObject: GroupIdAndUserIdObject) {
-    return tryCatchModified(async () => {
-      return this.groupMembersServiceStable.addGroupMember(
-        groupIdAndUserIdObject,
-      );
-    });
+    return this.groupMembersServiceStable.addGroupMember(
+      groupIdAndUserIdObject,
+    );
   }
 
   async getGroupMembers(getGroupMembers: GetGroupMembers) {
-    return tryCatchModified(async () => {
-      const groupMembers =
-        await this.groupMembersServiceStable.getGroupMembers(getGroupMembers);
-      return groupMembers;
-    });
+    const groupMembers =
+      await this.groupMembersServiceStable.getGroupMembers(getGroupMembers);
+    return groupMembers;
   }
 
   async findGroupMember(groupIdAndUserIdObject: GroupIdAndUserIdObject) {
-    return tryCatchModified(async () => {
-      const groupMember = await this.groupMembersServiceStable.findGroupMember(
-        groupIdAndUserIdObject,
-      );
-      return groupMember;
-    });
+    const groupMember = await this.groupMembersServiceStable.findGroupMember(
+      groupIdAndUserIdObject,
+    );
+    return groupMember;
   }
   async deleteGroupMember(
     hostId: EndUserId,
     groupIdAndUserIdObject: GroupIdAndUserIdObject,
   ) {
-    return tryCatchModified(async () => {
-      const groupMember = await this.groupMembersServiceStable.findGroupMember(
-        groupIdAndUserIdObject,
-      );
-      //Populate in Mongoose is hard with types, so it has to be this ugly!
-      const groupPopulatedInGroupMember = (await groupMember.populate({
-        path: 'groupId',
-        select: 'endUserId',
-      })) as Group & { groupId: Pick<Group, 'endUserId'> };
-      if (!hostId.equals(groupPopulatedInGroupMember.endUserId)) {
-        throw new UnauthorizedException(
-          'You are not the admin of the group to remove this user',
-        );
-      }
-      groupMember.deleteOne();
-      return groupMember;
-    });
+    const groupMember = await this.groupMembersServiceStable.findGroupMember(
+      groupIdAndUserIdObject,
+    );
+    //Populate in Mongoose is hard with types, so it has to be this ugly!
+    const groupPopulatedInGroupMember = (await groupMember.populate({
+      path: 'groupId',
+      select: 'endUserId',
+    })) as Group & { groupId: Pick<Group, 'endUserId'> };
+    if (isIdsEqual(hostId, groupPopulatedInGroupMember.endUserId)) {
+      throw new BadRequestException("You don't have access to this!");
+    }
+    groupMember.deleteOne();
+    return groupMember;
   }
 }

@@ -1,6 +1,6 @@
-export * from './checks/checkImagesTypeToThrowError';
-export * from './checks/checkImageTypeToThrowError';
-export * from './checks/CompareIdToThrowError';
+export * from './checks/isImagesTheRightType';
+export * from './checks/isImageTheRightType';
+export * from './checks/isIdsEqual';
 export * from './converts/convertFilesToArrayOfNamesString';
 export * from './converts/convertObjectToHash';
 export * from './converts/convertToBooleanBasedOnStringMeaning';
@@ -18,3 +18,4 @@ export * from './files/removeFile';
 export * from './files/storeFile';
 export * from './files/storeFiles';
 export * from './checks/tryCatchModified';
+export * from './checks/isUndefined';

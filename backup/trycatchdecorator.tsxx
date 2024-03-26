@@ -4,7 +4,7 @@ import { HttpException, InternalServerErrorException } from '@nestjs/common';
  * To make the codes cleaner, Please use this on unstable services.
  * @returns void
  */
-export const TryCatchForServiceClass = (): ClassDecorator => {
+export const TryCatchDecorator = (): ClassDecorator => {
   // type target as function because a class is a `special function`
   // eslint-disable-next-line @typescript-eslint/ban-types
   return (target: Function) => {
@@ -12,8 +12,6 @@ export const TryCatchForServiceClass = (): ClassDecorator => {
     const prototype = target.prototype;
     // Get all the property names (function | method) in the class
     const propertyNames = Object.getOwnPropertyNames(prototype);
-    console.log(propertyNames);
-    // We loop to each function name in the class
     propertyNames.forEach((propertyName) => {
       // We get the descriptor of the function by targeting
       // to the prototype and the propertyName, so that we

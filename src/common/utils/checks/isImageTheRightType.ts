@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 
-export function checkImageTypeToThrowError(
+export function isImageTheRightType(
   file: Express.Multer.File,
 ): file is Express.Multer.File {
   if (

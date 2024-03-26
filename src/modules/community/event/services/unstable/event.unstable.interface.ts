@@ -3,14 +3,28 @@ import {
   EventAggregation,
 } from 'src/common/types/mongodbTypes';
 import { Event } from '../../entities';
-import { EndUserId, EventId } from 'src/common/types/utilTypes';
-import { ModifyEventDto } from '../../dto';
+import { EndUserId, EventId, GroupId } from 'src/common/types/utilTypes';
+import { CreateEventDto, ModifyEventDto } from '../../dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 
 export const IEventServiceUnstableString = 'IEventServiceUnstable';
 
+export type CreateEventParams = {
+  endUserId: EndUserId;
+  createEventDto: CreateEventDto & { endUserId: EndUserId };
+};
+
 export interface IEventServiceUnstable {
-  getEvents(queryLimitSkip: QueryLimitSkip): Promise<EventAggregation[]>;
+  createEvent(
+    createEventParams: CreateEventParams,
+  ): Promise<DocumentMongodbType<Event>>;
+
+  findEvent(eventId: EventId): Promise<DocumentMongodbType<Event>>;
+
+  getEvents(
+    queryLimitSkip: QueryLimitSkip,
+    groupId: GroupId,
+  ): Promise<EventAggregation[]>;
 
   modifyEvent(
     endUserId: EndUserId,
