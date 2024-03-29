@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePostDto } from '../../../post/dto/create-post.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, PipelineStage } from 'mongoose';
+import { Model } from 'mongoose';
 import { Post } from '../../../post/entities/post.entity';
-import { FindPostDto } from '../../../post/dto/find-post.dto';
 import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/feeds';
-import { EndUserId } from 'src/common/types/utilTypes/Brand';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
-import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
 import { LookUpEndUserAggregate } from 'src/common/constants/lookup-enduser.aggregate';
+import {
+  IPostServiceStable,
+  IPostServiceStableArgs,
+} from './post.stable.interface';
 
 @Injectable()
-export class PostServiceStable {
+export class PostServiceStable implements IPostServiceStable {
   constructor(
     @InjectModel(Post.name) private readonly postModel: Model<Post>,
   ) {}
@@ -19,10 +19,7 @@ export class PostServiceStable {
   public async getPostsAggregation({
     queryLimitSkip,
     queryAggregation,
-  }: {
-    queryLimitSkip: QueryLimitSkip;
-    queryAggregation: PipelineStage[];
-  }) {
+  }: IPostServiceStableArgs['getPostsAggregation']) {
     const postsAggregation: PostAggregation[] = await this.postModel.aggregate([
       ...queryAggregation,
       {
@@ -34,7 +31,9 @@ export class PostServiceStable {
     return postsAggregation;
   }
 
-  public async findPostAggregation(findPostDto: FindPostDto) {
+  public async findPostAggregation(
+    findPostDto: IPostServiceStableArgs['findPostAggregation'],
+  ) {
     const postsAggregation: PostAggregation[] = await this.postModel.aggregate([
       {
         $match: { _id: findPostDto.postId },
@@ -46,7 +45,7 @@ export class PostServiceStable {
   }
 
   public async findPostById(
-    findPostDto: FindPostDto,
+    findPostDto: IPostServiceStableArgs['findPostById'],
   ): Promise<DocumentMongodbType<Post>> {
     const post = await this.postModel.findById(findPostDto.postId);
     return post;
@@ -56,11 +55,7 @@ export class PostServiceStable {
     endUserId,
     createPostDto,
     imageNames,
-  }: {
-    createPostDto: CreatePostDto;
-    endUserId: EndUserId;
-    imageNames: string[];
-  }): Promise<DocumentMongodbType<Post>> {
+  }: IPostServiceStableArgs['createPost']): Promise<DocumentMongodbType<Post>> {
     const createdPost = await this.postModel.create({
       ...createPostDto,
       endUserId,

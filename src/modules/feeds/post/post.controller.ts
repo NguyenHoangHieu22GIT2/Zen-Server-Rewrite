@@ -12,6 +12,7 @@ import {
   Patch,
   Delete,
   NotFoundException,
+  Inject,
 } from '@nestjs/common';
 import { RequestUser } from 'src/common/types/utilTypes/';
 import { LoggedInGuard } from 'src/modules/auth/';
@@ -45,11 +46,14 @@ import {
   DeletePostsSwaggerAPIDecorators,
 } from 'src/documents/swagger-api/posts/';
 import { FindByIdEndUserDto } from 'src/modules/users/enduser';
+import { IPostServiceUnstableString } from './services/unstable/post.unstable.interface';
+
 @ApiTags('Post')
 @Controller('posts')
 @UseGuards(LoggedInGuard)
 export class PostController {
   constructor(
+    @Inject(IPostServiceUnstableString)
     private readonly postUnstableService: PostServiceUnstable,
     private readonly postRedisStableService: PostRedisStableService,
   ) {}
