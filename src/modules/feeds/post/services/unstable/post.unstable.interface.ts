@@ -48,7 +48,7 @@ export type IPostServiceUnstableArgs = {
   };
 };
 
-export const IPostServiceUnstableString = 'IPostServiceUnstable ';
+export const IPostServiceUnstableString = 'IPostServiceUnstable';
 
 export interface IPostServiceUnstable {
   createPost(

@@ -20,6 +20,7 @@ import { NotificationModule } from './social/notification/notification.module';
 import { GroupMembersModule } from './community/group-members/group-members.module';
 import { GroupPostsModule } from './community/group-posts/group-posts.module';
 import { AuthorizationMiddleware } from 'src/cores/middlewares/Authorization.middleware';
+
 @Module({
   imports: [
     //Configurations

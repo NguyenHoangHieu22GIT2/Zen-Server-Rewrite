@@ -22,7 +22,7 @@ export type IPostServiceStableArgs = {
   };
 };
 
-export const IPostServiceStableString = 'IPostServiceStable ';
+export const IPostServiceStableString = 'IPostServiceStable';
 
 export interface IPostServiceStable {
   getPostsAggregation(

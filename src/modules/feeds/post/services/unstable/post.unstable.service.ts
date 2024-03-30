@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PostServiceStable } from '../stable/post.stable.service';
 import { PipelineStage } from 'mongoose';
 import { isIdsEqual } from 'src/common/utils/index';
 import { TryCatchDecorator } from 'src/cores/decorators';
@@ -7,14 +6,17 @@ import {
   IPostServiceUnstable,
   IPostServiceUnstableArgs,
 } from './post.unstable.interface';
-import { IPostServiceStableString } from '../stable/post.stable.interface';
+import {
+  IPostServiceStable,
+  IPostServiceStableString,
+} from '../stable/post.stable.interface';
 
 @Injectable()
 @TryCatchDecorator()
 export class PostServiceUnstable implements IPostServiceUnstable {
   constructor(
     @Inject(IPostServiceStableString)
-    private readonly postServiceStable: PostServiceStable,
+    private readonly postServiceStable: IPostServiceStable,
   ) {}
 
   async createPost({
