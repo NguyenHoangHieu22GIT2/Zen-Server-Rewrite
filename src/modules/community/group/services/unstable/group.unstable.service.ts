@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
   Inject,
@@ -39,6 +40,7 @@ export class GroupServiceUnstable implements IGroupServiceUnstable {
       endUserId,
       createGroupDto,
     );
+
     return group;
   }
 
@@ -70,7 +72,7 @@ export class GroupServiceUnstable implements IGroupServiceUnstable {
     if (isUndefined(group)) {
       throw new NotFoundException('No Group Found');
     }
-    if (isIdsEqual(endUserId, group.endUserId)) {
+    if (!isIdsEqual(endUserId, group.endUserId)) {
       throw new BadRequestException("You don't have access to this!");
     }
     await this.groupServiceStable.deleteGroup(groupId);
