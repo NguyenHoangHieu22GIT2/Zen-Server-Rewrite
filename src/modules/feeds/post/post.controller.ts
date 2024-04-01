@@ -44,6 +44,7 @@ import {
   ModifyPostsSwaggerAPIDecorators,
   DeletePostsSwaggerAPIDecorators,
 } from 'src/documents/swagger-api/posts/';
+
 @ApiTags('Post')
 @Controller('posts')
 @UseGuards(LoggedInGuard)
