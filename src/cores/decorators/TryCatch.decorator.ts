@@ -2,9 +2,9 @@ import { HttpException, InternalServerErrorException } from '@nestjs/common';
 import { ClassMethodsDecorator } from './ClassMethods.Decorator';
 
 export const TryCatchDecorator = ClassMethodsDecorator(
-  async (originalMethod, args) => {
+  async function (_this, originalMethod, args) {
     try {
-      const result = await originalMethod.apply(this, args);
+      const result = await originalMethod.apply(_this, args);
       return result;
     } catch (error: unknown) {
       console.log('-----------------------------');
