@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Inject,
   Param,
   Post,
   Query,
@@ -22,12 +23,16 @@ import { LoggedInGuard } from 'src/modules/auth/passport/';
 import { QueryLimitSkip } from 'src/cores/global-dtos/';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
 import { Like } from './entities/';
+import { ILikeServiceUnstableString } from './services/unstable/like.unstable.interface';
 
 @Controller('like')
 @ApiTags('Like')
 @UseGuards(LoggedInGuard)
 export class LikeController {
-  constructor(private readonly likeServiceUnstable: LikeServiceUnstable) {}
+  constructor(
+    @Inject(ILikeServiceUnstableString)
+    private readonly likeServiceUnstable: LikeServiceUnstable,
+  ) {}
 
   @Post()
   @ToggleLikeSwaggerAPIDecorators()

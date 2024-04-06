@@ -5,9 +5,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
+import { ILikeServiceStable } from './like.stable.interface';
 
 @Injectable()
-export class LikeServiceStable {
+export class LikeServiceStable implements ILikeServiceStable {
   constructor(
     @InjectModel(Like.name) private readonly likeModel: Model<Like>,
   ) {}
