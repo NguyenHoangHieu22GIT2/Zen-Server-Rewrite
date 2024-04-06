@@ -5,9 +5,10 @@ import { Model, PipelineStage } from 'mongoose';
 import { GetCommentsDto, FindCommentDto, CreateCommentDto } from '../../dto/';
 import { CommentId, EndUserId } from 'src/common/types/utilTypes/';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
+import { ICommentStableService } from './comment.stable.interface';
 
 @Injectable()
-export class CommentServiceStable {
+export class CommentServiceStable implements ICommentStableService {
   constructor(
     @InjectModel(Comment.name) private readonly commentModel: Model<Comment>,
   ) {}
@@ -58,11 +59,5 @@ export class CommentServiceStable {
       ...createCommentDto,
     });
     return comment;
-  }
-
-  async deleteComment(commentId: CommentId) {
-    await this.commentModel.deleteOne({
-      _id: commentId,
-    });
   }
 }
