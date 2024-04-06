@@ -7,9 +7,7 @@ import {
   PostId,
 } from 'src/common/types/utilTypes';
 import { LikeServiceUnstable } from './like.unstable.service';
-import { ILikeServiceUnstable } from './like.unstable.interface';
 import { Like } from '../../entities';
-import { PostServiceStable } from 'src/modules/feeds/post';
 import { LikeServiceStable } from '../stable';
 import { ILikeServiceStableString } from '../stable/like.stable.interface';
 
