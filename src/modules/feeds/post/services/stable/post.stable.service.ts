@@ -9,6 +9,7 @@ import {
   IPostServiceStable,
   IPostServiceStableArgs,
 } from './post.stable.interface';
+import { PostId } from 'src/common/types/utilTypes';
 
 @Injectable()
 export class PostServiceStable implements IPostServiceStable {
@@ -62,5 +63,13 @@ export class PostServiceStable implements IPostServiceStable {
       images: imageNames,
     });
     return createdPost;
+  }
+
+  savePost(postId: PostId, data: Partial<Post>): Promise<unknown> {
+    return this.postModel.updateOne({ _id: postId }, { $set: { ...data } });
+  }
+
+  deletePost(postId: PostId): Promise<unknown> {
+    return this.postModel.deleteOne({ _id: postId });
   }
 }

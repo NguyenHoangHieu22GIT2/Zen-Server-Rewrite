@@ -47,7 +47,6 @@ import {
 } from 'src/documents/swagger-api/posts/';
 import { FindByIdEndUserDto } from 'src/modules/users/enduser';
 import { IPostServiceUnstableString } from './services/unstable/post.unstable.interface';
-import { PipelineStage } from 'mongoose';
 
 @ApiTags('Post')
 @Controller('posts')

@@ -29,5 +29,5 @@ export class CreatePostDto {
   })
   @Transform(({ value }) => checkToConvertToMongoIdOrThrowError(value))
   @IsString()
-  groupId: string;
+  groupId?: string;
 }

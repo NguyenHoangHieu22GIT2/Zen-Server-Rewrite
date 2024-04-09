@@ -35,7 +35,7 @@ export class Post {
     type: Types.ObjectId,
     ref: nameOfCollections.Group,
   })
-  groupId: GroupId;
+  groupId?: GroupId;
 
   createdAt: Date;
 
