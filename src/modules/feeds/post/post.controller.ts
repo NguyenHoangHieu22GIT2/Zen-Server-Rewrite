@@ -89,13 +89,26 @@ export class PostController {
 
   @Get('/:endUserId')
   @GetPostsSwaggerAPIDecorators()
-  async getUserPosts(
+  async getUserPostsFromProfile(
     @Param() param: FindByIdEndUserDto,
     @Query() getUserPostsDto: GetUserPostsDto,
   ) {
-    const posts = await this.postUnstableService.getUserPosts({
-      endUserId: param.endUserId,
+    const posts = await this.postUnstableService.getUserPostsFromProfile({
       getUserPostsDto,
+      endUserId: param.endUserId,
+    });
+    await this.postRedisStableService.savePosts(posts);
+    return posts;
+  }
+  @Get('/group/:endUserId')
+  @GetPostsSwaggerAPIDecorators()
+  async getUserPostsFromGroup(
+    @Param() param: FindByIdEndUserDto,
+    @Query() getUserPostsDto: GetUserPostsDto,
+  ) {
+    const posts = await this.postUnstableService.getUserPostsFromGroup({
+      getUserPostsDto,
+      endUserId: param.endUserId,
     });
 
     await this.postRedisStableService.savePosts(posts);

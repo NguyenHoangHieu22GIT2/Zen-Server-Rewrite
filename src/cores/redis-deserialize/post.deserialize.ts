@@ -17,5 +17,9 @@ export function postDeserialize(post: ObjectToHashType<Post>): Post {
     updatedAt: new Date(parseInt(post.updatedAt)),
     views: parseInt(post.views),
     images: JSON.parse(post.images) as string[],
+    groupId: checkToConvertToMongoIdOrThrowError({
+      id: post.groupId,
+      returnError: false,
+    }),
   };
 }

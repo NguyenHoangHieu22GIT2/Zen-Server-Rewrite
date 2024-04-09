@@ -59,7 +59,11 @@ export interface IPostServiceUnstable {
     findPostDto: IPostServiceUnstableArgs['findPost'],
   ): Promise<PostAggregation>;
 
-  getUserPosts(
+  getUserPostsFromGroup(
+    getuserPosts: IPostServiceUnstableArgs['getUserPosts'],
+  ): Promise<PostAggregation[]>;
+
+  getUserPostsFromProfile(
     getuserPosts: IPostServiceUnstableArgs['getUserPosts'],
   ): Promise<PostAggregation[]>;
 
