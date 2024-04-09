@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, MinLength } from 'class-validator';
-import { Post } from '../entities/post.entity';
+import { Transform } from 'class-transformer';
+import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils';
 
-export class CreatePostDto implements Partial<Post> {
+export class CreatePostDto {
   @ApiProperty({
     title: "post's title",
     required: true,
@@ -20,4 +21,13 @@ export class CreatePostDto implements Partial<Post> {
   @IsString()
   @MinLength(1)
   body: string;
+
+  @ApiProperty({
+    title: 'Group Id',
+    required: false,
+    example: '1234',
+  })
+  @Transform(({ value }) => checkToConvertToMongoIdOrThrowError(value))
+  @IsString()
+  groupId: string;
 }
