@@ -101,7 +101,8 @@ export class PostServiceUnstable implements IPostServiceUnstable {
     });
     isIdsEqual(post.endUserId, endUserId);
     Object.assign(post, { ...modifyPostDto, images });
-    return post.save();
+    await this.postServiceStable.savePost(post.id, post);
+    return post;
   }
 
   public async deletePost({
@@ -113,7 +114,7 @@ export class PostServiceUnstable implements IPostServiceUnstable {
     });
     isIdsEqual(post.endUserId, endUserId);
 
-    await post.deleteOne();
+    await this.postServiceStable.deletePost(postId);
     return post;
   }
 }

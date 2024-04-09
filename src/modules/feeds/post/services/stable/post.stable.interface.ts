@@ -6,7 +6,7 @@ import {
 } from 'src/common/types/mongodbTypes';
 import { CreatePostDto, FindPostDto } from '../../dto';
 import { Post } from '../../entities';
-import { EndUserId } from 'src/common/types/utilTypes';
+import { EndUserId, PostId } from 'src/common/types/utilTypes';
 
 export type IPostServiceStableArgs = {
   getPostsAggregation: {
@@ -40,4 +40,7 @@ export interface IPostServiceStable {
   createPost(
     params: IPostServiceStableArgs['createPost'],
   ): Promise<DocumentMongodbType<Post>>;
+
+  deletePost(postId: PostId): Promise<unknown>;
+  savePost(postId: PostId, data: Partial<Post>): Promise<unknown>;
 }

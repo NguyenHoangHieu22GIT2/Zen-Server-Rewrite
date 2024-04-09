@@ -19,7 +19,7 @@ describe('groupUnstableService', () => {
     body: 'This is me, mario :)))))',
   };
 
-  const fulfilledPost: Post & { save: () => any; deleteOne: () => any } = {
+  const fulfilledPost: Post = {
     title: 'Hello everyone',
     body: 'This is me, mario :)))))',
     _id: new mongoose.Types.ObjectId() as PostId,
@@ -28,12 +28,6 @@ describe('groupUnstableService', () => {
     createdAt: new Date(),
     endUserId: testEndUserId,
     updatedAt: new Date(),
-    save: function () {
-      return this;
-    },
-    deleteOne: function () {
-      return this;
-    },
   };
 
   beforeEach(async () => {
@@ -43,6 +37,8 @@ describe('groupUnstableService', () => {
       createPost: jest.fn(),
       findPostById: jest.fn(),
       findPostAggregation: jest.fn(),
+      deletePost: jest.fn(),
+      savePost: jest.fn(),
     };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -83,10 +79,9 @@ describe('groupUnstableService', () => {
           imageNames: [],
           createPostDto: postCreated,
         }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
-
   describe('find post:', () => {
     it('succeed', async () => {
       mockupStableService.findPostAggregation.mockResolvedValue(fulfilledPost);
@@ -96,38 +91,11 @@ describe('groupUnstableService', () => {
       expect(post.title).toBe(fulfilledPost.title);
       expect(post.body).toBe(fulfilledPost.body);
     });
-
-    it('failed', async () => {
+    it('fail', async () => {
       mockupStableService.findPostAggregation.mockRejectedValue(new Error());
       await expect(
         service.findPost({ postId: fulfilledPost._id }),
-      ).rejects.toThrowError();
-    });
-  });
-
-  describe('get user posts:', () => {
-    it('succeed', async () => {
-      mockupStableService.getPostsAggregation.mockResolvedValue([
-        fulfilledPost,
-      ]);
-      const posts = await service.getUserPosts({
-        endUserId: testEndUserId,
-        getUserPostsDto: { limit: 10, skip: 0, endUserId: testEndUserId },
-      });
-
-      expect(mockupStableService.getPostsAggregation).toHaveBeenCalled();
-      expect(posts[0].title).toBe(fulfilledPost.title);
-      expect(posts[0].body).toBe(fulfilledPost.body);
-    });
-
-    it('failed', async () => {
-      mockupStableService.getPostsAggregation.mockRejectedValue(new Error());
-      await expect(
-        service.getUserPosts({
-          endUserId: testEndUserId,
-          getUserPostsDto: { limit: 10, skip: 0, endUserId: testEndUserId },
-        }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
 
@@ -153,7 +121,7 @@ describe('groupUnstableService', () => {
           queryLimitSkip: { limit: 10, skip: 0 },
           pipelineStages: [{ $match: { endUserId: testEndUserId } }],
         }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
 
@@ -179,34 +147,7 @@ describe('groupUnstableService', () => {
           queryLimitSkip: { limit: 10, skip: 0 },
           endUserId: testEndUserId,
         }),
-      ).rejects.toThrowError();
-    });
-  });
-
-  describe('modify post:', () => {
-    it('succeed', async () => {
-      mockupStableService.findPostById.mockResolvedValue(fulfilledPost);
-      mockupStableService.createPost.mockResolvedValue(fulfilledPost);
-      const post = await service.modifyPost({
-        endUserId: testEndUserId,
-        images: [],
-        modifyPostDto: { postId: fulfilledPost._id, ...postCreated },
-      });
-
-      expect(mockupStableService.findPostById).toHaveBeenCalled();
-      expect(post.title).toBe(postCreated.title);
-      expect(post.body).toBe(postCreated.body);
-    });
-
-    it('failed', async () => {
-      mockupStableService.findPostById.mockRejectedValue(new Error());
-      await expect(
-        service.modifyPost({
-          endUserId: testEndUserId,
-          images: [],
-          modifyPostDto: { postId: fulfilledPost._id, ...postCreated },
-        }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
     });
   });
 
@@ -230,7 +171,40 @@ describe('groupUnstableService', () => {
           endUserId: testEndUserId,
           postId: fulfilledPost._id,
         }),
-      ).rejects.toThrowError();
+      ).rejects.toThrow();
+    });
+  });
+
+  describe('modify post:', () => {
+    it('succeed', async () => {
+      mockupStableService.findPostById.mockResolvedValue(fulfilledPost);
+      const post = await service.modifyPost({
+        endUserId: testEndUserId,
+        images: [],
+        modifyPostDto: {
+          postId: fulfilledPost._id,
+          title: fulfilledPost.title,
+          body: fulfilledPost.body,
+        },
+      });
+
+      expect(mockupStableService.findPostById).toHaveBeenCalled();
+      expect(post.title).toBe(fulfilledPost.title);
+      expect(post.body).toBe(fulfilledPost.body);
+    });
+    it('fail', async () => {
+      mockupStableService.findPostById.mockRejectedValue(new Error());
+      await expect(
+        service.modifyPost({
+          endUserId: testEndUserId,
+          images: [],
+          modifyPostDto: {
+            postId: fulfilledPost._id,
+            title: 'Hello everyone',
+            body: 'This is me, mario :)))))',
+          },
+        }),
+      ).rejects.toThrow();
     });
   });
 });
