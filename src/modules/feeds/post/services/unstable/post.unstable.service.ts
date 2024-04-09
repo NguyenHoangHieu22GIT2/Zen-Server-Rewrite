@@ -37,13 +37,30 @@ export class PostServiceUnstable implements IPostServiceUnstable {
     return post;
   }
 
-  public async getUserPosts({
-    endUserId,
+  public async getUserPostsFromProfile({
     getUserPostsDto,
+    endUserId,
   }: IPostServiceUnstableArgs['getUserPosts']) {
     const posts = await this.postServiceStable.getPostsAggregation({
       queryLimitSkip: getUserPostsDto,
-      queryAggregation: [{ $match: { endUserId } }],
+      queryAggregation: [{ $match: { endUserId: endUserId } }],
+    });
+    return posts;
+  }
+
+  public async getUserPostsFromGroup({
+    getUserPostsDto,
+    endUserId,
+  }: IPostServiceUnstableArgs['getUserPosts']) {
+    const query: PipelineStage[] = [{ $match: { endUserId: endUserId } }];
+
+    if (getUserPostsDto.groupId) {
+      query[0]['$match'].groupId = getUserPostsDto.groupId;
+    }
+
+    const posts = await this.postServiceStable.getPostsAggregation({
+      queryLimitSkip: getUserPostsDto,
+      queryAggregation: query,
     });
     return posts;
   }

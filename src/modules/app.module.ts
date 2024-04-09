@@ -18,7 +18,6 @@ import { ConversationModule } from './communication/conversation/conversation.mo
 import { MessageModule } from './communication/message/message.module';
 import { NotificationModule } from './social/notification/notification.module';
 import { GroupMembersModule } from './community/group-members/group-members.module';
-import { GroupPostsModule } from './community/group-posts/group-posts.module';
 import { AuthorizationMiddleware } from 'src/cores/middlewares/Authorization.middleware';
 
 @Module({
@@ -58,7 +57,6 @@ import { AuthorizationMiddleware } from 'src/cores/middlewares/Authorization.mid
     MessageModule,
     NotificationModule,
     GroupMembersModule,
-    GroupPostsModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserRedis],

@@ -47,6 +47,7 @@ import {
 } from 'src/documents/swagger-api/posts/';
 import { FindByIdEndUserDto } from 'src/modules/users/enduser';
 import { IPostServiceUnstableString } from './services/unstable/post.unstable.interface';
+import { PipelineStage } from 'mongoose';
 
 @ApiTags('Post')
 @Controller('posts')
@@ -89,13 +90,26 @@ export class PostController {
 
   @Get('/:endUserId')
   @GetPostsSwaggerAPIDecorators()
-  async getUserPosts(
+  async getUserPostsFromProfile(
     @Param() param: FindByIdEndUserDto,
     @Query() getUserPostsDto: GetUserPostsDto,
   ) {
-    const posts = await this.postUnstableService.getUserPosts({
-      endUserId: param.endUserId,
+    const posts = await this.postUnstableService.getUserPostsFromProfile({
       getUserPostsDto,
+      endUserId: param.endUserId,
+    });
+    await this.postRedisStableService.savePosts(posts);
+    return posts;
+  }
+  @Get('/group/:endUserId')
+  @GetPostsSwaggerAPIDecorators()
+  async getUserPostsFromGroup(
+    @Param() param: FindByIdEndUserDto,
+    @Query() getUserPostsDto: GetUserPostsDto,
+  ) {
+    const posts = await this.postUnstableService.getUserPostsFromGroup({
+      getUserPostsDto,
+      endUserId: param.endUserId,
     });
 
     await this.postRedisStableService.savePosts(posts);

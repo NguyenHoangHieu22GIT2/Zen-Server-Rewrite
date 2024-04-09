@@ -16,7 +16,7 @@ import { IGroupPostsServiceUnstable } from './group-posts.unstable.interface';
 
 @Injectable()
 @TryCatchDecorator()
-export class GroupPostsServiceUnstable implements IGroupPostsServiceUnstable {
+export class GroupPostsServiceUnstable {
   constructor(
     private readonly groupPostServiceStable: GroupPostServiceStable,
   ) {}
@@ -74,40 +74,23 @@ export class GroupPostsServiceUnstable implements IGroupPostsServiceUnstable {
     return posts;
   }
 
-  public async modifyPost({
-    endUserId,
-    modifyGroupPostDto,
-    images,
-  }: {
-    modifyGroupPostDto: ModifyGroupPostDto;
-    endUserId: EndUserId;
-    images: string[];
-  }) {
-    const post = await this.groupPostServiceStable.findPostById({
-      groupPostId: modifyGroupPostDto.groupPostId,
-    });
-    if (isIdsEqual(post.endUserId, endUserId)) {
-      throw new BadRequestException("You don't have access to this!");
-    }
-    Object.assign(post, { ...modifyGroupPostDto, images });
-    return post.save();
-  }
-
-  public async deletePost({
-    groupPostId,
-    endUserId,
-  }: {
-    endUserId: EndUserId;
-    groupPostId: GroupPostId;
-  }) {
-    const post = await this.groupPostServiceStable.findPostById({
-      groupPostId,
-    });
-    if (isIdsEqual(post.endUserId, endUserId)) {
-      throw new BadRequestException("You don't have access to this!");
-    }
-
-    await post.deleteOne();
-    return post;
-  }
+  // public async modifyPost({
+  //   endUserId,
+  //   modifyGroupPostDto,
+  //   images,
+  // }: {
+  //   modifyGroupPostDto: ModifyGroupPostDto;
+  //   endUserId: EndUserId;
+  //   images: string[];
+  // }) {
+  //   const post = await this.groupPostServiceStable.findPostById({
+  //     groupPostId: modifyGroupPostDto.groupPostId,
+  //   });
+  //   if (isIdsEqual(post.endUserId, endUserId)) {
+  //     throw new BadRequestException("You don't have access to this!");
+  //   }
+  //   Object.assign(post, { ...modifyGroupPostDto, images });
+  //   return post.save();
+  // }
+  //
 }
