@@ -29,7 +29,7 @@ export class CommentServiceUnstable implements ICommentUnstableService {
     const comments: TcommentsLookUpEndUser =
       await this.commentServiceStable.getCommentsAggregate<{
         endUser: userMinimalType;
-      }>(getCommentsDto, LookUpEndUserAggregate);
+      }>({ getCommentsDto, pipelineStages: LookUpEndUserAggregate });
 
     return comments;
   }
@@ -73,7 +73,11 @@ export class CommentServiceUnstable implements ICommentUnstableService {
       );
     }
     comment.content = modifyCommentDto.content;
-    return comment.save();
+    await this.commentServiceStable.saveComment({
+      commentId: modifyCommentDto.commentId,
+      data: comment,
+    });
+    return comment;
   }
 
   async deleteComment({
@@ -91,7 +95,7 @@ export class CommentServiceUnstable implements ICommentUnstableService {
       );
     }
 
-    await comment.deleteOne();
+    await this.commentServiceStable.deleteComment({ commentId });
     return comment;
   }
 }

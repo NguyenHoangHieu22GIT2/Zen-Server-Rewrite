@@ -16,22 +16,15 @@ describe('Comment unstable service', () => {
   let mockupStableService: MockedMethods<CommentServiceStable>;
   const testEndUserId = new mongoose.Types.ObjectId() as EndUserId;
 
-  const fulfilledComment: Comment & { save: () => any; deleteOne: () => any } =
-    {
-      endUserId: testEndUserId,
-      _id: new mongoose.Types.ObjectId() as CommentId,
-      content: 'test',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      parentCommentId: new mongoose.Types.ObjectId() as CommentId,
-      postId: new mongoose.Types.ObjectId() as PostId,
-      save: function () {
-        return this;
-      },
-      deleteOne: function () {
-        return this;
-      },
-    };
+  const fulfilledComment: Comment = {
+    endUserId: testEndUserId,
+    _id: new mongoose.Types.ObjectId() as CommentId,
+    content: 'test',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    parentCommentId: new mongoose.Types.ObjectId() as CommentId,
+    postId: new mongoose.Types.ObjectId() as PostId,
+  };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -39,8 +32,9 @@ describe('Comment unstable service', () => {
       getCommentsAggregate: jest.fn(),
       findCommentAggregate: jest.fn(),
       createComment: jest.fn(),
-      deleteComment: jest.fn(),
       findCommentById: jest.fn(),
+      deleteComment: jest.fn(),
+      saveComment: jest.fn(),
     };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -160,6 +154,32 @@ describe('Comment unstable service', () => {
             commentId: new mongoose.Types.ObjectId() as CommentId,
             content: 'test',
             postId: new mongoose.Types.ObjectId() as PostId,
+          },
+          endUserId: testEndUserId,
+        }),
+      ).rejects.toThrow();
+    });
+  });
+
+  describe('deleteComment', () => {
+    it('should delete comment', async () => {
+      const comment = fulfilledComment;
+      mockupStableService.findCommentById.mockResolvedValue(comment);
+      expect(
+        await service.deleteComment({
+          findCommentDto: {
+            commentId: new mongoose.Types.ObjectId() as CommentId,
+          },
+          endUserId: testEndUserId,
+        }),
+      ).toEqual(comment);
+    });
+    it('should fail to delete comment', async () => {
+      mockupStableService.findCommentById.mockRejectedValue(new Error());
+      await expect(
+        service.deleteComment({
+          findCommentDto: {
+            commentId: new mongoose.Types.ObjectId() as CommentId,
           },
           endUserId: testEndUserId,
         }),
