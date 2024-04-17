@@ -7,6 +7,7 @@ import {
   RegisterEndUserDto,
 } from '../dto';
 import { EndUser } from 'src/modules/users/enduser';
+import { FilterQuery } from 'mongoose';
 
 export const IAuthUnstableServiceString = 'IAuthUnstableService';
 
@@ -14,6 +15,10 @@ export interface IAuthUnstableService {
   registerAccount(
     registerEndUserDto: RegisterEndUserDto,
   ): Promise<DocumentMongodbType<EndUser>>;
+
+  findAccountFilterQuery(
+    filterQuery: FilterQuery<EndUser>,
+  ): Promise<DocumentMongodbType<EndUser> | null>;
 
   activateAccount(
     activateAccountDto: ActivateAccountDto,

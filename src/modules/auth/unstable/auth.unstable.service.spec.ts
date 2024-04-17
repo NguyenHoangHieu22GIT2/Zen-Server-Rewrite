@@ -40,13 +40,9 @@ describe('Auth Service Unstable', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     mockupStableService = {
-      checkAccountIfAlreadyExistThenThrowError: jest.fn(),
-      checkAccountIfNotExistThenThrowError: jest.fn(),
-      checkLoginAccount: jest.fn(),
-      checkRegisteredAccount: jest.fn(),
-      create: jest.fn(),
+      findAccountFilterQuery: jest.fn(),
       findAccountById: jest.fn(),
-      checkAccountIfAlreadyExist: jest.fn(),
+      create: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -96,41 +92,33 @@ describe('Auth Service Unstable', () => {
   });
   describe('activate the account', () => {
     it('is success', async () => {
-      mockupStableService.checkAccountIfNotExistThenThrowError.mockResolvedValue(
-        testEndUser,
-      );
+      mockupStableService.findAccountFilterQuery.mockResolvedValue(testEndUser);
       const account = await service.activateAccount({
         activationToken: testEndUser.activationToken,
       });
-      expect(
-        mockupStableService.checkAccountIfNotExistThenThrowError,
-      ).toHaveBeenCalled();
+      expect(mockupStableService.findAccountFilterQuery).toHaveBeenCalled();
       expect(account).toBe(testEndUser);
     });
 
     it('is failed', async () => {
       await tryCatchForTest(async () => {
-        mockupStableService.checkAccountIfNotExistThenThrowError.mockResolvedValue(
-          undefined,
-        );
+        mockupStableService.findAccountFilterQuery.mockResolvedValue(undefined);
         const account = await service.activateAccount({
           activationToken: testEndUser.activationToken,
         });
-        expect(
-          mockupStableService.checkAccountIfNotExistThenThrowError,
-        ).toHaveBeenCalled();
+        expect(mockupStableService.findAccountFilterQuery).toHaveBeenCalled();
         expect(account).not.toBe(testEndUser);
       });
     });
   });
   describe('Login:', () => {
     it('will success', async () => {
-      mockupStableService.checkLoginAccount.mockResolvedValue(testEndUser);
+      mockupStableService.findAccountFilterQuery.mockResolvedValue(testEndUser);
       const user = await service.loginAccount({
         email: testEndUser.email,
         password: rawPassword,
       });
-      expect(mockupStableService.checkLoginAccount).toHaveBeenCalled();
+      expect(mockupStableService.findAccountFilterQuery).toHaveBeenCalled();
       expect(user).toBe(testEndUser);
     });
 
@@ -140,7 +128,7 @@ describe('Auth Service Unstable', () => {
           email: testEndUser.email,
           password: rawPassword,
         });
-        expect(mockupStableService.checkLoginAccount).toHaveBeenCalled();
+        expect(mockupStableService.findAccountFilterQuery).toHaveBeenCalled();
         expect(user).not.toBe(testEndUser);
       });
     });
@@ -149,27 +137,19 @@ describe('Auth Service Unstable', () => {
   describe('forgot password:', () => {
     it('will success', async () => {
       const oldModifyToken = testEndUser.modifyToken;
-      mockupStableService.checkAccountIfNotExistThenThrowError.mockResolvedValue(
-        testEndUser,
-      );
+      mockupStableService.findAccountFilterQuery.mockResolvedValue(testEndUser);
 
       const user = await service.forgotPassword({ email: testEndUser.email });
 
-      expect(
-        mockupStableService.checkAccountIfNotExistThenThrowError,
-      ).toHaveBeenCalled();
+      expect(mockupStableService.findAccountFilterQuery).toHaveBeenCalled();
       expect(user.modifyToken).not.toMatch(oldModifyToken);
     });
 
     it('will fail', async () => {
       await tryCatchForTest(async () => {
-        mockupStableService.checkAccountIfNotExistThenThrowError.mockResolvedValue(
-          undefined,
-        );
+        mockupStableService.findAccountFilterQuery.mockResolvedValue(undefined);
         const user = await service.forgotPassword({ email: testEndUser.email });
-        expect(
-          mockupStableService.checkAccountIfNotExistThenThrowError,
-        ).toHaveBeenCalled();
+        expect(mockupStableService.findAccountFilterQuery).toHaveBeenCalled();
         expect(user).not.toBe(testEndUser);
       });
     });
@@ -177,34 +157,26 @@ describe('Auth Service Unstable', () => {
 
   describe('change forgotton password', () => {
     it('will success', async () => {
-      mockupStableService.checkAccountIfNotExistThenThrowError.mockResolvedValue(
-        testEndUser,
-      );
+      mockupStableService.findAccountFilterQuery.mockResolvedValue(testEndUser);
       const endUser = await service.changeForgottonPassword({
         modifyToken: testEndUser.modifyToken,
         password: 'newPasswrod',
       });
-      expect(
-        mockupStableService.checkAccountIfNotExistThenThrowError,
-      ).toHaveBeenCalled();
+      expect(mockupStableService.findAccountFilterQuery).toHaveBeenCalled();
 
       expect(endUser).toBe(testEndUser);
     });
 
     it('will fail', async () => {
       await tryCatchForTest(async () => {
-        mockupStableService.checkAccountIfNotExistThenThrowError.mockResolvedValue(
-          undefined,
-        );
+        mockupStableService.findAccountFilterQuery.mockResolvedValue(undefined);
 
         const endUser = await service.changeForgottonPassword({
           modifyToken: testEndUser.modifyToken,
           password: 'newPasswrod',
         });
 
-        expect(
-          mockupStableService.checkAccountIfNotExistThenThrowError,
-        ).toHaveBeenCalled();
+        expect(mockupStableService.findAccountFilterQuery).toHaveBeenCalled();
 
         expect(endUser).toBe(testEndUser);
       });

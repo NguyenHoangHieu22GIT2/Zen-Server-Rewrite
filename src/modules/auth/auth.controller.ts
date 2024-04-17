@@ -6,6 +6,7 @@ import {
   UseGuards,
   Req,
   Inject,
+  BadRequestException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
@@ -27,10 +28,6 @@ import {
 } from './dto/';
 import { LocalGuard } from './passport/';
 import {
-  IAuthServiceStable,
-  IAuthServiceStableString,
-} from './stable/auth.stable.interface';
-import {
   IAuthUnstableService,
   IAuthUnstableServiceString,
 } from './unstable/auth.unstable.interface';
@@ -43,8 +40,6 @@ export class AuthController {
     @Inject(IAuthUnstableServiceString)
     private readonly authServiceUnstable: IAuthUnstableService,
     private readonly authRedisStableService: AuthRedisStableService,
-    @Inject(IAuthServiceStableString)
-    private readonly authServiceStable: IAuthServiceStable,
   ) {}
 
   @RegisterAccountSwaggerAPIDecorators()
@@ -52,13 +47,21 @@ export class AuthController {
   async registerAccount(@Body() registerEndUserDto: RegisterEndUserDto) {
     const message = 'This email is already in used. Try another one';
 
-    await this.authRedisStableService.isEmailAlreadyRegistered(
-      registerEndUserDto.email,
-    );
-    await this.authServiceStable.checkRegisteredAccount(
-      registerEndUserDto.email,
-      message,
-    );
+    const isExistedRedis =
+      await this.authRedisStableService.isEmailAlreadyRegistered(
+        registerEndUserDto.email,
+      );
+
+    if (isExistedRedis) {
+      throw new BadRequestException(message);
+    }
+    const isExisted = await this.authServiceUnstable.findAccountFilterQuery({
+      email: registerEndUserDto.email,
+    });
+
+    if (isExisted) {
+      throw new BadRequestException(message);
+    }
 
     const result =
       await this.authServiceUnstable.registerAccount(registerEndUserDto);

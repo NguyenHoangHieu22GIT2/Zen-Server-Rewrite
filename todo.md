@@ -3,3 +3,6 @@ In the time that I am developing this application (server), I am reading books a
 But of course, If I don't mark it as todo, i will forget to apply the design patterns in all the place it needs to be.
 
 1. Apply Interface instead of using concrete services.
+2. Finish all Specs for the services.
+3. Refactor the codes to be more readable.
+4. Always look at things to see improvement.

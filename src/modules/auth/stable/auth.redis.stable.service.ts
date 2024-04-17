@@ -11,11 +11,11 @@ export class AuthRedisStableService {
   }
 
   async addUserRegisteredToRedis(email: string) {
-    UserRedis.usersHaveRegisteredSADD(email);
+    await UserRedis.usersHaveRegisteredSADD(email);
   }
 
   async isEmailAlreadyRegistered(email: string) {
-    UserRedis.usersHaveRegisteredSISMEMBER(email);
+    return UserRedis.usersHaveRegisteredSISMEMBER(email);
   }
 
   async checkLoginAcount(email: string) {

@@ -18,6 +18,7 @@ import {
   IAuthServiceStableString,
 } from '../stable/auth.stable.interface';
 import { IAuthUnstableService } from './auth.unstable.interface';
+import { FilterQuery } from 'mongoose';
 
 @Injectable()
 export class AuthServiceUnstable implements IAuthUnstableService {
@@ -42,16 +43,18 @@ export class AuthServiceUnstable implements IAuthUnstableService {
     return createdAccount;
   }
 
+  async findAccountFilterQuery(filterQuery: FilterQuery<EndUser>) {
+    return this.authServiceStable.findAccountFilterQuery(filterQuery);
+  }
+
   async activateAccount({ activationToken }: ActivateAccountDto) {
     const inactivateAccount =
-      await this.authServiceStable.checkAccountIfNotExistThenThrowError({
-        filterQuery: { activationToken },
-        message: 'We found no account with this token!',
-      });
+      await this.authServiceStable.findAccountFilterQuery({ activationToken });
 
     if (isUndefined(inactivateAccount)) {
-      throw new UnauthorizedException("You don't have access to this action");
+      throw new UnauthorizedException('We found no account with this token!');
     }
+
     // Set To undefined so the property in mongodb document remove the field entirely
     inactivateAccount.activationToken = undefined;
     const activatedAccount = inactivateAccount;
@@ -61,7 +64,7 @@ export class AuthServiceUnstable implements IAuthUnstableService {
 
   async loginAccount(loginEndUserDto: LoginEndUserDto) {
     const existedAccount =
-      await this.authServiceStable.checkLoginAccount(loginEndUserDto);
+      await this.authServiceStable.findAccountFilterQuery(loginEndUserDto);
     if (existedAccount == undefined || existedAccount.activationToken) {
       throw new UnauthorizedException(
         'This account has not been activated, please go to your email account to activate it',
@@ -84,11 +87,9 @@ export class AuthServiceUnstable implements IAuthUnstableService {
   }
 
   async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
-    const user =
-      await this.authServiceStable.checkAccountIfNotExistThenThrowError({
-        filterQuery: { email: forgotPasswordDto.email },
-        message: 'Check your Input carefully please!',
-      });
+    const user = await this.authServiceStable.findAccountFilterQuery({
+      email: forgotPasswordDto.email,
+    });
 
     if (isUndefined(user)) {
       throw new UnauthorizedException("You don't have the access");
@@ -103,11 +104,9 @@ export class AuthServiceUnstable implements IAuthUnstableService {
   async changeForgottonPassword(
     changeForgottonPasswordDto: ChangeForgottonPasswordDto,
   ) {
-    const existedAccount =
-      await this.authServiceStable.checkAccountIfNotExistThenThrowError({
-        filterQuery: { modifyToken: changeForgottonPasswordDto.modifyToken },
-        message: 'This is not the right place for you to be. Get out.',
-      });
+    const existedAccount = await this.authServiceStable.findAccountFilterQuery({
+      modifyToken: changeForgottonPasswordDto.modifyToken,
+    });
 
     if (!existedAccount) {
       throw new UnauthorizedException("You don't have access to this!");
