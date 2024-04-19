@@ -4,7 +4,7 @@ import { EndUserId, PostId } from 'src/common/types/utilTypes/';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
 import { LikeServiceStable } from '../stable/';
 import { QueryLimitSkip } from 'src/cores/global-dtos/';
-import { LookUpEndUserAggregate } from 'src/common/constants/';
+import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
 import { ILikeServiceUnstable } from './like.unstable.interface';
 import { TryCatchDecorator } from 'src/cores/decorators';
 import { ILikeServiceStableString } from '../stable/like.stable.interface';

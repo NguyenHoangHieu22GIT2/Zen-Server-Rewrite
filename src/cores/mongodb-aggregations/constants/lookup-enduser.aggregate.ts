@@ -1,5 +1,5 @@
 import { PipelineStage } from 'mongoose';
-import { nameOfCollections } from './name-of-collections';
+import { nameOfCollections } from '../../../common/constants/name-of-collections';
 
 export const LookUpEndUserAggregate: PipelineStage[] = [
   {

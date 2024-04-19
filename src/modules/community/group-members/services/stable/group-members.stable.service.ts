@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { GroupMember } from '../../entities';
 import { Model } from 'mongoose';
-import { LookUpEndUserAggregate } from 'src/common/constants';
+import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
+
 import { PopulateSkipAndLimit } from 'src/common/utils/';
 import { GetGroupMembers } from '../../dto/get-group-members.dto';
 import {

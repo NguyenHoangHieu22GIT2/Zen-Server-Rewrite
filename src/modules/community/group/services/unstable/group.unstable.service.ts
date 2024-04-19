@@ -19,7 +19,8 @@ import {
   DocumentMongodbType,
   GroupAggregation,
 } from 'src/common/types/mongodbTypes';
-import { LookUpEndUserAggregate } from 'src/common/constants';
+import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
+
 import { TryCatchDecorator } from 'src/cores/decorators';
 import {
   IGroupServiceStable,

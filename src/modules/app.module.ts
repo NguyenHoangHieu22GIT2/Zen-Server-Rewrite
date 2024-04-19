@@ -19,6 +19,7 @@ import { MessageModule } from './communication/message/message.module';
 import { NotificationModule } from './social/notification/notification.module';
 import { GroupMembersModule } from './community/group-members/group-members.module';
 import { AuthorizationMiddleware } from 'src/cores/middlewares/Authorization.middleware';
+
 @Module({
   imports: [
     //Configurations
@@ -42,6 +43,7 @@ import { AuthorizationMiddleware } from 'src/cores/middlewares/Authorization.mid
         },
       },
     }),
+
     //Modules
     EnduserModule,
     AdminModule,

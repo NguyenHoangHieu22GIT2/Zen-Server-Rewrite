@@ -1,12 +1,24 @@
 import { Module } from '@nestjs/common';
-import { FriendService } from './friend.service';
 import { FriendController } from './friend.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Friend, FriendSchema } from './entities/friend.entity';
+import { IFriendUnstableServiceString } from './services/unstable/friend.unstable.interface';
+import { FriendUnstableService } from './services/unstable/friend.unstable.service';
+import { FriendStableService } from './services/stable/friend.stable.service';
+import { IFriendStableServiceString } from './services/stable/friend.stable.interface';
 
 @Module({
   controllers: [FriendController],
-  providers: [FriendService],
+  providers: [
+    {
+      provide: IFriendUnstableServiceString,
+      useClass: FriendUnstableService,
+    },
+    {
+      provide: IFriendStableServiceString,
+      useClass: FriendStableService,
+    },
+  ],
   imports: [
     MongooseModule.forFeature([{ name: Friend.name, schema: FriendSchema }]),
   ],
