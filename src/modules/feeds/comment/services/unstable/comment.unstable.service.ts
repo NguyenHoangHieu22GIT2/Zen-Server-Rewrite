@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CommentServiceStable } from '../stable/comment.stable.service';
 import { LookUpEndUserAggregate } from 'src/common/constants/lookup-enduser.aggregate';
 import {
@@ -10,34 +10,37 @@ import {
 import { userMinimalType } from 'src/common/types/objectTypes/user-minimal.type';
 import { TcommentsLookUpEndUser } from '../../types/comment.type';
 import { EndUserId } from 'src/common/types/utilTypes/';
-import { tryCatchModified } from 'src/common/utils/';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
 import { Comment } from '../../entities/';
+import { TryCatchDecorator } from 'src/cores/decorators';
+import { ICommentUnstableService } from './comment.unstable.interface';
+import { ICommentStableServiceString } from '../stable/comment.stable.interface';
+import { isIdsEqual } from 'src/common/utils';
 
 @Injectable()
-export class CommentServiceUnstable {
-  constructor(private readonly commentServiceStable: CommentServiceStable) {}
+@TryCatchDecorator()
+export class CommentServiceUnstable implements ICommentUnstableService {
+  constructor(
+    @Inject(ICommentStableServiceString)
+    private readonly commentServiceStable: CommentServiceStable,
+  ) {}
 
   async getComments(getCommentsDto: GetCommentsDto) {
-    return tryCatchModified(async () => {
-      const comments: TcommentsLookUpEndUser =
-        await this.commentServiceStable.getCommentsAggregate<{
-          endUser: userMinimalType;
-        }>(getCommentsDto, LookUpEndUserAggregate);
+    const comments: TcommentsLookUpEndUser =
+      await this.commentServiceStable.getCommentsAggregate<{
+        endUser: userMinimalType;
+      }>({ getCommentsDto, pipelineStages: LookUpEndUserAggregate });
 
-      return comments;
-    });
+    return comments;
   }
 
   async findComment(findCommentDto: FindCommentDto) {
-    return tryCatchModified(async () => {
-      const comment: TcommentsLookUpEndUser[0] =
-        await this.commentServiceStable.findCommentAggregate<{
-          endUser: userMinimalType;
-        }>(findCommentDto, LookUpEndUserAggregate);
+    const comment: TcommentsLookUpEndUser[0] =
+      await this.commentServiceStable.findCommentAggregate<{
+        endUser: userMinimalType;
+      }>(findCommentDto, LookUpEndUserAggregate);
 
-      return comment;
-    });
+    return comment;
   }
 
   async createComment({
@@ -47,13 +50,11 @@ export class CommentServiceUnstable {
     createCommentDto: CreateCommentDto;
     endUserId: EndUserId;
   }) {
-    return tryCatchModified(async () => {
-      const comment = await this.commentServiceStable.createComment({
-        endUserId,
-        createCommentDto,
-      });
-      return comment;
+    const comment = await this.commentServiceStable.createComment({
+      endUserId,
+      createCommentDto,
     });
+    return comment;
   }
 
   async modifyComment({
@@ -63,18 +64,20 @@ export class CommentServiceUnstable {
     modifyCommentDto: ModifyCommentDto;
     endUserId: EndUserId;
   }): Promise<DocumentMongodbType<Comment>> {
-    return tryCatchModified(async () => {
-      const comment = await this.commentServiceStable.findCommentById(
-        modifyCommentDto.commentId,
+    const comment = await this.commentServiceStable.findCommentById(
+      modifyCommentDto.commentId,
+    );
+    if (!comment.endUserId.equals(endUserId)) {
+      throw new UnauthorizedException(
+        "You can not modify this comment because it isn't yours",
       );
-      if (!comment.endUserId.equals(endUserId)) {
-        throw new UnauthorizedException(
-          "You can not modify this comment because it isn't yours",
-        );
-      }
-      comment.content = modifyCommentDto.comment;
-      return comment.save();
+    }
+    comment.content = modifyCommentDto.content;
+    await this.commentServiceStable.saveComment({
+      commentId: modifyCommentDto.commentId,
+      data: comment,
     });
+    return comment;
   }
 
   async deleteComment({
@@ -84,16 +87,15 @@ export class CommentServiceUnstable {
     findCommentDto: FindCommentDto;
     endUserId: EndUserId;
   }) {
-    return tryCatchModified(async () => {
-      const commentId = findCommentDto.commentId;
-      const comment =
-        await this.commentServiceStable.findCommentById(commentId);
-      if (!comment.endUserId.equals(endUserId)) {
-        throw new UnauthorizedException(
-          "You can not modify this comment because it isn't yours",
-        );
-      }
-      return comment;
-    });
+    const commentId = findCommentDto.commentId;
+    const comment = await this.commentServiceStable.findCommentById(commentId);
+    if (!isIdsEqual(comment.endUserId, endUserId)) {
+      throw new UnauthorizedException(
+        "You can not modify this comment because it isn't yours",
+      );
+    }
+
+    await this.commentServiceStable.deleteComment({ commentId });
+    return comment;
   }
 }

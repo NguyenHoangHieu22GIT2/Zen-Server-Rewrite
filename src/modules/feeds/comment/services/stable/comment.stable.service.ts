@@ -2,20 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment } from '../../entities/';
 import { Model, PipelineStage } from 'mongoose';
-import { GetCommentsDto, FindCommentDto, CreateCommentDto } from '../../dto/';
-import { CommentId, EndUserId } from 'src/common/types/utilTypes/';
+import { FindCommentDto } from '../../dto/';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
+import {
+  ICommentStableService,
+  ICommentStableServiceArgs,
+} from './comment.stable.interface';
 
 @Injectable()
-export class CommentServiceStable {
+export class CommentServiceStable implements ICommentStableService {
   constructor(
     @InjectModel(Comment.name) private readonly commentModel: Model<Comment>,
   ) {}
 
-  async getCommentsAggregate<CustomTypeForPipeLine>(
-    getCommentsDto: GetCommentsDto,
-    pipelineStages?: PipelineStage[],
-  ): Promise<(Comment & CustomTypeForPipeLine)[]> {
+  async getCommentsAggregate<CustomTypeForPipeLine>({
+    getCommentsDto,
+    pipelineStages,
+  }: ICommentStableServiceArgs['getCommentsAggregate']): Promise<
+    (Comment & CustomTypeForPipeLine)[]
+  > {
     const comments = await this.commentModel.aggregate<
       Comment & CustomTypeForPipeLine
     >([
@@ -41,7 +46,7 @@ export class CommentServiceStable {
   }
 
   async findCommentById(
-    commentId: CommentId,
+    commentId: ICommentStableServiceArgs['findCommentById'],
   ): Promise<DocumentMongodbType<Comment>> {
     return this.commentModel.findById(commentId);
   }
@@ -49,10 +54,9 @@ export class CommentServiceStable {
   async createComment({
     endUserId,
     createCommentDto,
-  }: {
-    createCommentDto: CreateCommentDto;
-    endUserId: EndUserId;
-  }): Promise<DocumentMongodbType<Comment>> {
+  }: ICommentStableServiceArgs['createComment']): Promise<
+    DocumentMongodbType<Comment>
+  > {
     const comment = await this.commentModel.create({
       endUserId,
       ...createCommentDto,
@@ -60,9 +64,16 @@ export class CommentServiceStable {
     return comment;
   }
 
-  async deleteComment(commentId: CommentId) {
-    await this.commentModel.deleteOne({
-      _id: commentId,
-    });
+  async saveComment({
+    commentId,
+    data,
+  }: ICommentStableServiceArgs['saveComment']): Promise<unknown> {
+    return this.commentModel.updateOne(commentId, data);
+  }
+
+  async deleteComment({
+    commentId,
+  }: ICommentStableServiceArgs['deleteComment']): Promise<unknown> {
+    return this.commentModel.findByIdAndDelete(commentId);
   }
 }

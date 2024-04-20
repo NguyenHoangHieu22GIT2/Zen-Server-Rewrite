@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
@@ -21,11 +22,13 @@ import { TcommentsLookUpEndUser } from './types/';
 import { ApiTags } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/modules/auth/passport/';
 import { RequestUser } from 'src/common/types/utilTypes/';
+import { ICommentUnstableServiceString } from './services/unstable/comment.unstable.interface';
 
 @ApiTags('Comment')
 @Controller('comment')
 export class CommentController {
   constructor(
+    @Inject(ICommentUnstableServiceString)
     private readonly commentServiceUnstable: CommentServiceUnstable,
   ) {}
 

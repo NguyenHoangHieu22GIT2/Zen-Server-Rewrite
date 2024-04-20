@@ -25,7 +25,7 @@ export class ModifyCommentDto {
     required: true,
     name: 'Content of the comment',
   })
-  comment: string;
+  content: string;
 
   @ApiProperty({
     type: String,
