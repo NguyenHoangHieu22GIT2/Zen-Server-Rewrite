@@ -35,6 +35,7 @@ export type IPostServiceUnstableArgs = {
   getRecommendedPost: {
     queryLimitSkip: QueryLimitSkip;
     endUserId: EndUserId;
+    queryaggregation?: PipelineStage[];
   };
   modifyPost: {
     modifyPostDto: ModifyPostDto;

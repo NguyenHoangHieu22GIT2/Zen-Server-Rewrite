@@ -22,5 +22,15 @@ import { ICommentUnstableServiceString } from './services/unstable/comment.unsta
   imports: [
     MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
   ],
+  exports: [
+    {
+      provide: ICommentStableServiceString,
+      useClass: CommentServiceStable,
+    },
+    {
+      provide: ICommentUnstableServiceString,
+      useClass: CommentServiceUnstable,
+    },
+  ],
 })
 export class CommentModule {}

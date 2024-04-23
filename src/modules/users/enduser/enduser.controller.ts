@@ -31,7 +31,6 @@ export class EnduserController {
     private readonly enduserServiceStable: EnduserServiceStable,
     private readonly enduserServiceUnstable: EnduserServiceUnstable,
   ) {}
-
   @Get('/:id')
   @ApiParam({ name: 'id', required: true })
   @FindOneEndUserSwaggerAPIDecorators()

@@ -26,5 +26,15 @@ import { ILikeServiceUnstableString } from './services/unstable/like.unstable.in
   imports: [
     MongooseModule.forFeature([{ name: Like.name, schema: LikeSchema }]),
   ],
+  exports: [
+    {
+      provide: ILikeServiceStableString,
+      useClass: LikeServiceStable,
+    },
+    {
+      provide: ILikeServiceUnstableString,
+      useClass: LikeServiceUnstable,
+    },
+  ],
 })
 export class LikeModule {}

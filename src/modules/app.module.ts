@@ -19,6 +19,7 @@ import { MessageModule } from './communication/message/message.module';
 import { NotificationModule } from './social/notification/notification.module';
 import { GroupMembersModule } from './community/group-members/group-members.module';
 import { AuthorizationMiddleware } from 'src/cores/middlewares/Authorization.middleware';
+import { FeedsModule } from './client-side/feeds/feeds.module';
 @Module({
   imports: [
     //Configurations
@@ -56,6 +57,7 @@ import { AuthorizationMiddleware } from 'src/cores/middlewares/Authorization.mid
     MessageModule,
     NotificationModule,
     GroupMembersModule,
+    FeedsModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserRedis],

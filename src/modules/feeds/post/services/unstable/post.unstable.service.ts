@@ -77,11 +77,12 @@ export class PostServiceUnstable implements IPostServiceUnstable {
 
   public async getRecommendedPosts({
     queryLimitSkip,
+    queryaggregation,
     //TODO: will use endUserId when we have recommendation system.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     endUserId,
   }: IPostServiceUnstableArgs['getRecommendedPost']) {
-    const queryAggregation: PipelineStage[] = [];
+    const queryAggregation: PipelineStage[] = queryaggregation || [];
 
     const posts = await this.postServiceStable.getPostsAggregation({
       queryLimitSkip,

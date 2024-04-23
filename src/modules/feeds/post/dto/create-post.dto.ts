@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, MinLength } from 'class-validator';
+import { IsOptional, IsString, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils';
 
@@ -29,5 +29,6 @@ export class CreatePostDto {
   })
   @Transform(({ value }) => checkToConvertToMongoIdOrThrowError(value))
   @IsString()
+  @IsOptional()
   groupId?: string;
 }

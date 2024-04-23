@@ -87,7 +87,7 @@ export class PostController {
     return post;
   }
 
-  @Get('/:endUserId')
+  @Get('profile/:endUserId')
   @GetPostsSwaggerAPIDecorators()
   async getUserPostsFromProfile(
     @Param() param: FindByIdEndUserDto,
@@ -100,6 +100,7 @@ export class PostController {
     await this.postRedisStableService.savePosts(posts);
     return posts;
   }
+
   @Get('/group/:endUserId')
   @GetPostsSwaggerAPIDecorators()
   async getUserPostsFromGroup(

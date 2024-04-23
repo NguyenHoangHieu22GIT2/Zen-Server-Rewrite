@@ -63,9 +63,14 @@ export class AuthServiceUnstable implements IAuthUnstableService {
   }
 
   async loginAccount(loginEndUserDto: LoginEndUserDto) {
-    const existedAccount =
-      await this.authServiceStable.findAccountFilterQuery(loginEndUserDto);
-    if (existedAccount == undefined || existedAccount.activationToken) {
+    const existedAccount = await this.authServiceStable.findAccountFilterQuery({
+      email: loginEndUserDto.email,
+    });
+    if (isUndefined(existedAccount)) {
+      throw new UnauthorizedException('No account found with this email!');
+    }
+
+    if (existedAccount.activationToken) {
       throw new UnauthorizedException(
         'This account has not been activated, please go to your email account to activate it',
       );

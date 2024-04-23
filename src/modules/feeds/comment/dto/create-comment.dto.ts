@@ -17,7 +17,6 @@ export class CreateCommentDto {
     required: true,
     name: 'Post Id',
   })
-  @IsString()
   @Transform((opts) => {
     const postId = checkToConvertToMongoIdOrThrowError<PostId>({
       id: opts.value,
@@ -25,6 +24,9 @@ export class CreateCommentDto {
     });
     return postId;
   })
+  // I DON"T KNOW WHY IT DOESN"T WORK, PLEASE HELP ME!!!
+  // HELP HELP HELP, NO WORKAROUND!!!
+  // @IsString()
   postId: PostId;
 
   @ApiProperty({

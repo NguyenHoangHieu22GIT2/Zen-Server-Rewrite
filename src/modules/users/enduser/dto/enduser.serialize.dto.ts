@@ -15,6 +15,9 @@ export class EndUserSerializeDto {
   _id: Types.ObjectId;
 
   @Expose()
+  description: string;
+
+  @Expose()
   username: string;
 
   @Expose()

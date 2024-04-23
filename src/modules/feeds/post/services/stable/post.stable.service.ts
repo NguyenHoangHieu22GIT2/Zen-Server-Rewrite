@@ -21,6 +21,7 @@ export class PostServiceStable implements IPostServiceStable {
     queryLimitSkip,
     queryAggregation,
   }: IPostServiceStableArgs['getPostsAggregation']) {
+    this.postModel.findById;
     const postsAggregation: PostAggregation[] = await this.postModel.aggregate([
       ...queryAggregation,
       {

@@ -25,7 +25,8 @@ import { RequestUser } from 'src/common/types/utilTypes/';
 import { ICommentUnstableServiceString } from './services/unstable/comment.unstable.interface';
 
 @ApiTags('Comment')
-@Controller('comment')
+@Controller('comments')
+@UseGuards(LoggedInGuard)
 export class CommentController {
   constructor(
     @Inject(ICommentUnstableServiceString)
@@ -38,6 +39,7 @@ export class CommentController {
   ): Promise<TcommentsLookUpEndUser> {
     const comments =
       await this.commentServiceUnstable.getComments(getCommentsDto);
+    console.log('DITMETHANGNHAT:', comments);
     return comments;
   }
 

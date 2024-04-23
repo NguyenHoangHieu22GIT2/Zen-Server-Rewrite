@@ -8,6 +8,7 @@ import {
   ICommentStableService,
   ICommentStableServiceArgs,
 } from './comment.stable.interface';
+import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils';
 
 @Injectable()
 export class CommentServiceStable implements ICommentStableService {
@@ -21,17 +22,21 @@ export class CommentServiceStable implements ICommentStableService {
   }: ICommentStableServiceArgs['getCommentsAggregate']): Promise<
     (Comment & CustomTypeForPipeLine)[]
   > {
+    const postId = checkToConvertToMongoIdOrThrowError({
+      id: getCommentsDto.postId.toString(),
+      returnError: true,
+    });
     const comments = await this.commentModel.aggregate<
       Comment & CustomTypeForPipeLine
     >([
-      { $match: { postId: getCommentsDto.postId } },
+      { $match: { postId: postId } },
       {
-        $skip: getCommentsDto.skip,
+        $skip: +getCommentsDto.skip,
       },
-      { $limit: getCommentsDto.limit },
+      { $limit: +getCommentsDto.limit },
       ...pipelineStages,
     ]);
-
+    console.log(comments);
     return comments;
   }
 
