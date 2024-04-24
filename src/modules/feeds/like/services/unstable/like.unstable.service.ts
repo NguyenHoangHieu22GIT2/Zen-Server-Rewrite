@@ -1,7 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Like } from '../../entities/';
 import { EndUserId, PostId } from 'src/common/types/utilTypes/';
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
+import {
+  DocumentMongodbType,
+  LikeAggregation,
+} from 'src/common/types/mongodbTypes/';
 import { LikeServiceStable } from '../stable/';
 import { QueryLimitSkip } from 'src/cores/global-dtos/';
 import { LookUpEndUserAggregate } from 'src/common/constants/';
@@ -28,7 +31,7 @@ export class LikeServiceUnstable implements ILikeServiceUnstable {
   }: {
     postId: PostId;
     queryLimitSkip: QueryLimitSkip;
-  }): Promise<DocumentMongodbType<Like>[]> {
+  }): Promise<LikeAggregation[]> {
     const likes = await this.likeServiceStable.getLikes({
       postId,
       queryLimitSkip,

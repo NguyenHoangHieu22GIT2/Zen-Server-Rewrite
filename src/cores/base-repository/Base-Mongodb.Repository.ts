@@ -44,6 +44,10 @@ export class GenericRepositoryMongodb<T> implements MongodbRepository {
     return this.model.create(data) as any as Promise<DocumentMongodbType<T>>;
   }
 
+  countDocuments(filterQuery: FilterQuery<T>): Promise<number> {
+    return this.model.countDocuments(filterQuery);
+  }
+
   async delete<ObjectId>(id: ObjectId): Promise<T> {
     const result = await this.model.findByIdAndDelete(id);
     return result.value;

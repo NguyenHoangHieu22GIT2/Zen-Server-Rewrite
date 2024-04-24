@@ -42,5 +42,6 @@ export interface IPostServiceStable {
   ): Promise<DocumentMongodbType<Post>>;
 
   deletePost(postId: PostId): Promise<unknown>;
+
   savePost(postId: PostId, data: Partial<Post>): Promise<unknown>;
 }
