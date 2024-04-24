@@ -78,7 +78,7 @@ describe('Auth Service Unstable', () => {
 
     it('is failed', async () => {
       await tryCatchForTest(async () => {
-        mockupStableService.create.mockResolvedValue(undefined);
+        mockupStableService.create.mockResolvedValue(null);
         const endUser = await service.registerAccount({
           email: testEndUser.email,
           gender: testEndUser.gender as gender,
@@ -102,7 +102,7 @@ describe('Auth Service Unstable', () => {
 
     it('is failed', async () => {
       await tryCatchForTest(async () => {
-        mockupStableService.findAccountFilterQuery.mockResolvedValue(undefined);
+        mockupStableService.findAccountFilterQuery.mockResolvedValue(null);
         const account = await service.activateAccount({
           activationToken: testEndUser.activationToken,
         });
@@ -147,7 +147,7 @@ describe('Auth Service Unstable', () => {
 
     it('will fail', async () => {
       await tryCatchForTest(async () => {
-        mockupStableService.findAccountFilterQuery.mockResolvedValue(undefined);
+        mockupStableService.findAccountFilterQuery.mockResolvedValue(null);
         const user = await service.forgotPassword({ email: testEndUser.email });
         expect(mockupStableService.findAccountFilterQuery).toHaveBeenCalled();
         expect(user).not.toBe(testEndUser);
@@ -169,7 +169,7 @@ describe('Auth Service Unstable', () => {
 
     it('will fail', async () => {
       await tryCatchForTest(async () => {
-        mockupStableService.findAccountFilterQuery.mockResolvedValue(undefined);
+        mockupStableService.findAccountFilterQuery.mockResolvedValue(null);
 
         const endUser = await service.changeForgottonPassword({
           modifyToken: testEndUser.modifyToken,

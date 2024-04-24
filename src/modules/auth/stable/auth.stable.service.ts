@@ -23,7 +23,7 @@ export class AuthServiceStable implements IAuthServiceStable {
     filterQuery: FilterQuery<EndUser>,
   ): Promise<DocumentMongodbType<EndUser>> | undefined {
     const user = await this.EndUserModel.findOne(filterQuery);
-    return user ? user : undefined;
+    return user ? user : null;
   }
 
   public async findAccountById(

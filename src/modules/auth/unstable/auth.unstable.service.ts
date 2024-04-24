@@ -9,17 +9,14 @@ import {
 } from '../dto/';
 import { EndUser } from 'src/modules/users/enduser/';
 import { v4 } from 'uuid';
-import {
-  isUndefined,
-  checkingToConvertToObjectFromDocument,
-} from 'src/common/utils/';
+import { checkingToConvertToObjectFromDocument } from 'src/common/utils/';
 import {
   IAuthServiceStable,
   IAuthServiceStableString,
 } from '../stable/auth.stable.interface';
 import { IAuthUnstableService } from './auth.unstable.interface';
 import { FilterQuery } from 'mongoose';
-
+import { isNullOrUndefined } from 'src/common/utils/';
 @Injectable()
 export class AuthServiceUnstable implements IAuthUnstableService {
   constructor(
@@ -51,7 +48,7 @@ export class AuthServiceUnstable implements IAuthUnstableService {
     const inactivateAccount =
       await this.authServiceStable.findAccountFilterQuery({ activationToken });
 
-    if (isUndefined(inactivateAccount)) {
+    if (isNullOrUndefined(inactivateAccount)) {
       throw new UnauthorizedException('We found no account with this token!');
     }
 
@@ -63,9 +60,14 @@ export class AuthServiceUnstable implements IAuthUnstableService {
   }
 
   async loginAccount(loginEndUserDto: LoginEndUserDto) {
-    const existedAccount =
-      await this.authServiceStable.findAccountFilterQuery(loginEndUserDto);
-    if (existedAccount == undefined || existedAccount.activationToken) {
+    const existedAccount = await this.authServiceStable.findAccountFilterQuery({
+      email: loginEndUserDto.email,
+    });
+    if (isNullOrUndefined(existedAccount)) {
+      throw new UnauthorizedException('This account does not exist');
+    }
+
+    if (existedAccount.activationToken) {
       throw new UnauthorizedException(
         'This account has not been activated, please go to your email account to activate it',
       );
@@ -91,7 +93,7 @@ export class AuthServiceUnstable implements IAuthUnstableService {
       email: forgotPasswordDto.email,
     });
 
-    if (isUndefined(user)) {
+    if (isNullOrUndefined(user)) {
       throw new UnauthorizedException("You don't have the access");
     }
     user.modifyToken = v4();

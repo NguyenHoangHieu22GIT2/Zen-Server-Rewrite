@@ -10,7 +10,7 @@ export interface IAuthServiceStable {
 
   findAccountFilterQuery(
     filterQuery: FilterQuery<EndUser>,
-  ): Promise<DocumentMongodbType<EndUser>> | undefined;
+  ): Promise<DocumentMongodbType<EndUser>> | null;
 
   findAccountById(endUserId: EndUserId): Promise<DocumentMongodbType<EndUser>>;
 }
