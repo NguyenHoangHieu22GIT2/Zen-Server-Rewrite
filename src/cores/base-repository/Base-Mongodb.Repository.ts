@@ -19,9 +19,7 @@ export class GenericRepositoryMongodb<T> implements MongodbRepository {
   }
 
   async findById(id: Types.ObjectId): Promise<DocumentMongodbType<T>> {
-    console.log('The id is:', id);
     const result = (await this.model.findById(id)) as DocumentMongodbType<T>;
-    console.log('The result isssss:', result);
     return result;
   }
 
