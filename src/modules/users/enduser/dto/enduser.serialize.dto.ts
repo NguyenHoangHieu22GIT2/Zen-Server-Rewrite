@@ -17,6 +17,9 @@ export class EndUserSerializeDto {
   username: string;
 
   @Expose()
+  description: string;
+
+  @Expose()
   email: string;
 
   @Expose()
