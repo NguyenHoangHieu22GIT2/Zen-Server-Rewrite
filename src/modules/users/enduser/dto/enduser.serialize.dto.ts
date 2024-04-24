@@ -1,5 +1,4 @@
 import { Exclude, Expose } from 'class-transformer';
-import { Types } from 'mongoose';
 
 export class EndUserSerializeDto {
   @Exclude()
@@ -12,7 +11,7 @@ export class EndUserSerializeDto {
   activationToken: string;
 
   @Expose()
-  _id: Types.ObjectId;
+  _id: string;
 
   @Expose()
   username: string;

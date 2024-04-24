@@ -1,19 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { EndUser } from '../../entities/';
-import { Model } from 'mongoose';
 import { EndUserId } from 'src/common/types/utilTypes/';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
+import { EndUserRepository } from '../../repository/enduser.repository';
+
 @Injectable()
 export class EnduserServiceStable {
-  constructor(
-    @InjectModel(EndUser.name) private readonly EndUserModel: Model<EndUser>,
-  ) {}
+  constructor(private readonly endUserRepository: EndUserRepository) {}
 
   public async findById(
     endUserId: EndUserId,
   ): Promise<DocumentMongodbType<EndUser>> {
-    const user = await this.EndUserModel.findById(endUserId);
+    const user = await this.endUserRepository.findById(endUserId);
     return user;
   }
 }
