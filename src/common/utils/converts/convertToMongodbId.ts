@@ -9,13 +9,10 @@ export function checkToConvertToMongoIdOrThrowError<TType>({
   id: string | EndUserId;
   returnError: boolean;
 }) {
-  if (
-    (typeof id === 'string' && id.toString().length == 24) ||
-    Types.ObjectId.isValid(id)
-  ) {
+  if (id.toString().length == 24 || Types.ObjectId.isValid(id)) {
     return new mongoose.Types.ObjectId(id) as TType;
-  }
-  if (returnError) {
+  } else if (returnError) {
+    console.log(id[0]);
     throw new BadRequestException('Wrong Id Type');
   }
   return null;

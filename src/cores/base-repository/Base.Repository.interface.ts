@@ -1,3 +1,5 @@
+export const BaseRepositoryName = 'BaseRepository';
+
 export interface BaseRepository {
   findById(id: unknown): Promise<unknown>;
 

@@ -1,4 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PipelineStage } from 'mongoose';
 import { isIdsEqual } from 'src/common/utils/index';
 import { TryCatchDecorator } from 'src/cores/decorators';
@@ -99,7 +104,14 @@ export class PostServiceUnstable implements IPostServiceUnstable {
     const post = await this.postServiceStable.findPostById({
       postId: modifyPostDto.postId,
     });
-    isIdsEqual(post.endUserId, endUserId);
+
+    if (!post) {
+      throw new BadRequestException('Post does not exist!');
+    }
+
+    if (!isIdsEqual(post.endUserId, endUserId)) {
+      throw new UnauthorizedException('You are not authorized to do this!');
+    }
     Object.assign(post, { ...modifyPostDto, images });
     await this.postServiceStable.savePost(post.id, post);
     return post;
@@ -112,7 +124,12 @@ export class PostServiceUnstable implements IPostServiceUnstable {
     const post = await this.postServiceStable.findPostById({
       postId,
     });
-    isIdsEqual(post.endUserId, endUserId);
+    if (!post) {
+      throw new BadRequestException('Post does not exist!');
+    }
+    if (!isIdsEqual(post.endUserId, endUserId)) {
+      throw new UnauthorizedException('You are not authorized to do this!');
+    }
 
     await this.postServiceStable.deletePost(postId);
     return post;

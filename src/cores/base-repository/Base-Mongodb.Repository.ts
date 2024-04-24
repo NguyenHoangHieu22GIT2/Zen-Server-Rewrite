@@ -23,7 +23,9 @@ export class GenericRepositoryMongodb<T> implements MongodbRepository {
     return result;
   }
 
-  findByAggregation(pipeline: PipelineStage[]): Promise<T[]> {
+  findByAggregation<TAggregation>(
+    pipeline: PipelineStage[],
+  ): Promise<TAggregation[]> {
     return this.model.aggregate(pipeline);
   }
 

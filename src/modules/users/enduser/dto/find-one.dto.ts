@@ -9,7 +9,7 @@ export class FindByIdEndUserDto {
     type: String,
   })
   @Transform((opts) => {
-    console.log('This is the optsvalue', opts.value);
+    console.log('WHAT THE FUCK');
     return checkToConvertToMongoIdOrThrowError<EndUserId>({
       id: opts.value,
       returnError: true,

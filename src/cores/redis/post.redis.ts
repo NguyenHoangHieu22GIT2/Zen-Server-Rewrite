@@ -11,6 +11,7 @@ import { EndUserId, PostId } from 'src/common/types/utilTypes';
 import { postDeserialize } from '../redis-deserialize/post.deserialize';
 import { ObjectToHashType } from 'src/common/types/redisTypes';
 import { Post } from 'src/modules/feeds/post';
+import { isRedisResultEmpty } from 'src/common/utils/checks/isRedisResultEmpty';
 
 export class PostRedis {
   //HASH
@@ -26,6 +27,9 @@ export class PostRedis {
     const post = (await RedisClient.HGETALL(
       postKey(postId),
     )) as ObjectToHashType<Post>;
+    if (isRedisResultEmpty(post)) {
+      return null;
+    }
     return postDeserialize(post);
   }
 

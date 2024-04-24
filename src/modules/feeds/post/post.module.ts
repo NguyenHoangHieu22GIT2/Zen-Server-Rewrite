@@ -10,6 +10,8 @@ import {
 import { MongooseModule } from '@nestjs/mongoose';
 import { IPostServiceStableString } from './services/stable/post.stable.interface';
 import { IPostServiceUnstableString } from './services/unstable/post.unstable.interface';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
+import { PostRepository } from './repository/post.repository';
 
 @Module({
   controllers: [PostController],
@@ -23,6 +25,10 @@ import { IPostServiceUnstableString } from './services/unstable/post.unstable.in
       useClass: PostServiceUnstable,
     },
     PostRedisStableService,
+    {
+      provide: BaseRepositoryName,
+      useClass: PostRepository,
+    },
   ],
   imports: [
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
