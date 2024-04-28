@@ -1,5 +1,10 @@
-import { Model, PipelineStage, Types } from 'mongoose';
-import { FilterQuery } from 'mongoose';
+import {
+  Model,
+  PipelineStage,
+  Types,
+  FilterQuery,
+  UpdateQuery,
+} from 'mongoose';
 import { MongodbRepository } from './Base.Repository.interface';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
 
@@ -35,9 +40,16 @@ export class GenericRepositoryMongodb<T> implements MongodbRepository {
 
   update<ObjectId>(
     id: ObjectId,
-    newData: Partial<T>,
-  ): Promise<DocumentMongodbType<T>[]> {
+    newData: Partial<T> | UpdateQuery<T>,
+  ): Promise<DocumentMongodbType<T>> {
     return this.model.findByIdAndUpdate(id, newData, { new: true });
+  }
+
+  updateOne(
+    filterQuery: FilterQuery<T>,
+    newData: UpdateQuery<T>,
+  ): Promise<DocumentMongodbType<T>> {
+    return this.model.findOneAndUpdate(filterQuery, newData, { new: true });
   }
 
   create(data: Partial<T>): Promise<DocumentMongodbType<T>> {

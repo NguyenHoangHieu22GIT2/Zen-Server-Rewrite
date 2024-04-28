@@ -1,34 +1,70 @@
-import { InjectModel } from '@nestjs/mongoose';
 import { Friend } from '../../entities/friend.entity';
-import { Model, PipelineStage } from 'mongoose';
-import { IFriendStableService } from './friend.stable.interface';
+import { PipelineStage } from 'mongoose';
+import {
+  IFriendStableService,
+  IFriendStableServiceArgs,
+} from './friend.stable.interface';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
-import { EndUserId } from 'src/common/types/utilTypes';
 import { FriendAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/social/friend.aggregation';
+import { FriendRepository } from '../../repository/friends.repository';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
+@Injectable()
 export class FriendStableService implements IFriendStableService {
-  constructor(
-    @InjectModel(Friend.name) private readonly friendModel: Model<Friend>,
-  ) {}
+  constructor(private readonly friendRepository: FriendRepository) {}
 
-  async createFriend(
-    leaderId: EndUserId,
-    endUserId: EndUserId,
-  ): Promise<DocumentMongodbType<Friend>> {
-    const friend = await this.friendModel.findOneAndUpdate(
+  private async isFriend({
+    leaderId,
+    endUserId,
+  }: IFriendStableServiceArgs['isFriend']): Promise<boolean> {
+    const friendDocument = await this.friendRepository.findOne({
+      endUserId: leaderId,
+    });
+
+    return (
+      friendDocument.friends.findIndex(
+        (friendId) => friendId.toString() === endUserId.toString(),
+      ) != -1
+    );
+  }
+
+  async createFriend({
+    leaderId,
+    endUserId,
+  }: IFriendStableServiceArgs['createFriend']): Promise<
+    DocumentMongodbType<Friend>
+  > {
+    const hasBeenFriend = await this.isFriend({ leaderId, endUserId });
+
+    if (hasBeenFriend) {
+      throw new BadRequestException('You already be friend with this user!');
+    }
+
+    const friend = await this.friendRepository.updateOne(
       { endUserId: leaderId },
-      { $push: { friends: endUserId } },
+      {
+        $push: { friends: endUserId },
+      },
     );
     return friend;
   }
 
-  async removeFriend(
-    leaderId: EndUserId,
-    endUserId: EndUserId,
-  ): Promise<DocumentMongodbType<Friend>> {
-    const friend = await this.friendModel.findOneAndUpdate(
+  async removeFriend({
+    leaderId,
+    endUserId,
+  }: IFriendStableServiceArgs['removeFriend']): Promise<
+    DocumentMongodbType<Friend>
+  > {
+    const hasBeenFriend = await this.isFriend({ leaderId, endUserId });
+    if (!hasBeenFriend) {
+      throw new BadRequestException('You are not their friend to remove!');
+    }
+
+    const friend = await this.friendRepository.updateOne(
       { endUserId: leaderId },
-      { $pull: { friends: endUserId } },
+      {
+        $pull: { friends: endUserId },
+      },
     );
     return friend;
   }
@@ -37,7 +73,7 @@ export class FriendStableService implements IFriendStableService {
     pipelineStage: PipelineStage[],
   ): Promise<FriendAggregation> {
     const friends = (
-      await this.friendModel.aggregate(pipelineStage)
+      await this.friendRepository.findByAggregation(pipelineStage)
     )[0] as FriendAggregation;
 
     return friends;

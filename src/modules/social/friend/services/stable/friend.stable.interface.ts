@@ -6,20 +6,34 @@ import { Friend } from '../../entities/friend.entity';
 
 export const IFriendStableServiceString = 'IFriendStableService';
 
-export const IFriendStableServiceArgs = {};
+export type IFriendStableServiceArgs = {
+  isFriend: {
+    leaderId: EndUserId;
+    endUserId: EndUserId;
+  };
+  getFriendsAggregation: PipelineStage[];
+  removeFriend: {
+    leaderId: EndUserId;
+    endUserId: EndUserId;
+  };
+  createFriend: {
+    leaderId: EndUserId;
+    endUserId: EndUserId;
+  };
+};
 
 export interface IFriendStableService {
+  // private isFriend(args: IFriendStableServiceArgs['isFriend']): Promise<boolean>;
+
   getFriendsAggregation(
-    pipelineStage: PipelineStage[],
+    pipelineStage: IFriendStableServiceArgs['getFriendsAggregation'],
   ): Promise<FriendAggregation>;
 
   removeFriend(
-    leaderId: EndUserId,
-    endUserId: EndUserId,
+    args: IFriendStableServiceArgs['removeFriend'],
   ): Promise<DocumentMongodbType<Friend>>;
 
   createFriend(
-    leaderId: EndUserId,
-    endUserId: EndUserId,
+    args: IFriendStableServiceArgs['createFriend'],
   ): Promise<DocumentMongodbType<Friend>>;
 }

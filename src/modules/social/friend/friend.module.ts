@@ -6,6 +6,7 @@ import { IFriendUnstableServiceString } from './services/unstable/friend.unstabl
 import { FriendUnstableService } from './services/unstable/friend.unstable.service';
 import { FriendStableService } from './services/stable/friend.stable.service';
 import { IFriendStableServiceString } from './services/stable/friend.stable.interface';
+import { FriendRepository } from './repository/friends.repository';
 
 @Module({
   controllers: [FriendController],
@@ -18,6 +19,7 @@ import { IFriendStableServiceString } from './services/stable/friend.stable.inte
       provide: IFriendStableServiceString,
       useClass: FriendStableService,
     },
+    FriendRepository,
   ],
   imports: [
     MongooseModule.forFeature([{ name: Friend.name, schema: FriendSchema }]),

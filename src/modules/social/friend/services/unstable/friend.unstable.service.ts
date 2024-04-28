@@ -11,6 +11,7 @@ import { TryCatchDecorator } from 'src/cores/decorators';
 import { FriendAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/social/friend.aggregation';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { getFriendsAggregation } from 'src/cores/mongodb-aggregations';
+import { nameOfCollections } from 'src/common/constants';
 
 @Injectable()
 @TryCatchDecorator()
@@ -20,25 +21,59 @@ export class FriendUnstableService implements IFriendUnstableService {
     private readonly friendService: IFriendStableService,
   ) {}
 
-  async addFriend(
+  //THIS IS HARD WITH MONGODB :(((
+  //TODO: DO THIS LATER
+  async getRecommendation(
     endUserId: EndUserId,
-    friendId: EndUserId,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _queryLimitSkip: QueryLimitSkip,
+  ): Promise<FriendAggregation> {
+    const friends = await this.friendService.getFriendsAggregation([
+      {
+        $match: { endUserId: endUserId },
+      },
+      {
+        $addFields: {
+          filteredFriends: {
+            $filter: {
+              input: '$friends',
+              as: 'friend',
+              cond: { $not: { $in: ['$$friend', [1, 2, 3]] } },
+            },
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: nameOfCollections.EndUser,
+          localField: 'friends',
+          foreignField: '_id',
+          as: 'FriendDetails',
+        },
+      },
+    ]);
+    return friends;
+  }
+
+  async addFriend(
+    leaderId: EndUserId,
+    endUserId: EndUserId,
   ): Promise<DocumentMongodbType<Friend>> {
-    const newFriend = await this.friendService.createFriend(
+    const newFriend = await this.friendService.createFriend({
+      leaderId,
       endUserId,
-      friendId,
-    );
+    });
     return newFriend;
   }
 
   async removeFriend(
+    leaderId: EndUserId,
     endUserId: EndUserId,
-    friendId: EndUserId,
   ): Promise<DocumentMongodbType<Friend>> {
-    const deletedFriend = await this.friendService.removeFriend(
+    const deletedFriend = await this.friendService.removeFriend({
+      leaderId,
       endUserId,
-      friendId,
-    );
+    });
     return deletedFriend;
   }
 
@@ -61,9 +96,5 @@ export class FriendUnstableService implements IFriendUnstableService {
     ]);
     const friends = await this.friendService.getFriendsAggregation(query);
     return friends;
-  }
-
-  getRecommendation(endUserId: EndUserId, queryLimitSkip: QueryLimitSkip): Promise<FriendAggregation> {
-    const query = getFriendsAggregation(endUserId, queryLimitSkip);
   }
 }

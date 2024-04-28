@@ -7,5 +7,7 @@ export const nameOfCollections = {
   Post: 'posts',
   Group: 'groups',
   Event: 'events',
-  Comment: 'Comments',
+  Comment: 'comments',
+  Friend: 'friends',
+  Notification: 'notifications',
 } as const;
