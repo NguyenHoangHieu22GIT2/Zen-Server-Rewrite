@@ -10,6 +10,7 @@ import {
 } from './';
 import { ILikeServiceStableString } from './services/stable/like.stable.interface';
 import { ILikeServiceUnstableString } from './services/unstable/like.unstable.interface';
+import { LikeRepository } from './repository/like.repository';
 
 @Module({
   controllers: [LikeController],
@@ -22,6 +23,7 @@ import { ILikeServiceUnstableString } from './services/unstable/like.unstable.in
       provide: ILikeServiceUnstableString,
       useClass: LikeServiceUnstable,
     },
+    LikeRepository,
   ],
   imports: [
     MongooseModule.forFeature([{ name: Like.name, schema: LikeSchema }]),

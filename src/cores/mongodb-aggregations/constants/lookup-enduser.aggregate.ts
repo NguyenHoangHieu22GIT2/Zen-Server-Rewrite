@@ -11,6 +11,9 @@ export const LookUpEndUserAggregate: PipelineStage[] = [
     },
   },
   {
+    $unwind: '$userFull',
+  },
+  {
     $set: {
       endUser: {
         _id: '$userFull._id',

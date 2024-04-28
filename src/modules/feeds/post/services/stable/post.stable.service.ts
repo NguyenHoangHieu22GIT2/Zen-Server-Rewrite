@@ -1,6 +1,4 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Inject, Injectable } from '@nestjs/common';
 import { Post } from '../../../post/entities/post.entity';
 import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/feeds';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
@@ -10,37 +8,41 @@ import {
   IPostServiceStableArgs,
 } from './post.stable.interface';
 import { PostId } from 'src/common/types/utilTypes';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
+import { PostRepository } from '../../repository/post.repository';
 
 @Injectable()
 export class PostServiceStable implements IPostServiceStable {
   constructor(
-    @InjectModel(Post.name) private readonly postModel: Model<Post>,
+    @Inject(BaseRepositoryName) private readonly postRepository: PostRepository,
   ) {}
 
   public async getPostsAggregation({
     queryLimitSkip,
     queryAggregation,
   }: IPostServiceStableArgs['getPostsAggregation']) {
-    const postsAggregation: PostAggregation[] = await this.postModel.aggregate([
-      ...queryAggregation,
-      {
-        $limit: queryLimitSkip.limit,
-      },
-      { $skip: queryLimitSkip.skip },
-      ...LookUpEndUserAggregate,
-    ]);
+    const postsAggregation: PostAggregation[] =
+      await this.postRepository.findByAggregation([
+        ...queryAggregation,
+        {
+          $limit: queryLimitSkip.limit,
+        },
+        { $skip: queryLimitSkip.skip },
+        ...LookUpEndUserAggregate,
+      ]);
     return postsAggregation;
   }
 
   public async findPostAggregation(
     findPostDto: IPostServiceStableArgs['findPostAggregation'],
   ) {
-    const postsAggregation: PostAggregation[] = await this.postModel.aggregate([
-      {
-        $match: { _id: findPostDto.postId },
-      },
-      ...LookUpEndUserAggregate,
-    ]);
+    const postsAggregation: PostAggregation[] =
+      await this.postRepository.findByAggregation([
+        {
+          $match: { _id: findPostDto.postId },
+        },
+        ...LookUpEndUserAggregate,
+      ]);
     const postAggregation = postsAggregation[0];
     return postAggregation;
   }
@@ -48,7 +50,7 @@ export class PostServiceStable implements IPostServiceStable {
   public async findPostById(
     findPostDto: IPostServiceStableArgs['findPostById'],
   ): Promise<DocumentMongodbType<Post>> {
-    const post = await this.postModel.findById(findPostDto.postId);
+    const post = await this.postRepository.findById(findPostDto.postId);
     return post;
   }
 
@@ -57,7 +59,7 @@ export class PostServiceStable implements IPostServiceStable {
     createPostDto,
     imageNames,
   }: IPostServiceStableArgs['createPost']): Promise<DocumentMongodbType<Post>> {
-    const createdPost = await this.postModel.create({
+    const createdPost = await this.postRepository.create({
       ...createPostDto,
       endUserId,
       images: imageNames,
@@ -66,10 +68,10 @@ export class PostServiceStable implements IPostServiceStable {
   }
 
   savePost(postId: PostId, data: Partial<Post>): Promise<unknown> {
-    return this.postModel.updateOne({ _id: postId }, { $set: { ...data } });
+    return this.postRepository.update(postId, data);
   }
 
   deletePost(postId: PostId): Promise<unknown> {
-    return this.postModel.deleteOne({ _id: postId });
+    return this.postRepository.delete(postId);
   }
 }

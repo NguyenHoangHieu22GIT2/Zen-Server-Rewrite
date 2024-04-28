@@ -9,8 +9,7 @@ import {
   UploadedFile,
   Req,
 } from '@nestjs/common';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
-import { EnduserServiceStable } from './services/stable/';
+import { ApiTags } from '@nestjs/swagger';
 import { SerializeDecorator } from 'src/cores/interceptors/';
 import { EndUserSerializeDto, FindByIdEndUserDto } from './dto/';
 import { LoggedInGuard } from 'src/modules/auth/passport/loggedIn.guard';
@@ -28,12 +27,10 @@ import { EnduserServiceUnstable } from './services/unstable/';
 @UseGuards(LoggedInGuard)
 export class EnduserController {
   constructor(
-    private readonly enduserServiceStable: EnduserServiceStable,
     private readonly enduserServiceUnstable: EnduserServiceUnstable,
   ) {}
 
-  @Get('/:id')
-  @ApiParam({ name: 'id', required: true })
+  @Get('/:endUserId')
   @FindOneEndUserSwaggerAPIDecorators()
   async findOne(@Param() params: FindByIdEndUserDto) {
     return this.enduserServiceUnstable.findById(params.endUserId);

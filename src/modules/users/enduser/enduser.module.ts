@@ -6,11 +6,12 @@ import {
   EnduserServiceStable,
   EnduserController,
   EnduserServiceUnstable,
+  EndUserRepository,
 } from './';
 
 @Module({
   controllers: [EnduserController],
-  providers: [EnduserServiceUnstable, EnduserServiceStable],
+  providers: [EnduserServiceUnstable, EnduserServiceStable, EndUserRepository],
   imports: [
     MongooseModule.forFeature([{ name: EndUser.name, schema: EndUserSchema }]),
   ],

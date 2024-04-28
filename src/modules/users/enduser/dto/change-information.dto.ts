@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
 
 export class ChangeInformationDto {
@@ -17,6 +18,13 @@ export class ChangeInformationDto {
     type: String,
     examples: ['male', 'female', 'other'],
     required: false,
+  })
+  @Transform((opts) => {
+    let value = opts.value;
+    if (value !== 'male' && value !== 'female' && value !== 'other') {
+      value = 'other';
+    }
+    return value;
   })
   @IsString()
   @IsOptional()

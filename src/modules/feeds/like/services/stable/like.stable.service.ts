@@ -1,17 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Model, PipelineStage } from 'mongoose';
-import { Like } from '../../entities/';
-import { InjectModel } from '@nestjs/mongoose';
+import { PipelineStage } from 'mongoose';
 import { EndUserId, PostId } from 'src/common/types/utilTypes/Brand';
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
 import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
 import { ILikeServiceStable } from './like.stable.interface';
+import { LikeRepository } from '../../repository/like.repository';
+import { LikeAggregation } from 'src/common/types/mongodbTypes';
 
 @Injectable()
 export class LikeServiceStable implements ILikeServiceStable {
-  constructor(
-    @InjectModel(Like.name) private readonly likeModel: Model<Like>,
-  ) {}
+  constructor(private readonly likeRepository: LikeRepository) {}
 
   async createLike({
     postId,
@@ -20,7 +17,7 @@ export class LikeServiceStable implements ILikeServiceStable {
     postId: PostId;
     endUserId: EndUserId;
   }) {
-    return this.likeModel.create({ endUserId, postId });
+    return this.likeRepository.create({ endUserId, postId });
   }
 
   async findLike({
@@ -30,11 +27,11 @@ export class LikeServiceStable implements ILikeServiceStable {
     postId: PostId;
     endUserId: EndUserId;
   }) {
-    return this.likeModel.findOne({ postId, endUserId });
+    return this.likeRepository.findOne({ postId, endUserId });
   }
 
   async getNumberOfLikes(postId: PostId): Promise<number> {
-    return this.likeModel.countDocuments({ postId });
+    return this.likeRepository.countDocuments({ postId });
   }
 
   async getLikes({
@@ -45,8 +42,8 @@ export class LikeServiceStable implements ILikeServiceStable {
     postId: PostId;
     queryLimitSkip: QueryLimitSkip;
     pipelineStages?: PipelineStage[];
-  }): Promise<DocumentMongodbType<Like>[]> {
-    const likes = await this.likeModel.aggregate([
+  }): Promise<LikeAggregation[]> {
+    const likes = await this.likeRepository.findByAggregation<LikeAggregation>([
       { $match: { postId } },
       {
         $skip: queryLimitSkip.skip,

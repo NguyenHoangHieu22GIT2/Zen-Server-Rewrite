@@ -1,4 +1,7 @@
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
+import {
+  DocumentMongodbType,
+  LikeAggregation,
+} from 'src/common/types/mongodbTypes';
 import { EndUserId, PostId } from 'src/common/types/utilTypes';
 import { Like } from '../../entities';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
@@ -17,7 +20,7 @@ export interface ILikeServiceStable {
     postId: PostId;
     queryLimitSkip: QueryLimitSkip;
     pipelineStages?: PipelineStage[];
-  }): Promise<DocumentMongodbType<Like>[]>;
+  }): Promise<LikeAggregation[]>;
 
   findLike({
     postId,

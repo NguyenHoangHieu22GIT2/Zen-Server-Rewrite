@@ -67,6 +67,7 @@ export class PostController {
     @UploadedFiles() images: Express.Multer.File[],
   ): Promise<DocumentMongodbType<PostEntity>> {
     const imageNames: string[] = [];
+    console.log('I am the best cool kid');
     if (images) {
       isImagesTheRightType(images);
 
@@ -78,6 +79,8 @@ export class PostController {
       storeFiles(createdImageObjects);
     }
 
+    console.log('I am the cool kid');
+
     const post = await this.postUnstableService.createPost({
       endUserId: req.user._id,
       createPostDto,
@@ -87,7 +90,22 @@ export class PostController {
     return post;
   }
 
-  @Get('/:endUserId')
+  @Get('recommend')
+  @GetPostsSwaggerAPIDecorators()
+  async getRecommendedPosts(
+    @Req() req: RequestUser,
+    @Query() query: QueryLimitSkip,
+  ): Promise<PostAggregation[]> {
+    const posts = await this.postUnstableService.getRecommendedPosts({
+      endUserId: req.user._id,
+      queryLimitSkip: query,
+    });
+
+    await this.postRedisStableService.savePosts(posts);
+    return posts;
+  }
+
+  @Get('/endusers/:endUserId')
   @GetPostsSwaggerAPIDecorators()
   async getUserPostsFromProfile(
     @Param() param: FindByIdEndUserDto,
@@ -100,7 +118,8 @@ export class PostController {
     await this.postRedisStableService.savePosts(posts);
     return posts;
   }
-  @Get('/group/:endUserId')
+
+  @Get('/groups/:endUserId')
   @GetPostsSwaggerAPIDecorators()
   async getUserPostsFromGroup(
     @Param() param: FindByIdEndUserDto,
@@ -109,21 +128,6 @@ export class PostController {
     const posts = await this.postUnstableService.getUserPostsFromGroup({
       getUserPostsDto,
       endUserId: param.endUserId,
-    });
-
-    await this.postRedisStableService.savePosts(posts);
-    return posts;
-  }
-
-  @Get('recommend')
-  @GetPostsSwaggerAPIDecorators()
-  async getRecommendedPosts(
-    @Req() req: RequestUser,
-    @Query() query: QueryLimitSkip,
-  ): Promise<PostAggregation[]> {
-    const posts = await this.postUnstableService.getRecommendedPosts({
-      endUserId: req.user._id,
-      queryLimitSkip: query,
     });
 
     await this.postRedisStableService.savePosts(posts);
