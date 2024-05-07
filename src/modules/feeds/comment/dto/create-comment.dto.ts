@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional } from 'class-validator';
 import { CommentId, PostId } from 'src/common/types/utilTypes/Brand';
 import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils';
 
@@ -17,7 +17,6 @@ export class CreateCommentDto {
     required: true,
     name: 'Post Id',
   })
-  @IsString()
   @Transform((opts) => {
     const postId = checkToConvertToMongoIdOrThrowError<PostId>({
       id: opts.value,
@@ -25,6 +24,7 @@ export class CreateCommentDto {
     });
     return postId;
   })
+  // @IsString()
   postId: PostId;
 
   @ApiProperty({
@@ -32,7 +32,7 @@ export class CreateCommentDto {
     required: false,
     name: 'Comment Id',
   })
-  @IsString()
+  // @IsString()
   @IsOptional()
   @Transform((opts) => {
     const commentId = checkToConvertToMongoIdOrThrowError<CommentId>({

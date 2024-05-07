@@ -50,6 +50,6 @@ export class GenericRepositoryMongodb<T> implements MongodbRepository {
 
   async delete<ObjectId>(id: ObjectId): Promise<T> {
     const result = await this.model.findByIdAndDelete(id);
-    return result.value;
+    return result;
   }
 }

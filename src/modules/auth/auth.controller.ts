@@ -74,6 +74,7 @@ export class AuthController {
     return result;
   }
 
+  //check the sent activation token  & remove the activate token field in the db
   @ActivateAccountSwaggerAPIDecorators()
   @Patch('activate-account')
   async activateAccount(@Body() activateAccountDto: ActivateAccountDto) {
@@ -84,6 +85,7 @@ export class AuthController {
   @Patch('login-account')
   @UseGuards(LocalGuard)
   loginAccount(@Req() req: Request) {
+    console.log(req.user, 'req.user');
     return req.user;
   }
 

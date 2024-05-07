@@ -24,11 +24,32 @@ export class CommentServiceStable implements ICommentStableService {
     const comments = await this.commentModel.aggregate<
       Comment & CustomTypeForPipeLine
     >([
-      { $match: { postId: getCommentsDto.postId } },
+      {
+        $match: {
+          postId: getCommentsDto.postId,
+          parentCommentId: getCommentsDto.parentCommentId,
+        },
+      },
       {
         $skip: getCommentsDto.skip,
       },
       { $limit: getCommentsDto.limit },
+      {
+        $lookup: {
+          from: 'comments',
+          let: { commentId: '$_id' },
+          pipeline: [
+            { $match: { $expr: { $eq: ['$parentCommentId', '$$commentId'] } } },
+            { $limit: 1 },
+          ],
+          as: 'hasReplies',
+        },
+      },
+      {
+        $addFields: {
+          hasReplies: { $gt: [{ $size: '$hasReplies' }, 0] },
+        },
+      },
       ...pipelineStages,
     ]);
 
