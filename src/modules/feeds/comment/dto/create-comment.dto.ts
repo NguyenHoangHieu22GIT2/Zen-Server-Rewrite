@@ -8,14 +8,14 @@ export class CreateCommentDto {
   @ApiProperty({
     type: String,
     required: true,
-    name: 'Content of the comment',
+    name: 'content',
   })
   content: string;
 
   @ApiProperty({
     type: String,
     required: true,
-    name: 'Post Id',
+    name: 'postId',
   })
   @Transform((opts) => {
     const postId = checkToConvertToMongoIdOrThrowError<PostId>({
@@ -30,9 +30,8 @@ export class CreateCommentDto {
   @ApiProperty({
     type: String,
     required: false,
-    name: 'Comment Id',
+    name: 'parentCommentId',
   })
-  // @IsString()
   @IsOptional()
   @Transform((opts) => {
     const commentId = checkToConvertToMongoIdOrThrowError<CommentId>({
@@ -41,5 +40,5 @@ export class CreateCommentDto {
     });
     return commentId;
   })
-  parentCommentId: CommentId;
+  parentCommentId?: CommentId;
 }
