@@ -6,12 +6,10 @@ import {
   usersHaveRegisteredKey,
   usersRecentlyLoginKey,
 } from '../redisKeys/user.redis.keys';
-import { Injectable } from '@nestjs/common';
 import { userDeserialize } from '../redis-deserialize/user.deserialize';
 import { ObjectToHashType } from 'src/common/types/redisTypes/ObjectToHash.redis.type';
 import { ConvertObjectToHash } from 'src/common/utils/index';
 
-@Injectable()
 export class UserRedis {
   //HASH
   static async userConvertToRedisTypeThenHSET(email: string, endUser: EndUser) {
