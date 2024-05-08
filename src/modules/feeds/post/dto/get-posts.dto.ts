@@ -1,7 +1,3 @@
-import { QueryLimitSkip } from 'src/cores/global-dtos/query-limit-skip.dto';
-import { FindByIdEndUserDto } from 'src/modules/users/enduser/dto/find-one.dto';
-import { Mixin } from 'ts-mixer';
-
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsNumber, Min } from 'class-validator';

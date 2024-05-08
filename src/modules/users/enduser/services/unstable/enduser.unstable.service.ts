@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, LoggerService } from '@nestjs/common';
 import { EndUserId } from 'src/common/types/utilTypes/';
 import {
   isImageTheRightType,
@@ -11,7 +11,10 @@ import { EnduserServiceStable } from '../stable/';
 import { ChangeInformationDto } from '../../dto/';
 @Injectable()
 export class EnduserServiceUnstable {
-  constructor(private readonly enduserServiceStable: EnduserServiceStable) {}
+  private readonly loggerService: LoggerService;
+  constructor(private readonly enduserServiceStable: EnduserServiceStable) {
+    this.loggerService = new Logger(EnduserServiceUnstable.name);
+  }
 
   public async findById(userId: EndUserId) {
     const user = await this.enduserServiceStable.findById(userId);
