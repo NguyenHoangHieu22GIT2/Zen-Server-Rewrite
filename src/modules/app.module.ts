@@ -19,6 +19,9 @@ import { MessageModule } from './communication/message/message.module';
 import { NotificationModule } from './social/notification/notification.module';
 import { GroupMembersModule } from './community/group-members/group-members.module';
 import { AuthorizationMiddleware } from 'src/cores/middlewares/Authorization.middleware';
+import { config } from 'src/cores/configs';
+import { MongooseConfig } from 'src/cores/configs/mongoose.config';
+import { MailerConfig } from 'src/cores/configs/mailer.config';
 
 @Module({
   imports: [
@@ -26,22 +29,15 @@ import { AuthorizationMiddleware } from 'src/cores/middlewares/Authorization.mid
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+      load: [config],
     }),
-
-    MongooseModule.forRoot(process.env.DB_URL, {
-      dbName: process.env.DB_NAME,
-      appName: process.env.APP_NAME,
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: MongooseConfig,
     }),
-
-    MailerModule.forRoot({
-      transport: {
-        service: process.env.MAILER_SERVICE,
-        host: process.env.MAILER_HOST,
-        auth: {
-          user: process.env.MAILER_USERNAME,
-          pass: process.env.MAILER_PASSWORD,
-        },
-      },
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: MailerConfig,
     }),
 
     //Modules

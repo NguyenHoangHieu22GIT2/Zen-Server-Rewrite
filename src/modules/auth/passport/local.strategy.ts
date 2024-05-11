@@ -25,7 +25,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
    * */
   async validate(email: string, password: string) {
     const user = await this.authService.loginAccount({ email, password });
-
+    //by default, session will be stored in "sess:sessionID" KEY
+    //store into current_access_user for afterward usage
     await Promise.all([
       UserRedis.usersRecentlyLoginPFADD(user.email),
       UserRedis.userConvertToRedisTypeThenHSET(user.email, user),

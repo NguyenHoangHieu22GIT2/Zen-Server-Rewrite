@@ -67,7 +67,8 @@ export class PostController {
     @UploadedFiles() images: Express.Multer.File[],
   ): Promise<DocumentMongodbType<PostEntity>> {
     const imageNames: string[] = [];
-    console.log('I am the best cool kid');
+    console.log('images', images);
+
     if (images) {
       isImagesTheRightType(images);
 
@@ -78,8 +79,7 @@ export class PostController {
 
       storeFiles(createdImageObjects);
     }
-
-    console.log('I am the cool kid');
+    console.log('imageNames', imageNames);
 
     const post = await this.postUnstableService.createPost({
       endUserId: req.user._id,
