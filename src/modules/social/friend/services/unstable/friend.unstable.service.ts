@@ -23,7 +23,7 @@ export class FriendUnstableService implements IFriendUnstableService {
 
   //THIS IS HARD WITH MONGODB :(((
   //TODO: DO THIS LATER
-  async getRecommendation(
+  public async getRecommendation(
     endUserId: EndUserId,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _queryLimitSkip: QueryLimitSkip,
@@ -55,29 +55,37 @@ export class FriendUnstableService implements IFriendUnstableService {
     return friends;
   }
 
-  async addFriend(
+  // public async searchStrangerFriends(
+  //   endUserId: EndUserId,
+  //   name: string,
+  //   queryLimitSkip: QueryLimitSkip,
+  // ): Promise<userMinimalType[]> {
+  //   return 0 as any;
+  // }
+
+  public async addFriend(
     leaderId: EndUserId,
-    endUserId: EndUserId,
+    friendId: EndUserId,
   ): Promise<DocumentMongodbType<Friend>> {
     const newFriend = await this.friendService.createFriend({
       leaderId,
-      endUserId,
+      friendId,
     });
     return newFriend;
   }
 
-  async removeFriend(
+  public async removeFriend(
     leaderId: EndUserId,
-    endUserId: EndUserId,
+    friendId: EndUserId,
   ): Promise<DocumentMongodbType<Friend>> {
     const deletedFriend = await this.friendService.removeFriend({
       leaderId,
-      endUserId,
+      friendId,
     });
     return deletedFriend;
   }
 
-  async getFriendList(
+  public async getFriendList(
     endUserId: EndUserId,
     queryLimitSkip: QueryLimitSkip,
   ): Promise<FriendAggregation> {
@@ -86,7 +94,7 @@ export class FriendUnstableService implements IFriendUnstableService {
     return friends;
   }
 
-  async findFriendsByName(
+  public async findFriendsByName(
     endUserId: EndUserId,
     name: string,
     queryLimitSkip: QueryLimitSkip,

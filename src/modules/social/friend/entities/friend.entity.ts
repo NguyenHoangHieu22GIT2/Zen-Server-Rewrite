@@ -13,14 +13,14 @@ export class Friend {
     ref: nameOfCollections.EndUser,
     index: { unique: true },
   })
-  endUserId: EndUserId;
+  leaderId: EndUserId;
 
   @Prop({
     required: true,
-    type: [Types.ObjectId],
+    type: Types.ObjectId,
     ref: nameOfCollections.EndUser,
   })
-  friends: EndUserId[];
+  friendId: EndUserId;
 }
 
 export const FriendSchema = SchemaFactory.createForClass(Friend);

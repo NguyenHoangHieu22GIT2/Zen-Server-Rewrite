@@ -1,6 +1,5 @@
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
-import { EndUser } from 'src/modules/users/enduser';
 import { EndUserId } from 'src/common/types/utilTypes';
 import { FriendAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/social/friend.aggregation';
 import { Friend } from '../../entities/friend.entity';
@@ -18,6 +17,12 @@ export interface IFriendUnstableService {
     queryLimitSkip: QueryLimitSkip,
   ): Promise<FriendAggregation>;
 
+  // searchStrangerFriends(
+  //   endUserId: EndUserId,
+  //   name: string,
+  //   queryLimitSkip: QueryLimitSkip,
+  // ): Promise<userMinimalType[]>;
+
   findFriendsByName(
     endUserId: EndUserId,
     name: string,
@@ -25,12 +30,12 @@ export interface IFriendUnstableService {
   ): Promise<FriendAggregation>;
 
   removeFriend(
-    endUserId: EndUserId,
+    leaderId: EndUserId,
     friendId: EndUserId,
   ): Promise<DocumentMongodbType<Friend>>;
 
   addFriend(
-    endUserId: EndUserId,
+    leaderId: EndUserId,
     friendId: EndUserId,
   ): Promise<DocumentMongodbType<Friend>>;
 }

@@ -1,5 +1,5 @@
-import { EndUserId } from '../../types/utilTypes/Brand';
+import { Types } from 'mongoose';
 
-export function isIdsEqual(userIdOne: EndUserId, userIdTwo: EndUserId) {
-  return userIdOne.toString() === userIdTwo.toString();
+export function isIdsEqual(id1: Types.ObjectId, id2: Types.ObjectId) {
+  return id1.toString() === id2.toString();
 }

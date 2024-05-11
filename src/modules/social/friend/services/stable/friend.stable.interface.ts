@@ -9,16 +9,16 @@ export const IFriendStableServiceString = 'IFriendStableService';
 export type IFriendStableServiceArgs = {
   isFriend: {
     leaderId: EndUserId;
-    endUserId: EndUserId;
+    friendId: EndUserId;
   };
   getFriendsAggregation: PipelineStage[];
   removeFriend: {
     leaderId: EndUserId;
-    endUserId: EndUserId;
+    friendId: EndUserId;
   };
   createFriend: {
     leaderId: EndUserId;
-    endUserId: EndUserId;
+    friendId: EndUserId;
   };
 };
 

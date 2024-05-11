@@ -24,5 +24,11 @@ import { FriendRepository } from './repository/friends.repository';
   imports: [
     MongooseModule.forFeature([{ name: Friend.name, schema: FriendSchema }]),
   ],
+  exports: [
+    {
+      provide: IFriendUnstableServiceString,
+      useClass: FriendUnstableService,
+    },
+  ],
 })
 export class FriendModule {}

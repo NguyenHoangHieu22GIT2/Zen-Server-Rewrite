@@ -1,7 +1,6 @@
 import { IsString } from 'class-validator';
-import { QueryLimitSkip } from 'src/cores/global-dtos';
 
-export class FindFriendsByName extends QueryLimitSkip {
+export class FindFriendsByName {
   @IsString()
   username: string;
 }

@@ -1,26 +1,69 @@
-import { Injectable } from '@nestjs/common';
-import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
-import { UpdateFriendRequestDto } from './dto/update-friend-request.dto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { FriendRequestRepository } from './repository/friend-request.repository';
+import { EndUserId, FriendRequestId } from 'src/common/types/utilTypes';
+import { IFriendRequestService } from './friend-request.interface.service';
+import { QueryLimitSkip } from 'src/cores/global-dtos';
+import { emptyObj, isIdsEqual } from 'src/common/utils';
 
 @Injectable()
-export class FriendRequestService {
-  create(createFriendRequestDto: CreateFriendRequestDto) {
-    return 'This action adds a new friendRequest';
+export class FriendRequestService implements IFriendRequestService {
+  constructor(
+    private readonly friendRequestRepository: FriendRequestRepository,
+  ) {}
+
+  public async createFriendRequest(leaderId: EndUserId, friendId: EndUserId) {
+    const result = await this.friendRequestRepository.create({
+      leaderId,
+      friendId,
+    });
+    return result;
   }
 
-  findAll() {
-    return `This action returns all friendRequest`;
+  public async getFriendRequests(
+    endUserId: EndUserId,
+    queryLimitSkip: QueryLimitSkip,
+  ) {
+    const result = await this.friendRequestRepository.find(
+      {
+        leaderId: endUserId,
+      },
+      emptyObj,
+      { ...queryLimitSkip },
+    );
+    return result;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} friendRequest`;
+  public async acceptFriendRequest(
+    endUserId: EndUserId,
+    friendRequestId: FriendRequestId,
+  ) {
+    const result = await this.friendRequestRepository.findById(friendRequestId);
+
+    if (!isIdsEqual(result.leaderId, endUserId)) {
+      throw new UnauthorizedException(
+        'You are not allowed to accept this friend request!',
+      );
+    }
+
+    result.state = 'accepted';
+
+    return result.save();
   }
 
-  update(id: number, updateFriendRequestDto: UpdateFriendRequestDto) {
-    return `This action updates a #${id} friendRequest`;
-  }
+  public async declineFriendRequest(
+    endUserId: EndUserId,
+    friendRequestId: FriendRequestId,
+  ) {
+    const result = await this.friendRequestRepository.findById(friendRequestId);
 
-  remove(id: number) {
-    return `This action removes a #${id} friendRequest`;
+    if (!isIdsEqual(result.leaderId, endUserId)) {
+      throw new UnauthorizedException(
+        'You are not allowed to decline this friend request!',
+      );
+    }
+
+    result.deleteOne();
+
+    return result;
   }
 }

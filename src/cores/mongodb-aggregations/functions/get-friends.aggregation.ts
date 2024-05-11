@@ -29,7 +29,7 @@ export function getFriendsAggregation(
       },
     },
     {
-      $unset: ['!friend.password'],
+      $unset: ['friend.password'],
     },
     {
       $group: {

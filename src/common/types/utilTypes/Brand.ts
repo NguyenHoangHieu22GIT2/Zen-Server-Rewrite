@@ -6,6 +6,8 @@ export type Brand<TType, TBrand> = TType & { [brand]: TBrand };
 
 export type EndUserId = Brand<Types.ObjectId, 'EndUserId'>;
 
+export type FriendRequestId = Brand<Types.ObjectId, 'FriendRequestId'>;
+
 export type AdminId = Brand<Types.ObjectId, 'AdminId'>;
 
 export type FriendId = Brand<Types.ObjectId, 'FriendId'>;

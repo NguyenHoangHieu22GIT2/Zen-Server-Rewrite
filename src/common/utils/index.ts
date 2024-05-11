@@ -20,3 +20,5 @@ export * from './files/storeFiles';
 export * from './checks/tryCatchModified';
 export * from './checks/isUndefined';
 export * from './checks/isNullOrUndefined';
+export * from './helpers/index';
+export * from './checks/isMongodbId';
