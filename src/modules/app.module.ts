@@ -22,6 +22,7 @@ import { AuthorizationMiddleware } from 'src/cores/middlewares/Authorization.mid
 import { config } from 'src/cores/configs';
 import { MongooseConfig } from 'src/cores/configs/mongoose.config';
 import { MailerConfig } from 'src/cores/configs/mailer.config';
+import { FriendRequestModule } from './social/friend-request/friend-request.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { MailerConfig } from 'src/cores/configs/mailer.config';
     MessageModule,
     NotificationModule,
     GroupMembersModule,
+    FriendRequestModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserRedis],

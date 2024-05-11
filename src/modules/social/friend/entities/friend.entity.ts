@@ -11,7 +11,6 @@ export class Friend {
     required: true,
     type: Types.ObjectId,
     ref: nameOfCollections.EndUser,
-    index: { unique: true },
   })
   leaderId: EndUserId;
 

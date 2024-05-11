@@ -5,6 +5,11 @@ import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.in
 import { FriendRequestRepository } from './repository/friend-request.repository';
 import { IFriendRequestServiceString } from './friend-request.interface.service';
 import { FriendModule } from '../friend/friend.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import {
+  FriendRequest,
+  FriendRequestSchema,
+} from './entities/friend-request.entity';
 
 @Module({
   controllers: [FriendRequestController],
@@ -18,6 +23,11 @@ import { FriendModule } from '../friend/friend.module';
       useClass: FriendRequestRepository,
     },
   ],
-  imports: [FriendModule],
+  imports: [
+    FriendModule,
+    MongooseModule.forFeature([
+      { name: FriendRequest.name, schema: FriendRequestSchema },
+    ]),
+  ],
 })
 export class FriendRequestModule {}

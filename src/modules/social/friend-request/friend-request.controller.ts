@@ -21,6 +21,10 @@ import { RequestUser } from 'src/common/types/utilTypes';
 import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
 import { FindFriendRequestDto } from './dto/find-friend-request.dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
+import { GetFriendRequestsSwaggerAPIDecorators } from 'src/documents/swagger-api/friend-request/get-friend-requests.api';
+import { CreateFriendRequestSwaggerAPIDecorators } from 'src/documents/swagger-api/friend-request/create-friend-request.api';
+import { AcceptFriendRequestSwaggerAPIDecorators } from 'src/documents/swagger-api/friend-request/accept-friend-request.api';
+import { DeclineFriendRequestSwaggerAPIDecorators } from 'src/documents/swagger-api/friend-request/decline-friend-request.api';
 
 @UseGuards(LoggedInGuard)
 @ApiTags('Friend Request')
@@ -33,6 +37,7 @@ export class FriendRequestController {
     private readonly friendService: FriendUnstableService,
   ) {}
 
+  @GetFriendRequestsSwaggerAPIDecorators()
   @Get()
   public async getFriendRequests(
     @Req() req: RequestUser,
@@ -46,11 +51,15 @@ export class FriendRequestController {
     return friendRequests;
   }
 
+  @CreateFriendRequestSwaggerAPIDecorators()
   @Post()
   public async createFriendRequest(
     @Req() req: RequestUser,
     @Body() createFriendRequestDto: CreateFriendRequestDto,
   ) {
+    //TODO: APPLY function to find the relationship to stop this.
+    // const hasBeenFriend = await this.friendService.
+
     const friendRequest = await this.friendRequestService.createFriendRequest(
       req.user._id,
       createFriendRequestDto.endUserId,
@@ -59,6 +68,7 @@ export class FriendRequestController {
     return friendRequest;
   }
 
+  @AcceptFriendRequestSwaggerAPIDecorators()
   @Patch('accept-friend-request')
   public async acceptFriendRequest(
     @Req() req: RequestUser,
@@ -66,7 +76,7 @@ export class FriendRequestController {
   ) {
     const friendRequest = await this.friendRequestService.acceptFriendRequest(
       req.user._id,
-      findFriendRequestDto.endUserId,
+      findFriendRequestDto.friendRequestId,
     );
 
     await this.friendService.addFriend(req.user._id, friendRequest.friendId);
@@ -74,6 +84,7 @@ export class FriendRequestController {
     return friendRequest;
   }
 
+  @DeclineFriendRequestSwaggerAPIDecorators()
   @Patch('decline-friend-request')
   public async declineFriendRequest(
     @Req() req: RequestUser,
@@ -81,7 +92,7 @@ export class FriendRequestController {
   ) {
     const friendRequest = await this.friendRequestService.declineFriendRequest(
       req.user._id,
-      FindFriendRequestDto.endUserId,
+      FindFriendRequestDto.friendRequestId,
     );
 
     return friendRequest;

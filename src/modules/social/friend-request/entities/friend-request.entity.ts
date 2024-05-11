@@ -22,7 +22,7 @@ export class FriendRequest {
 
   @Prop({
     required: true,
-    type: Boolean,
+    type: String,
   })
   state: stateOfFriendRequest;
 

@@ -19,6 +19,10 @@ import { FindFriendDto } from './dto';
 import { RequestUser } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { FindFriendsByName } from './dto/find-friends-by-name.dto';
+import { GetFriendsRecommendationSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/get-friends-recommendation.api';
+import { RemoveFriendSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/remove-friend.api';
+import { SearchFriendsByNameSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/search-friends-by-name.api';
+import { GetFriendListSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/get-friend-list.api';
 
 /**
  * leaderId => the user doing the action
@@ -34,6 +38,7 @@ export class FriendController {
     private readonly friendService: IFriendUnstableService,
   ) {}
 
+  @GetFriendsRecommendationSwaggerAPIDecorators()
   @Get('recommendation')
   public async getFriendsRecommendation(
     @Req() req: RequestUser,
@@ -46,6 +51,7 @@ export class FriendController {
     return friends;
   }
 
+  @RemoveFriendSwaggerAPIDecorators()
   @Put()
   public async removeFriend(
     @Req() req: RequestUser,
@@ -58,6 +64,7 @@ export class FriendController {
     return friendResult;
   }
 
+  @SearchFriendsByNameSwaggerAPIDecorators()
   @Get('search-by-name/:name')
   public async searchFriendsByName(
     @Req() req: RequestUser,
@@ -71,7 +78,7 @@ export class FriendController {
     );
     return friends;
   }
-
+  @GetFriendListSwaggerAPIDecorators()
   @Get()
   public async getFriendList(
     @Req() req: RequestUser,
