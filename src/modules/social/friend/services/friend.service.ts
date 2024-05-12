@@ -1,25 +1,36 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IFriendUnstableService } from './friend.unstable.interface';
-import {
-  IFriendStableService,
-  IFriendStableServiceString,
-} from '../stable/friend.stable.interface';
+import { IFriendService } from './friend.interface';
+
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
 import { EndUserId } from 'src/common/types/utilTypes';
-import { Friend } from '../../entities/friend.entity';
+import { Friend } from '../entities/friend.entity';
 import { TryCatchDecorator } from 'src/cores/decorators';
 import { FriendAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/social/friend.aggregation';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { getFriendsAggregation } from 'src/cores/mongodb-aggregations';
 import { nameOfCollections } from 'src/common/constants';
+import { FriendRepository } from '../repository/friends.repository';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 
 @Injectable()
 @TryCatchDecorator()
-export class FriendUnstableService implements IFriendUnstableService {
+export class FriendService implements IFriendService {
   constructor(
-    @Inject(IFriendStableServiceString)
-    private readonly friendService: IFriendStableService,
+    @Inject(BaseRepositoryName)
+    private readonly friendRepository: FriendRepository,
   ) {}
+
+  public async isFriends(
+    leaderId: EndUserId,
+    friendId: EndUserId,
+  ): Promise<boolean> {
+    const result = await this.friendRepository.findOne({ leaderId, friendId });
+
+    if (!result) {
+      return false;
+    }
+    return true;
+  }
 
   //THIS IS HARD WITH MONGODB :(((
   //TODO: DO THIS LATER
@@ -28,7 +39,7 @@ export class FriendUnstableService implements IFriendUnstableService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _queryLimitSkip: QueryLimitSkip,
   ): Promise<FriendAggregation> {
-    const friends = await this.friendService.getFriendsAggregation([
+    const friends = await this.friendRepository.getFriendsAggregation([
       {
         $match: { endUserId: endUserId },
       },
@@ -67,7 +78,7 @@ export class FriendUnstableService implements IFriendUnstableService {
     leaderId: EndUserId,
     friendId: EndUserId,
   ): Promise<DocumentMongodbType<Friend>> {
-    const newFriend = await this.friendService.createFriend({
+    const newFriend = await this.friendRepository.createFriend({
       leaderId,
       friendId,
     });
@@ -78,7 +89,7 @@ export class FriendUnstableService implements IFriendUnstableService {
     leaderId: EndUserId,
     friendId: EndUserId,
   ): Promise<DocumentMongodbType<Friend>> {
-    const deletedFriend = await this.friendService.removeFriend({
+    const deletedFriend = await this.friendRepository.removeFriend({
       leaderId,
       friendId,
     });
@@ -90,7 +101,7 @@ export class FriendUnstableService implements IFriendUnstableService {
     queryLimitSkip: QueryLimitSkip,
   ): Promise<FriendAggregation> {
     const query = getFriendsAggregation(endUserId, queryLimitSkip);
-    const friends = await this.friendService.getFriendsAggregation(query);
+    const friends = await this.friendRepository.getFriendsAggregation(query);
     return friends;
   }
 
@@ -102,7 +113,7 @@ export class FriendUnstableService implements IFriendUnstableService {
     const query = getFriendsAggregation(endUserId, queryLimitSkip, [
       { $match: { name: { $regex: name, $options: 'i' } } },
     ]);
-    const friends = await this.friendService.getFriendsAggregation(query);
+    const friends = await this.friendRepository.getFriendsAggregation(query);
     return friends;
   }
 }

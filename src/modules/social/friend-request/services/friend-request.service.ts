@@ -4,14 +4,14 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { FriendRequestRepository } from './repository/friend-request.repository';
+import { FriendRequestRepository } from '../repository/friend-request.repository';
 import { EndUserId, FriendRequestId } from 'src/common/types/utilTypes';
 import { IFriendRequestService } from './friend-request.interface.service';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { emptyObj, isIdsEqual } from 'src/common/utils';
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
-import { FriendRequest } from './entities/friend-request.entity';
+import { FriendRequest } from '../entities/friend-request.entity';
 
 @Injectable()
 export class FriendRequestService implements IFriendRequestService {
@@ -35,6 +35,18 @@ export class FriendRequestService implements IFriendRequestService {
       friendId,
       state: 'pending',
     });
+    return result;
+  }
+
+  public async removeFriendRequest(
+    leaderId: EndUserId,
+    friendId: EndUserId,
+  ): Promise<DocumentMongodbType<FriendRequest>> {
+    const result = await this.friendRequestRepository.delete({
+      leaderId,
+      friendId,
+    });
+
     return result;
   }
 
@@ -73,6 +85,7 @@ export class FriendRequestService implements IFriendRequestService {
         'You are not allowed to accept this friend request!',
       );
     }
+
     if (result.state === 'accepted') {
       throw new BadRequestException(
         'You already accepted this friend request!',
@@ -93,6 +106,12 @@ export class FriendRequestService implements IFriendRequestService {
     if (!isIdsEqual(result.friendId, endUserId)) {
       throw new UnauthorizedException(
         'You are not allowed to decline this friend request!',
+      );
+    }
+
+    if (result.state === 'accepted') {
+      throw new BadRequestException(
+        'You already accepted this friend request!',
       );
     }
 

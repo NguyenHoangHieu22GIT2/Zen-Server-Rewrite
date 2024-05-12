@@ -9,10 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import {
-  IFriendUnstableService,
-  IFriendUnstableServiceString,
-} from './services';
+
 import { ApiTags } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/modules/auth';
 import { FindFriendDto } from './dto';
@@ -23,6 +20,7 @@ import { GetFriendsRecommendationSwaggerAPIDecorators } from 'src/documents/swag
 import { RemoveFriendSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/remove-friend.api';
 import { SearchFriendsByNameSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/search-friends-by-name.api';
 import { GetFriendListSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/get-friend-list.api';
+import { IFriendService, IFriendServiceString } from './services';
 
 /**
  * leaderId => the user doing the action
@@ -34,8 +32,8 @@ import { GetFriendListSwaggerAPIDecorators } from 'src/documents/swagger-api/fri
 @UseGuards(LoggedInGuard)
 export class FriendController {
   constructor(
-    @Inject(IFriendUnstableServiceString)
-    private readonly friendService: IFriendUnstableService,
+    @Inject(IFriendServiceString)
+    private readonly friendService: IFriendService,
   ) {}
 
   @GetFriendsRecommendationSwaggerAPIDecorators()
@@ -49,19 +47,6 @@ export class FriendController {
       query,
     );
     return friends;
-  }
-
-  @RemoveFriendSwaggerAPIDecorators()
-  @Put()
-  public async removeFriend(
-    @Req() req: RequestUser,
-    @Body() findFriendDto: FindFriendDto,
-  ) {
-    const friendResult = await this.friendService.removeFriend(
-      req.user._id,
-      findFriendDto.endUserId,
-    );
-    return friendResult;
   }
 
   @SearchFriendsByNameSwaggerAPIDecorators()

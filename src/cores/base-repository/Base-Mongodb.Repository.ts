@@ -81,11 +81,11 @@ export class GenericRepositoryMongodb<T> extends MongodbRepository {
   ): Promise<DocumentMongodbType<T>> {
     if (isMongodbId(args)) {
       const result = await this.model.findById(args);
-      await result.deleteOne();
+      result && (await result.deleteOne());
       return result as any;
     } else {
       const result = await this.model.findOne(args);
-      await result.deleteOne();
+      result && (await result.deleteOne());
       return result as any;
     }
   }

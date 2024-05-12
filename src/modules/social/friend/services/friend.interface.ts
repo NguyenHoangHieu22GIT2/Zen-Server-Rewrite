@@ -2,11 +2,11 @@ import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
 import { EndUserId } from 'src/common/types/utilTypes';
 import { FriendAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/social/friend.aggregation';
-import { Friend } from '../../entities/friend.entity';
+import { Friend } from '../entities/friend.entity';
 
-export const IFriendUnstableServiceString = 'IFriendUnstableService';
+export const IFriendServiceString = 'IFriendService';
 
-export interface IFriendUnstableService {
+export interface IFriendService {
   getRecommendation(
     endUserId: EndUserId,
     queryLimitSkip: QueryLimitSkip,
@@ -16,6 +16,8 @@ export interface IFriendUnstableService {
     endUserId: EndUserId,
     queryLimitSkip: QueryLimitSkip,
   ): Promise<FriendAggregation>;
+
+  isFriends(leaderId: EndUserId, friendId: EndUserId): Promise<boolean>;
 
   // searchStrangerFriends(
   //   endUserId: EndUserId,
