@@ -34,7 +34,7 @@ export function createPathImage(fileName: string): string {
   return join(process.cwd(), `/src/uploads/${fileName}`);
 }
 
-export function removeFile(fileName: string) {
+export async function removeFile(fileName: string) {
   return unlink(createPathImage(fileName), () => {});
 }
 
@@ -43,7 +43,7 @@ type Parameters = {
   fileName: string;
 };
 
-export function storeFile({ file, fileName }: Parameters) {
+export async function storeFile({ file, fileName }: Parameters) {
   writeFile(createPathImage(fileName), file.buffer, (error) => {
     if (error) {
       unlink(createPathImage(fileName), () => {});
@@ -52,7 +52,7 @@ export function storeFile({ file, fileName }: Parameters) {
   });
 }
 
-export function storeFiles(parameters: Parameters[]) {
+export async function storeFiles(parameters: Parameters[]) {
   parameters.forEach(({ file, fileName }) => {
     storeFile({ file, fileName });
   });
