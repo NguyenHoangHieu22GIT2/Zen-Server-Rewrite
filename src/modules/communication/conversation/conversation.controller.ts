@@ -1,34 +1,38 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ConversationService } from './conversation.service';
-import { CreateConversationDto } from './dto/create-conversation.dto';
-import { UpdateConversationDto } from './dto/update-conversation.dto';
+import { Controller, UseGuards, Inject } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { LoggedInGuard } from 'src/modules/auth';
+import {
+  IConversationService,
+  IConversationServiceString,
+} from './service/conversation.interface.service';
 
+@ApiTags('Conversations')
+@UseGuards(LoggedInGuard)
 @Controller('conversation')
 export class ConversationController {
-  constructor(private readonly conversationService: ConversationService) {}
+  constructor(
+    @Inject(IConversationServiceString)
+    private readonly conversationService: IConversationService,
+  ) {}
 
-  @Post()
-  create(@Body() createConversationDto: CreateConversationDto) {
-    return this.conversationService.create(createConversationDto);
-  }
+  // @Post()
+  // public async createConversation(
+  //   @Req() req: RequestUser,
+  //   @Body() body: CreateConversationDto,
+  // ) {
+  //   const conversation = await this.conversationService.createConversation(
+  //     req.user._id,
+  //     body.userIds,
+  //   );
+  // }
 
-  @Get()
-  findAll() {
-    return this.conversationService.findAll();
-  }
+  // @Get()
+  // getConversations(@Req() req: RequestUser, @Query() query: QueryLimitSkip) {
+  //   const conversations = this.conversationService.getConversations(
+  //     req.user._id,
+  //     query,
+  //   );
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.conversationService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateConversationDto: UpdateConversationDto) {
-    return this.conversationService.update(+id, updateConversationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.conversationService.remove(+id);
-  }
+  //   return conversations;
+  // }
 }
