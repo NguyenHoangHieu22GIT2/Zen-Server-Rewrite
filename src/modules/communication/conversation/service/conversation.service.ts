@@ -7,6 +7,11 @@ import { ConversationId, EndUserId } from 'src/common/types/utilTypes';
 import { Conversation } from '../entities';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { ConversationDefaultName } from 'src/common/constants/constants';
+import { decorateAndConcatName } from 'src/common/utils';
+import {
+  IEndUserService,
+  IEndUserServiceString,
+} from 'src/modules/users/enduser';
 
 @Injectable()
 export class ConversationService implements IConversationService {
@@ -20,21 +25,7 @@ export class ConversationService implements IConversationService {
     endUserIds: EndUserId[],
   ): Promise<DocumentMongodbType<Conversation>> {
     const conversation = await this.conversationRepository.create({
-      name: ConversationDefaultName,
+      name: decorateAndConcatName(),
     });
   }
-
-  public async getConversation(
-    conversationId: ConversationId,
-  ): Promise<DocumentMongodbType<Conversation>> {}
-
-  public async getConversations(
-    endUserId: EndUserId,
-    query: QueryLimitSkip,
-  ): Promise<DocumentMongodbType<Conversation>> {}
-
-  public async updateConversation(
-    conversationId: ConversationId,
-    opts: Partial<Conversation>,
-  ): Promise<DocumentMongodbType<Conversation>> {}
 }

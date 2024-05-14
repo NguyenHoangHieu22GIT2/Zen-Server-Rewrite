@@ -6,6 +6,10 @@ import { ChangeInformationDto } from '../dto';
 export const IEndUserServiceString = 'IEndUserService';
 
 export interface IEndUserService {
+  getEndUsersThroughIds(
+    endUserIds: EndUserId[],
+  ): Promise<DocumentMongodbType<EndUser>[]>;
+
   findById(endUserId: EndUserId): Promise<DocumentMongodbType<EndUser>>;
 
   changeAvatar({

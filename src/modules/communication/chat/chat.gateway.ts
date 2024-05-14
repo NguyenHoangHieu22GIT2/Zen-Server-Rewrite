@@ -20,6 +20,7 @@ export class ChatGateway {
   constructor(
     @Inject(IConversationServiceString)
     private readonly conversationService: ConversationService,
+
     private readonly messageService: MessageService,
   ) {}
 

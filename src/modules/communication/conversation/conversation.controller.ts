@@ -14,7 +14,8 @@ export class ConversationController {
   constructor(
     @Inject(IConversationServiceString)
     private readonly conversationService: IConversationService,
-    private readonly endUserService: EnduserServiceUnstable,
+    @Inject(IEndUserServiceString)
+    private readonly endUserService: IEndUserService,
   ) {}
 
   @Post()

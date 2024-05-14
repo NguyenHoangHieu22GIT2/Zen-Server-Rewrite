@@ -1,2 +1,2 @@
 export * from './enduser.interface.service';
-export * from './enduser.unstable.service';
+export * from './enduser.service';
