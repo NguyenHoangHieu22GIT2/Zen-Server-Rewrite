@@ -6,6 +6,7 @@ import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
 import { ConversationId, EndUserId } from 'src/common/types/utilTypes';
 import { Conversation } from '../entities';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
+import { ConversationDefaultName } from 'src/common/constants/constants';
 
 @Injectable()
 export class ConversationService implements IConversationService {
@@ -19,7 +20,7 @@ export class ConversationService implements IConversationService {
     endUserIds: EndUserId[],
   ): Promise<DocumentMongodbType<Conversation>> {
     const conversation = await this.conversationRepository.create({
-      name: '__username__',
+      name: ConversationDefaultName,
     });
   }
 

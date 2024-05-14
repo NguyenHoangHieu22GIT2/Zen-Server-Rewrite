@@ -140,6 +140,33 @@ function isRedisResultEmpty(value: Record<any, any>): boolean {
   return Object.keys(value).length == 0;
 }
 
+function decorateAndConcatName(target: string[]) {
+  let stringResult = '';
+  target.forEach((string, index) => {
+    if (index == 3) {
+      stringResult += 'and ' + string;
+      if (target.length > 3) {
+        stringResult += 'and ...';
+      }
+    } else stringResult += string + ', ';
+  });
+  return stringResult;
+}
+
+// TODO: finish this if this makes sense, right now it is not!
+// function concatString(object: Record<string, any>[], property: string): string;
+// function concatString(arr: string[]): string;
+// function concatString(
+//   target: Record<string, any>[] | string[],
+//   property?: string,
+// ): string {
+//   if (isArray<string>(target)) {
+//     return decorateAndConcatName(target);
+//   } else {
+
+//   }
+// }
+
 export {
   isArray,
   isObject,
@@ -159,4 +186,5 @@ export {
   ExecuteIfRedisAvailable,
   PopulateSkipAndLimit,
   isRedisResultEmpty,
+  decorateAndConcatName,
 };
