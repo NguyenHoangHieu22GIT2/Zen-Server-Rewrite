@@ -1,11 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
-import { SchemaFieldTypes } from 'redis';
-import { nameOfCollections } from 'src/common/constants/name-of-collections';
-import { userMinimalType } from 'src/common/types/objectTypes/user-minimal.type';
-import { EndUserId, NotificationId } from 'src/common/types/utilTypes/Brand';
-import { TypeOfNotification } from 'src/common/types/utilTypes/typeOfNotification';
+import { NotificationId } from 'src/common/types/utilTypes/Brand';
 
+export type NotificationType =
+  | 'comment'
+  | 'like'
+  | 'mention ' // TODO:Not implement for now, but will be in the future
+  | 'friend_request';
+
+/**
+ * Use Event-Grammer Model
+ * */
 @Schema({ timestamps: true })
 export class Notification {
   _id: NotificationId;
@@ -13,22 +18,35 @@ export class Notification {
   @Prop({
     required: true,
     type: Types.ObjectId,
-    ref: nameOfCollections.EndUser,
   })
-  userSentId: EndUserId;
+  subjectId: Types.ObjectId;
+
+  @Prop({ required: true, type: String })
+  verb: NotificationType;
 
   @Prop({
     required: true,
     type: Types.ObjectId,
-    ref: nameOfCollections.EndUser,
   })
-  userReceivedId: EndUserId;
+  directObjectId: Types.ObjectId;
 
-  @Prop({ required: true, type: String, default: 'announce' })
-  typeOfNotification: TypeOfNotification;
+  @Prop({
+    required: false,
+    type: Types.ObjectId,
+  })
+  indirectObjectId: Types.ObjectId;
+
+  @Prop({
+    required: false,
+    type: Types.ObjectId,
+  })
+  prepObjectId: Types.ObjectId;
 
   @Prop({ required: true, type: String })
-  link: string;
+  referenceLink: string;
+
+  @Prop({ required: true, type: Boolean, default: false })
+  read: boolean;
 
   createdAt: Date;
 

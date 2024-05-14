@@ -6,11 +6,11 @@ import {
   UpdateQuery,
   ProjectionType,
   QueryOptions,
-  ObjectId,
 } from 'mongoose';
 import { MongodbRepository } from './Base.Repository.interface';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
 import { emptyObj, isMongodbId } from 'src/common/utils';
+import { nameOfCollections } from 'src/common/constants';
 export class GenericRepositoryMongodb<T> extends MongodbRepository {
   public model: Model<T>;
 
@@ -19,11 +19,13 @@ export class GenericRepositoryMongodb<T> extends MongodbRepository {
     this.model = theModel;
   }
 
-  public findAll(): Promise<DocumentMongodbType<T>[]> {
+  public async findAll(): Promise<DocumentMongodbType<T>[]> {
     return this.model.find();
   }
 
-  public findOne(filterQuery: FilterQuery<T>): Promise<DocumentMongodbType<T>> {
+  public async findOne(
+    filterQuery: FilterQuery<T>,
+  ): Promise<DocumentMongodbType<T>> {
     return this.model.findOne(filterQuery);
   }
 
@@ -32,13 +34,13 @@ export class GenericRepositoryMongodb<T> extends MongodbRepository {
     return result;
   }
 
-  public findByAggregation<TAggregation>(
+  public async findByAggregation<TAggregation>(
     pipeline: PipelineStage[],
   ): Promise<TAggregation[]> {
     return this.model.aggregate(pipeline);
   }
 
-  public find(
+  public async find(
     filter: FilterQuery<T>,
     projection?: ProjectionType<T>,
     options?: QueryOptions<T>,
@@ -46,31 +48,31 @@ export class GenericRepositoryMongodb<T> extends MongodbRepository {
     return this.model.find(filter, projection || emptyObj, options || {});
   }
 
-  public update<ObjectId>(
+  public async update<ObjectId>(
     id: ObjectId,
     newData: Partial<T> | UpdateQuery<T>,
   ): Promise<DocumentMongodbType<T>> {
     return this.model.findByIdAndUpdate(id, newData, { new: true });
   }
 
-  public updateOne(
+  public async updateOne(
     filterQuery: FilterQuery<T>,
     newData: UpdateQuery<T>,
   ): Promise<DocumentMongodbType<T>> {
     return this.model.findOneAndUpdate(filterQuery, newData, { new: true });
   }
 
-  public create(data: Partial<T>): Promise<DocumentMongodbType<T>> {
+  public async create(data: Partial<T>): Promise<DocumentMongodbType<T>> {
     return this.model.create(data) as any as Promise<DocumentMongodbType<T>>;
   }
 
-  public createMany(data: Partial<T>[]): Promise<any> {
+  public async createMany(data: Partial<T>[]): Promise<any> {
     return this.model.insertMany(data) as any as Promise<
       DocumentMongodbType<T>
     >;
   }
 
-  public countDocuments(filterQuery: FilterQuery<T>): Promise<number> {
+  public async countDocuments(filterQuery: FilterQuery<T>): Promise<number> {
     return this.model.countDocuments(filterQuery);
   }
 

@@ -9,6 +9,7 @@ import {
 
 import { EnduserServiceStable } from '../stable/';
 import { ChangeInformationDto } from '../../dto/';
+
 @Injectable()
 export class EnduserServiceUnstable {
   private readonly loggerService: LoggerService;
