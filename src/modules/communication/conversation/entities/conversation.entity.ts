@@ -11,7 +11,7 @@ export class Conversation {
     type: [Types.ObjectId],
     ref: nameOfCollections.EndUser,
   })
-  users: Types.ObjectId[];
+  endUserIds: Types.ObjectId[];
 
   @Prop({
     required: true,

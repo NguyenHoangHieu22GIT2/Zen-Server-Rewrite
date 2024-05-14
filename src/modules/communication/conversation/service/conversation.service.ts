@@ -5,13 +5,9 @@ import { IConversationService } from './conversation.interface.service';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
 import { ConversationId, EndUserId } from 'src/common/types/utilTypes';
 import { Conversation } from '../entities';
-import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { ConversationDefaultName } from 'src/common/constants/constants';
-import { decorateAndConcatName } from 'src/common/utils';
-import {
-  IEndUserService,
-  IEndUserServiceString,
-} from 'src/modules/users/enduser';
+import { QueryLimitSkip } from 'src/cores/global-dtos';
+import { noop } from 'src/common/utils';
 
 @Injectable()
 export class ConversationService implements IConversationService {
@@ -25,7 +21,48 @@ export class ConversationService implements IConversationService {
     endUserIds: EndUserId[],
   ): Promise<DocumentMongodbType<Conversation>> {
     const conversation = await this.conversationRepository.create({
-      name: decorateAndConcatName(),
+      name: ConversationDefaultName,
+      endUserIds,
     });
+    return conversation;
+  }
+
+  public async getConversation(
+    endUserId: EndUserId,
+    conversationId: ConversationId,
+  ): Promise<DocumentMongodbType<Conversation>> {
+    const conversation = await this.conversationRepository.findOne({
+      endUserIds: endUserId,
+      conversationId,
+    });
+    return conversation;
+  }
+
+  public async getConversations(
+    endUserId: EndUserId,
+    query: QueryLimitSkip,
+  ): Promise<DocumentMongodbType<Conversation>[]> {
+    const conversations = await this.conversationRepository.find(
+      {
+        endUserIds: endUserId,
+      },
+      noop,
+      { limit: query.limit, skip: query.skip },
+    );
+    return conversations;
+  }
+
+  public async updateConversation(
+    endUserId: EndUserId,
+    conversationId: ConversationId,
+    opts: Partial<Conversation>,
+  ): Promise<DocumentMongodbType<Conversation>> {
+    const conversation = await this.conversationRepository.findOne({
+      _id: conversationId,
+      endUserIds: endUserId,
+    });
+
+    Object.assign(conversation, opts);
+    return conversation.save();
   }
 }

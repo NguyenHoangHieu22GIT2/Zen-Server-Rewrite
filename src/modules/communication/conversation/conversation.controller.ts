@@ -1,11 +1,24 @@
-import { Controller, UseGuards, Inject } from '@nestjs/common';
+import {
+  Controller,
+  UseGuards,
+  Inject,
+  Req,
+  Body,
+  Post,
+  Get,
+  Query,
+  Param,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/modules/auth';
 import {
   IConversationService,
   IConversationServiceString,
 } from './service/conversation.interface.service';
-import { EnduserServiceUnstable } from 'src/modules/users/enduser';
+import { CreateConversationDto } from './dto';
+import { RequestUser } from 'src/common/types/utilTypes';
+import { QueryLimitSkip } from 'src/cores/global-dtos';
+import { FindConversationDto } from './dto/find-conversation.dto';
 
 @ApiTags('Conversations')
 @UseGuards(LoggedInGuard)
@@ -14,8 +27,6 @@ export class ConversationController {
   constructor(
     @Inject(IConversationServiceString)
     private readonly conversationService: IConversationService,
-    @Inject(IEndUserServiceString)
-    private readonly endUserService: IEndUserService,
   ) {}
 
   @Post()
@@ -27,15 +38,31 @@ export class ConversationController {
       req.user._id,
       body.userIds,
     );
+    return conversation;
   }
 
-  // @Get()
-  // getConversations(@Req() req: RequestUser, @Query() query: QueryLimitSkip) {
-  //   const conversations = this.conversationService.getConversations(
-  //     req.user._id,
-  //     query,
-  //   );
+  @Get()
+  public async getConversations(
+    @Req() req: RequestUser,
+    @Query() query: QueryLimitSkip,
+  ) {
+    const conversations = await this.conversationService.getConversations(
+      req.user._id,
+      query,
+    );
 
-  //   return conversations;
-  // }
+    return conversations;
+  }
+
+  @Get(':conversationId')
+  public async getConversation(
+    @Req() req: RequestUser,
+    @Param() param: FindConversationDto,
+  ) {
+    const conversation = await this.conversationService.getConversation(
+      req.user._id,
+      param.conversationId,
+    );
+    return conversation;
+  }
 }

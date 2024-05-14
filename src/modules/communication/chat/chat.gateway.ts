@@ -12,6 +12,7 @@ import { MessageService } from '../message';
 import { socketOn } from './path/socket.on';
 import { Inject } from '@nestjs/common';
 import { IConversationServiceString } from '../conversation/service/conversation.interface.service';
+// import { SendMessageDto } from './dto/send-message.dto';
 
 @WebSocketGateway()
 export class ChatGateway {
@@ -33,7 +34,9 @@ export class ChatGateway {
     if (socketOfUser.rooms.has(conversationId)) {
       return;
     }
-
     socketOfUser.join(conversationId);
   }
+
+  // @SubscribeMessage(socketOn.sendMessage)
+  // sendMessage(@MessageBody() body: SendMessageDto) {}
 }

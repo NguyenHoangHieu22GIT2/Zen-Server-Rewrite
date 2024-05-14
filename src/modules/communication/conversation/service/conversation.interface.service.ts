@@ -19,15 +19,17 @@ export interface IConversationService<T = Conversation> {
   // ): Promise<DocumentMongodbType<T>>;
 
   getConversation(
+    endUserId: EndUserId,
     conversationId: ConversationId,
   ): Promise<DocumentMongodbType<T>>;
 
   getConversations(
     endUserId: EndUserId,
     query: QueryLimitSkip,
-  ): Promise<DocumentMongodbType<T>>;
+  ): Promise<DocumentMongodbType<T>[]>;
 
   updateConversation(
+    endUserId: EndUserId,
     conversationId: ConversationId,
     opts: Partial<Conversation>,
   ): Promise<DocumentMongodbType<T>>;

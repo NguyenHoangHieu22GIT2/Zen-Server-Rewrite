@@ -5,9 +5,9 @@ import {
   EndUserSchema,
   EnduserController,
   EndUserRepository,
+  EndUserService,
 } from './';
 import { IEndUserServiceString } from './services/enduser.interface.service';
-import { EndUserService } from './services/enduser.unstable.service';
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 
 @Module({

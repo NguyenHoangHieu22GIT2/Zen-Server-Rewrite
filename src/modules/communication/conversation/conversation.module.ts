@@ -6,7 +6,6 @@ import { IConversationServiceString } from './service/conversation.interface.ser
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Conversation, ConversationSchema } from './entities';
-import { EnduserModule } from 'src/modules/users/enduser';
 
 @Module({
   controllers: [ConversationController],
@@ -18,7 +17,6 @@ import { EnduserModule } from 'src/modules/users/enduser';
     MongooseModule.forFeature([
       { name: Conversation.name, schema: ConversationSchema },
     ]),
-    EnduserModule,
   ],
   exports: [
     { provide: IConversationServiceString, useClass: ConversationService },
