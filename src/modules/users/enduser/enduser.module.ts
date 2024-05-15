@@ -3,15 +3,25 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {
   EndUser,
   EndUserSchema,
-  EnduserServiceStable,
   EnduserController,
-  EnduserServiceUnstable,
   EndUserRepository,
+  EndUserService,
 } from './';
+import { IEndUserServiceString } from './services/enduser.interface.service';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 
 @Module({
   controllers: [EnduserController],
-  providers: [EnduserServiceUnstable, EnduserServiceStable, EndUserRepository],
+  providers: [
+    {
+      provide: IEndUserServiceString,
+      useClass: EndUserService,
+    },
+    {
+      provide: BaseRepositoryName,
+      useClass: EndUserRepository,
+    },
+  ],
   imports: [
     MongooseModule.forFeature([{ name: EndUser.name, schema: EndUserSchema }]),
   ],

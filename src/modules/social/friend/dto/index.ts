@@ -1,2 +1,2 @@
-export * from './create-friend.dto';
+export * from './find-friend.dto';
 export * from './update-friend.dto';

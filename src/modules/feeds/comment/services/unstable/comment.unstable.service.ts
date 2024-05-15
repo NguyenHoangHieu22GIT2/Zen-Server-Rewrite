@@ -1,6 +1,6 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CommentServiceStable } from '../stable/comment.stable.service';
-import { LookUpEndUserAggregate } from 'src/common/constants/lookup-enduser.aggregate';
+import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
 import {
   ModifyCommentDto,
   GetCommentsDto,

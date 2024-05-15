@@ -1,34 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { MessageService } from './message.service';
-import { CreateMessageDto } from './dto/create-message.dto';
-import { UpdateMessageDto } from './dto/update-message.dto';
+import { Controller, Get, Inject, UseGuards, Query, Req } from '@nestjs/common';
+import {
+  IMessageService,
+  IMessageServiceString,
+} from './service/message.interface.service';
+import {
+  IConversationService,
+  IConversationServiceString,
+} from '../conversation/service/conversation.interface.service';
+import { ApiTags } from '@nestjs/swagger';
+import { LoggedInGuard } from 'src/modules/auth';
+import { RequestUser } from 'src/common/types/utilTypes';
+import { GetMessagesDto } from './dto/get-messages.dto';
 
 @Controller('message')
+@ApiTags('Message')
+@UseGuards(LoggedInGuard)
 export class MessageController {
-  constructor(private readonly messageService: MessageService) {}
-
-  @Post()
-  create(@Body() createMessageDto: CreateMessageDto) {
-    return this.messageService.create(createMessageDto);
-  }
+  constructor(
+    @Inject(IMessageServiceString)
+    private readonly messageService: IMessageService,
+    @Inject(IConversationServiceString)
+    private readonly conversationService: IConversationService,
+  ) {}
 
   @Get()
-  findAll() {
-    return this.messageService.findAll();
-  }
+  public async getMessages(
+    @Req() req: RequestUser,
+    @Query() query: GetMessagesDto,
+  ) {
+    const conversation = await this.conversationService.getConversation(
+      req.user._id,
+      query.conversationId,
+    );
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.messageService.findOne(+id);
-  }
+    const messages = await this.messageService.getMessages(
+      conversation._id,
+      query,
+    );
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto) {
-    return this.messageService.update(+id, updateMessageDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.messageService.remove(+id);
+    return messages;
   }
 }

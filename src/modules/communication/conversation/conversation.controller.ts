@@ -1,34 +1,68 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ConversationService } from './conversation.service';
-import { CreateConversationDto } from './dto/create-conversation.dto';
-import { UpdateConversationDto } from './dto/update-conversation.dto';
+import {
+  Controller,
+  UseGuards,
+  Inject,
+  Req,
+  Body,
+  Post,
+  Get,
+  Query,
+  Param,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { LoggedInGuard } from 'src/modules/auth';
+import {
+  IConversationService,
+  IConversationServiceString,
+} from './service/conversation.interface.service';
+import { CreateConversationDto } from './dto';
+import { RequestUser } from 'src/common/types/utilTypes';
+import { QueryLimitSkip } from 'src/cores/global-dtos';
+import { FindConversationDto } from './dto/find-conversation.dto';
 
+@ApiTags('Conversations')
+@UseGuards(LoggedInGuard)
 @Controller('conversation')
 export class ConversationController {
-  constructor(private readonly conversationService: ConversationService) {}
+  constructor(
+    @Inject(IConversationServiceString)
+    private readonly conversationService: IConversationService,
+  ) {}
 
   @Post()
-  create(@Body() createConversationDto: CreateConversationDto) {
-    return this.conversationService.create(createConversationDto);
+  public async createConversation(
+    @Req() req: RequestUser,
+    @Body() body: CreateConversationDto,
+  ) {
+    const conversation = await this.conversationService.createConversation(
+      req.user._id,
+      body.userIds,
+    );
+    return conversation;
   }
 
   @Get()
-  findAll() {
-    return this.conversationService.findAll();
+  public async getConversations(
+    @Req() req: RequestUser,
+    @Query() query: QueryLimitSkip,
+  ) {
+    const conversations = await this.conversationService.getConversations(
+      req.user._id,
+      query,
+    );
+
+    return conversations;
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.conversationService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateConversationDto: UpdateConversationDto) {
-    return this.conversationService.update(+id, updateConversationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.conversationService.remove(+id);
+  @Get(':conversationId')
+  public async getConversation(
+    @Req() req: RequestUser,
+    @Param() param: FindConversationDto,
+  ) {
+    const conversation = await this.conversationService.getConversation(
+      req.user._id,
+      param.conversationId,
+    );
+    return conversation;
   }
 }

@@ -11,7 +11,7 @@ import { EndUserId, PostId } from 'src/common/types/utilTypes';
 import { postDeserialize } from '../redis-deserialize/post.deserialize';
 import { ObjectToHashType } from 'src/common/types/redisTypes';
 import { Post } from 'src/modules/feeds/post';
-import { isRedisResultEmpty } from 'src/common/utils/checks/isRedisResultEmpty';
+import { isRedisResultEmpty } from 'src/common/utils/';
 
 export class PostRedis {
   //HASH

@@ -8,6 +8,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Req,
+  Inject,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SerializeDecorator } from 'src/cores/interceptors/';
@@ -19,7 +20,10 @@ import { ChangeInformationDto } from './dto/change-information.dto';
 import { RequestUser } from 'src/common/types/utilTypes/RequestUser';
 import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils/';
 import { EndUserId } from 'src/common/types/utilTypes/';
-import { EnduserServiceUnstable } from './services/unstable/';
+import {
+  IEndUserService,
+  IEndUserServiceString,
+} from './services/enduser.interface.service';
 
 @ApiTags('End User')
 @Controller('endusers')
@@ -27,13 +31,14 @@ import { EnduserServiceUnstable } from './services/unstable/';
 @UseGuards(LoggedInGuard)
 export class EnduserController {
   constructor(
-    private readonly enduserServiceUnstable: EnduserServiceUnstable,
+    @Inject(IEndUserServiceString)
+    private readonly endUserService: IEndUserService,
   ) {}
 
   @Get('/:endUserId')
   @FindOneEndUserSwaggerAPIDecorators()
   async findOne(@Param() params: FindByIdEndUserDto) {
-    return this.enduserServiceUnstable.findById(params.endUserId);
+    return this.endUserService.findById(params.endUserId);
   }
 
   @Patch('/change-avatar')
@@ -46,7 +51,7 @@ export class EnduserController {
       id: req.user._id,
       returnError: true,
     });
-    return this.enduserServiceUnstable.changeAvatar({
+    return this.endUserService.changeAvatar({
       userId,
       file,
     });
@@ -61,7 +66,7 @@ export class EnduserController {
       id: req.user._id,
       returnError: true,
     });
-    return this.enduserServiceUnstable.changeInformation({
+    return this.endUserService.changeInformation({
       changeInformationDto,
       userId,
     });

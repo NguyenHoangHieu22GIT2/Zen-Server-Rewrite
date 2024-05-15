@@ -16,7 +16,7 @@ import { EndUserId, EventId, GroupId } from 'src/common/types/utilTypes';
 import { ModifyEventDto } from '../../dto';
 import { isIdsEqual, PopulateSkipAndLimit } from 'src/common/utils';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
-import { LookUpEndUserAggregate } from 'src/common/constants';
+import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
 import { TryCatchDecorator } from 'src/cores/decorators';
 
 @Injectable()

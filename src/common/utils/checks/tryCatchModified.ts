@@ -1,7 +1,7 @@
 import { HttpException, InternalServerErrorException } from '@nestjs/common';
 
 /**
- *@param {Function} fn - () => any
+ * @param {Function} fn
  * This function is used for codes that need try catch in Nest.JS
  * Enviroment, so it will catch error and throw error based
  * on what kind of error it is (Purely instance of HttpException), or if it's an error coming from codes

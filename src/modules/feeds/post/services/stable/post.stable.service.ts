@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Post } from '../../../post/entities/post.entity';
 import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/feeds';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/DocumentMongodbType';
-import { LookUpEndUserAggregate } from 'src/common/constants/lookup-enduser.aggregate';
+import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
 import {
   IPostServiceStable,
   IPostServiceStableArgs,

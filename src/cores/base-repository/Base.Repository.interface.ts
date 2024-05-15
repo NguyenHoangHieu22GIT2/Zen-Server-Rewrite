@@ -1,23 +1,23 @@
 export const BaseRepositoryName = 'BaseRepository';
 
-export interface BaseRepository {
-  findById(id: unknown): Promise<unknown>;
+export abstract class BaseRepository {
+  public abstract findById(id: unknown): Promise<unknown>;
 
-  findOne(...args: any): Promise<unknown>;
+  public abstract findOne(...args: any): Promise<unknown>;
 
-  find(...args: any): Promise<unknown>;
+  public abstract find(...args: any): Promise<unknown>;
 
-  findAll(): Promise<unknown>;
+  public abstract findAll(): Promise<unknown>;
 
-  update(...args: any): Promise<unknown>;
+  public abstract update(...args: any): Promise<unknown>;
 
-  delete(id: unknown): Promise<unknown>;
+  public abstract delete(id: unknown): Promise<unknown>;
 
-  create(...args: any): Promise<unknown>;
+  public abstract create(...args: any): Promise<unknown>;
 }
 
-export interface MongodbRepository extends BaseRepository {
-  findByAggregation(...args: any): Promise<unknown>;
+export abstract class MongodbRepository extends BaseRepository {
+  public abstract findByAggregation(...args: any): Promise<unknown>;
 }
 
 // Do later since the app is using mongodb for now!
