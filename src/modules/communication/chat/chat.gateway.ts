@@ -8,7 +8,7 @@ import {
 import { JoinConversation } from './dto/create-chat.dto';
 import { Server, Socket } from 'socket.io';
 import { ConversationService } from '../conversation';
-import { MessageService } from '../message';
+import { IMessageServiceString, MessageService } from '../message';
 import { socketOn } from './path/socket.on';
 import { Inject, UnauthorizedException } from '@nestjs/common';
 import { IConversationServiceString } from '../conversation/service/conversation.interface.service';
@@ -25,6 +25,7 @@ export class ChatGateway {
     @Inject(IConversationServiceString)
     private readonly conversationService: ConversationService,
 
+    @Inject(IMessageServiceString)
     private readonly messageService: MessageService,
   ) {}
 
