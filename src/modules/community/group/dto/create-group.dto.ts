@@ -12,13 +12,13 @@ export class CreateGroupDto {
   })
   name: string;
 
-  @IsString()
-  @ApiProperty({
-    title: 'avatar of the group',
-    type: String,
-    example: 'alskdjalsdjlasjdlasjd',
-  })
-  avatar: string;
+  // @IsString()
+  // @ApiProperty({
+  //   title: 'avatar of the group',
+  //   type: String,
+  //   example: 'alskdjalsdjlasjdlasjd',
+  // })
+  // avatar: string;
 
   @IsBoolean()
   @Transform((opts) => convertToBooleanBasedOnStringMeaning(opts.value))

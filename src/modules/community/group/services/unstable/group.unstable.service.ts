@@ -35,10 +35,15 @@ export class GroupServiceUnstable implements IGroupServiceUnstable {
     private readonly groupServiceStable: IGroupServiceStable,
   ) {}
 
-  async createGroup(endUserId: EndUserId, createGroupDto: CreateGroupDto) {
+  async createGroup(
+    endUserId: EndUserId,
+    createGroupDto: CreateGroupDto,
+    imageName: string,
+  ) {
     const group = await this.groupServiceStable.createGroup(
       endUserId,
       createGroupDto,
+      imageName,
     );
 
     return group;

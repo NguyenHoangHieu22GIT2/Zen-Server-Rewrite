@@ -9,7 +9,9 @@ import {
   Post,
   Query,
   Req,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { RequestUser } from 'src/common/types/utilTypes';
 import { CreateGroupDto, ModifyGroupDto } from './dto';
@@ -28,6 +30,12 @@ import { getGroupsSwaggerAPIDecorators } from 'src/documents/swagger-api/groups/
 import { searchGroupsSwaggerAPIDecorators } from 'src/documents/swagger-api/groups/search-groups.api';
 import { deleteGroupSwaggerAPIDecorators } from 'src/documents/swagger-api/groups/delete-group.api';
 import { modifyGroupSwaggerAPIDecorators } from 'src/documents/swagger-api/groups/modify-group.api';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import {
+  createImageObjectsToSave,
+  isImageTheRightType,
+  storeFiles,
+} from 'src/common/utils';
 
 @ApiTags('Group')
 @Controller('group')
@@ -39,14 +47,32 @@ export class GroupController {
 
   @Post()
   @UseGuards(LoggedInGuard)
+  @UseInterceptors(FilesInterceptor('files'))
   @createGroupSwaggerAPIDecorators()
   async createGroup(
     @Req() req: RequestUser,
     @Body() createGroupDto: CreateGroupDto,
+    @UploadedFiles() images: Express.Multer.File[],
   ) {
+    const image = images[0];
+    console.log('isVisible', image);
+    let imageName;
+    if (image) {
+      isImageTheRightType(image);
+
+      const { createdImageObjects, imageNames } = createImageObjectsToSave([
+        image,
+      ]);
+      imageName = imageNames[0];
+
+      storeFiles(createdImageObjects);
+    }
+    console.log('imageName', imageName);
+
     const group = await this.groupService.createGroup(
       req.user._id,
       createGroupDto,
+      imageName,
     );
 
     return group;

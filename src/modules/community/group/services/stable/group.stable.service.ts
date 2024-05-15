@@ -16,9 +16,11 @@ export class GroupServiceStable implements IGroupServiceStable {
   async createGroup(
     endUserId: EndUserId,
     createGroupDto: CreateGroupDto,
+    imageName: string,
   ): Promise<DocumentMongodbType<Group>> {
     const group = await this.groupModel.create({
       endUserId,
+      avatar: imageName,
       ...createGroupDto,
     });
     return group;

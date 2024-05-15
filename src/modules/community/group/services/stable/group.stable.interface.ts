@@ -10,6 +10,7 @@ export interface IGroupServiceStable {
   createGroup(
     endUserId: EndUserId,
     createGroupDto: CreateGroupDto,
+    imageName: string,
   ): Promise<DocumentMongodbType<Group>>;
 
   findGroup(groupId: GroupId): Promise<DocumentMongodbType<Group> | undefined>;
