@@ -1,1 +1,3 @@
-export const socketEmit = {};
+export const enum socketEmit {
+  sendMessage = 'sendMessage',
+}

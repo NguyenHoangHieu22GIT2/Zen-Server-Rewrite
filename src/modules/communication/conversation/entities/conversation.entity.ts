@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { nameOfCollections } from 'src/common/constants/name-of-collections';
+import { ConversationId } from 'src/common/types/utilTypes';
 
 @Schema({ timestamps: true })
 export class Conversation {
-  _id: Types.ObjectId;
+  _id: ConversationId;
 
   @Prop({
     required: true,

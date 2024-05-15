@@ -1,12 +1,8 @@
 import { Transform } from 'class-transformer';
-import {
-  ConversationId,
-  EndUserId,
-  MessageId,
-} from 'src/common/types/utilTypes';
+import { EndUserId, MessageId } from 'src/common/types/utilTypes';
 import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils';
 
-export class UpdateChatDto {
+export class DeleteMessageDto {
   @Transform((opts) =>
     checkToConvertToMongoIdOrThrowError({ id: opts.value, returnError: true }),
   )
@@ -16,9 +12,4 @@ export class UpdateChatDto {
     checkToConvertToMongoIdOrThrowError({ id: opts.value, returnError: true }),
   )
   endUserId: EndUserId;
-
-  @Transform((opts) =>
-    checkToConvertToMongoIdOrThrowError({ id: opts.value, returnError: true }),
-  )
-  conversationId: ConversationId;
 }
