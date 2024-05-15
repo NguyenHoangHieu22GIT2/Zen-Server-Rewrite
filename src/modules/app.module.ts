@@ -24,6 +24,7 @@ import { MongooseConfig } from 'src/cores/configs/mongoose.config';
 import { MailerConfig } from 'src/cores/configs/mailer.config';
 import { FriendRequestModule } from './social/friend-request/friend-request.module';
 import { FriendSystemModule } from './social/friend-system/friend-system.module';
+import { ChatModule } from './communication/chat/chat.module';
 
 @Module({
   imports: [
@@ -57,8 +58,8 @@ import { FriendSystemModule } from './social/friend-system/friend-system.module'
     NotificationModule,
     GroupMembersModule,
     FriendRequestModule,
-
     FriendSystemModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserRedis],
