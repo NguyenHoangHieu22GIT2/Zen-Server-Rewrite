@@ -7,7 +7,7 @@ import { ConversationId, EndUserId } from 'src/common/types/utilTypes';
 import { Conversation } from '../entities';
 import { ConversationDefaultName } from 'src/common/constants/constants';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
-import { noop } from 'src/common/utils';
+import { noObj } from 'src/common/utils';
 
 @Injectable()
 export class ConversationService implements IConversationService {
@@ -46,7 +46,7 @@ export class ConversationService implements IConversationService {
       {
         endUserIds: endUserId,
       },
-      noop,
+      noObj,
       { limit: query.limit, skip: query.skip },
     );
     return conversations;

@@ -10,6 +10,8 @@ const emptyObj = {};
 
 const noop = () => {};
 
+const noObj = {};
+
 function isArray<T>(value: any): value is T[] {
   return Array.isArray(value);
 }
@@ -171,6 +173,7 @@ export {
   isArray,
   isObject,
   noop,
+  noObj,
   emptyObj,
   convertToBooleanBasedOnStringMeaning,
   checkingToConvertToObjectFromDocument,
