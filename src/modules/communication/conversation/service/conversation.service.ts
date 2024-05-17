@@ -33,7 +33,7 @@ export class ConversationService implements IConversationService {
   ): Promise<DocumentMongodbType<Conversation>> {
     const conversation = await this.conversationRepository.findOne({
       endUserIds: endUserId,
-      conversationId,
+      _id: conversationId,
     });
     return conversation;
   }
