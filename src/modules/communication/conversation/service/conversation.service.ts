@@ -20,7 +20,14 @@ export class ConversationService implements IConversationService {
     leaderId: EndUserId,
     endUserIds: EndUserId[],
   ): Promise<DocumentMongodbType<Conversation>> {
-    const conversation = await this.conversationRepository.create({
+    let conversation;
+    conversation = await this.conversationRepository.findOne({
+      endUserIds: { $eq: endUserIds },
+    });
+    if (conversation) {
+      return conversation;
+    }
+    conversation = await this.conversationRepository.create({
       name: ConversationDefaultName,
       endUserIds,
     });
