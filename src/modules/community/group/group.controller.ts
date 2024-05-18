@@ -55,8 +55,7 @@ export class GroupController {
     @UploadedFiles() images: Express.Multer.File[],
   ) {
     const image = images[0];
-    console.log('isVisible', image);
-    let imageName;
+    let imageName: string;
     if (image) {
       isImageTheRightType(image);
 
