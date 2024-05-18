@@ -9,16 +9,23 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+
 import {
   INotificationService,
   INotificationServiceString,
 } from './services/notification.interface.service';
+
 import { ApiTags } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/modules/auth';
 import { RequestUser } from 'src/common/types/utilTypes';
 import { CreateNotificationDto } from './dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { FindNotificationDto } from './dto/find-notification.dto';
+import {
+  CreateNotificationSwaggerAPIDecorators,
+  getNotificationSwaggerAPIDecorators,
+  getNotificationsSwaggerAPIDecorators,
+} from 'src/documents/swagger-api/notifications/';
 
 @Controller('notification')
 @ApiTags('Notification')
@@ -30,6 +37,7 @@ export class NotificationController {
   ) {}
 
   @Post()
+  @CreateNotificationSwaggerAPIDecorators()
   public async createNotification(
     @Req() req: RequestUser,
     @Body() createNotificationDto: CreateNotificationDto,
@@ -41,6 +49,7 @@ export class NotificationController {
   }
 
   @Get()
+  @getNotificationsSwaggerAPIDecorators()
   public async getNotifications(
     @Req() req: RequestUser,
     @Param() queryLimitSkip: QueryLimitSkip,
@@ -53,6 +62,7 @@ export class NotificationController {
   }
 
   @Get(':notificationId')
+  @getNotificationSwaggerAPIDecorators()
   public async getNotification(
     @Req() req: RequestUser,
     @Query() findNotificationDto: FindNotificationDto,
