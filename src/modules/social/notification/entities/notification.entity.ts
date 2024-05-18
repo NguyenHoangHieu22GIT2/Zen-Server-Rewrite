@@ -5,8 +5,15 @@ import { NotificationId } from 'src/common/types/utilTypes/Brand';
 export type NotificationType =
   | 'comment'
   | 'like'
-  | 'mention ' // TODO:Not implement for now, but will be in the future
+  | 'mention' // TODO:Not implement for now, but will be in the future
   | 'friend_request';
+
+export type noun = {
+  _id: Types.ObjectId;
+  name: string;
+  type: NotificationType;
+  image: string;
+};
 
 /**
  * Use Event-Grammer Model
@@ -16,31 +23,47 @@ export class Notification {
   _id: NotificationId;
 
   @Prop({
-    required: true,
-    type: Types.ObjectId,
+    type: {
+      _id: { type: Types.ObjectId, required: true },
+      name: { type: String, required: true },
+      type: { type: String, required: true },
+      image: { type: String, required: true },
+    },
   })
-  subjectId: Types.ObjectId;
+  subject: noun;
 
   @Prop({ required: true, type: String })
   verb: NotificationType;
 
   @Prop({
-    required: true,
-    type: Types.ObjectId,
+    type: {
+      _id: { type: Types.ObjectId, required: true },
+      name: { type: String, required: true },
+      type: { type: String, required: true },
+      image: { type: String, required: true },
+    },
   })
-  directObjectId: Types.ObjectId;
+  directObject: noun;
 
   @Prop({
-    required: false,
-    type: Types.ObjectId,
+    type: {
+      _id: { type: Types.ObjectId, required: true },
+      name: { type: String, required: true },
+      type: { type: String, required: true },
+      image: { type: String, required: true },
+    },
   })
-  indirectObjectId: Types.ObjectId;
+  indirectObject: noun;
 
   @Prop({
-    required: false,
-    type: Types.ObjectId,
+    type: {
+      _id: { type: Types.ObjectId, required: true },
+      name: { type: String, required: true },
+      type: { type: String, required: true },
+      image: { type: String, required: true },
+    },
   })
-  prepObjectId: Types.ObjectId;
+  prepObject: noun;
 
   @Prop({ required: true, type: String })
   referenceLink: string;

@@ -1,25 +1,29 @@
-import { Types } from 'mongoose';
-import { NotificationType } from '../entities';
-import { Transform } from 'class-transformer';
-import { checkMongodbIdInTransformToThrowError } from 'src/common/utils';
-import { IsString } from 'class-validator';
+import { Notification, NotificationType, noun } from '../entities';
+import { Type } from 'class-transformer';
+import { IsString, ValidateNested } from 'class-validator';
+import { NounDto } from './noun.dto';
 
-export class CreateNotificationDto {
+export class CreateNotificationDto implements Partial<Notification> {
   // We can use token from user to get the ID
   // @Transform(checkMongodbIdInTransformToThrowError)
-  subjectId: Types.ObjectId;
+  @ValidateNested({ each: true })
+  @Type(() => NounDto)
+  subject: noun;
 
   @IsString()
   verb: NotificationType;
 
-  @Transform(checkMongodbIdInTransformToThrowError)
-  directObjectId: Types.ObjectId;
+  @ValidateNested({ each: true })
+  @Type(() => NounDto)
+  directObject: noun;
 
-  @Transform(checkMongodbIdInTransformToThrowError)
-  indirectObjectId: Types.ObjectId;
+  @ValidateNested({ each: true })
+  @Type(() => NounDto)
+  indirectObject: noun;
 
-  @Transform(checkMongodbIdInTransformToThrowError)
-  prepObjectId: Types.ObjectId;
+  @ValidateNested({ each: true })
+  @Type(() => NounDto)
+  prepObject: noun;
 
   @IsString()
   referenceLink: string;

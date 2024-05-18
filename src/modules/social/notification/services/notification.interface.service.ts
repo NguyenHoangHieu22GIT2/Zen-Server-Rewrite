@@ -8,7 +8,6 @@ export const INotificationServiceString = 'INotificationService ';
 
 export interface INotificationService<T = Notification> {
   createNotification(
-    subjectId: EndUserId,
     createNotificationDto: CreateNotificationDto,
   ): Promise<DocumentMongodbType<T>>;
 

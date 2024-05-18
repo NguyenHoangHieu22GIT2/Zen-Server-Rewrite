@@ -17,23 +17,9 @@ export class NotificationService implements INotificationService {
   ) {}
 
   public async createNotification(
-    subjectId: EndUserId,
-    {
-      verb,
-      directObjectId,
-      indirectObjectId,
-      prepObjectId,
-      referenceLink,
-    }: CreateNotificationDto,
+    createNotificationDto: CreateNotificationDto,
   ) {
-    return this.notificationRepository.create({
-      subjectId,
-      verb,
-      directObjectId,
-      indirectObjectId,
-      prepObjectId,
-      referenceLink,
-    });
+    return this.notificationRepository.create(createNotificationDto);
   }
 
   public async getNotification(
