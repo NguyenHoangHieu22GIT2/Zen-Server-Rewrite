@@ -1,19 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { NotificationId } from 'src/common/types/utilTypes/Brand';
+import { NounEntity } from './noun.entity';
 
 export type NotificationType =
   | 'comment'
   | 'like'
   | 'mention' // TODO:Not implement for now, but will be in the future
   | 'friend_request';
-
-export type noun = {
-  _id: Types.ObjectId;
-  name: string;
-  type: NotificationType;
-  image: string;
-};
 
 /**
  * Use Event-Grammer Model
@@ -30,7 +24,7 @@ export class Notification {
       image: { type: String, required: true },
     },
   })
-  subject: noun;
+  subject: NounEntity;
 
   @Prop({ required: true, type: String })
   verb: NotificationType;
@@ -43,7 +37,7 @@ export class Notification {
       image: { type: String, required: true },
     },
   })
-  directObject: noun;
+  directObject: NounEntity;
 
   @Prop({
     type: {
@@ -53,7 +47,7 @@ export class Notification {
       image: { type: String, required: true },
     },
   })
-  indirectObject: noun;
+  indirectObject: NounEntity;
 
   @Prop({
     type: {
@@ -63,7 +57,7 @@ export class Notification {
       image: { type: String, required: true },
     },
   })
-  prepObject: noun;
+  prepObject: NounEntity;
 
   @Prop({ required: true, type: String })
   referenceLink: string;

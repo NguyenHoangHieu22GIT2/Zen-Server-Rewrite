@@ -1,29 +1,46 @@
-import { Notification, NotificationType, noun } from '../entities';
+import { Notification, NotificationType } from '../entities';
 import { Type } from 'class-transformer';
 import { IsString, ValidateNested } from 'class-validator';
 import { NounDto } from './noun.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateNotificationDto implements Partial<Notification> {
   // We can use token from user to get the ID
   // @Transform(checkMongodbIdInTransformToThrowError)
   @ValidateNested({ each: true })
   @Type(() => NounDto)
-  subject: noun;
+  @ApiProperty({
+    title: 'Subject',
+    type: NounDto,
+  })
+  subject: NounDto;
 
   @IsString()
   verb: NotificationType;
 
   @ValidateNested({ each: true })
   @Type(() => NounDto)
-  directObject: noun;
+  @ApiProperty({
+    title: 'directObject',
+    type: NounDto,
+  })
+  directObject: NounDto;
 
   @ValidateNested({ each: true })
   @Type(() => NounDto)
-  indirectObject: noun;
+  @ApiProperty({
+    title: 'indirectObject',
+    type: NounDto,
+  })
+  indirectObject: NounDto;
 
   @ValidateNested({ each: true })
   @Type(() => NounDto)
-  prepObject: noun;
+  @ApiProperty({
+    title: 'prepObject',
+    type: NounDto,
+  })
+  prepObject: NounDto;
 
   @IsString()
   referenceLink: string;
