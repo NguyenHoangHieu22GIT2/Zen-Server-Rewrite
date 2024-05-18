@@ -39,9 +39,13 @@ export class MessageService implements IMessageService {
     const messages = await this.messageRepository.find(
       { conversationId },
       emptyObj,
-      { limit: queryLimitSkip.limit, skip: queryLimitSkip.skip },
+      {
+        limit: queryLimitSkip.limit,
+        skip: queryLimitSkip.skip,
+        sort: { createdAt: -1 },
+      },
     );
-    return messages;
+    return messages.reverse();
   }
 
   public async deleteMessage(

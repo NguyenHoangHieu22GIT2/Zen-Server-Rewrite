@@ -16,9 +16,10 @@ import {
   IConversationServiceString,
 } from './service/conversation.interface.service';
 import { CreateConversationDto } from './dto';
-import { RequestUser } from 'src/common/types/utilTypes';
+import { EndUserId, RequestUser } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { FindConversationDto } from './dto/find-conversation.dto';
+import mongoose from 'mongoose';
 
 @ApiTags('Conversations')
 @UseGuards(LoggedInGuard)
@@ -34,6 +35,9 @@ export class ConversationController {
     @Req() req: RequestUser,
     @Body() body: CreateConversationDto,
   ) {
+    body.userIds = body.userIds.map(
+      (userId) => new mongoose.Types.ObjectId(userId) as EndUserId,
+    );
     const conversation = await this.conversationService.createConversation(
       req.user._id,
       body.userIds,
