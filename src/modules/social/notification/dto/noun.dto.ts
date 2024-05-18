@@ -16,7 +16,7 @@ const notificationTypes: NotificationType[] = [
 export class NounDto implements NounEntity {
   @ApiProperty({
     title: 'id of entity',
-    required: true,
+    required: false,
     type: String,
     default: '',
   })
@@ -25,7 +25,7 @@ export class NounDto implements NounEntity {
 
   @ApiProperty({
     title: 'id of entity',
-    required: true,
+    required: false,
     type: String,
     default: '',
   })
@@ -34,7 +34,7 @@ export class NounDto implements NounEntity {
 
   @ApiProperty({
     title: 'id of entity',
-    required: true,
+    required: false,
     type: String,
     default: '',
   })
@@ -43,7 +43,7 @@ export class NounDto implements NounEntity {
 
   @ApiProperty({
     title: 'id of entity',
-    required: true,
+    required: false,
     type: String,
     default: '',
   })
