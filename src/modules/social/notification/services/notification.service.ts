@@ -27,7 +27,7 @@ export class NotificationService implements INotificationService {
     notificationId: NotificationId,
   ): Promise<DocumentMongodbType<Notification>> {
     const notification = await this.notificationRepository.findOne({
-      indirectObjectId: endUserId,
+      'indirectObject._id': endUserId,
       _id: notificationId,
     });
     return notification;
@@ -38,7 +38,7 @@ export class NotificationService implements INotificationService {
     queryLimitSkip: QueryLimitSkip,
   ): Promise<DocumentMongodbType<Notification>[]> {
     const notifications = await this.notificationRepository.find(
-      { indirectObjectId: endUserId },
+      { 'indirectObject._id': endUserId },
       noObj,
       { limit: queryLimitSkip.limit, skip: queryLimitSkip.skip },
     );
@@ -50,7 +50,7 @@ export class NotificationService implements INotificationService {
     notificationId: NotificationId,
   ): Promise<DocumentMongodbType<Notification>> {
     const notification = await this.notificationRepository.delete({
-      indirectObjectId: endUserId,
+      'indirectObject._id': endUserId,
       _id: notificationId,
     });
     return notification;

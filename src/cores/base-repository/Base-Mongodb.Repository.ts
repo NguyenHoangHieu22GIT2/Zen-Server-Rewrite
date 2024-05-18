@@ -10,7 +10,6 @@ import {
 import { MongodbRepository } from './Base.Repository.interface';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
 import { emptyObj, isMongodbId } from 'src/common/utils';
-import { nameOfCollections } from 'src/common/constants';
 export class GenericRepositoryMongodb<T> extends MongodbRepository {
   public model: Model<T>;
 

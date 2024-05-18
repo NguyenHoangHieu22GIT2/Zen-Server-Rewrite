@@ -12,7 +12,7 @@ export type NotificationType =
 /**
  * Use Event-Grammer Model
  * */
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, strictQuery: true })
 export class Notification {
   _id: NotificationId;
 
