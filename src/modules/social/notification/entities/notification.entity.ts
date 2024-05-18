@@ -51,10 +51,10 @@ export class Notification {
 
   @Prop({
     type: {
-      _id: { type: Types.ObjectId, required: true },
-      name: { type: String, required: true },
-      type: { type: String, required: true },
-      image: { type: String, required: true },
+      _id: { type: Types.ObjectId, required: false },
+      name: { type: String, required: false },
+      type: { type: String, required: false },
+      image: { type: String, required: false },
     },
   })
   prepObject: NounEntity;
