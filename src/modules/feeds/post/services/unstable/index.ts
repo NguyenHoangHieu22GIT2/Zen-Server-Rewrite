@@ -1,1 +1,1 @@
-export * from './post.unstable.service';
+export * from './post.service';

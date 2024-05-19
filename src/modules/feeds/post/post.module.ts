@@ -4,25 +4,19 @@ import {
   PostRedisStableService,
   Post,
   PostSchema,
-  PostServiceStable,
-  PostServiceUnstable,
+  PostService,
 } from './';
 import { MongooseModule } from '@nestjs/mongoose';
-import { IPostServiceStableString } from './services/stable/post.stable.interface';
-import { IPostServiceUnstableString } from './services/unstable/post.unstable.interface';
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 import { PostRepository } from './repository/post.repository';
+import { IPostServiceString } from './services/unstable/post.interface';
 
 @Module({
   controllers: [PostController],
   providers: [
     {
-      provide: IPostServiceStableString,
-      useClass: PostServiceStable,
-    },
-    {
-      provide: IPostServiceUnstableString,
-      useClass: PostServiceUnstable,
+      provide: IPostServiceString,
+      useClass: PostService,
     },
     PostRedisStableService,
     {
@@ -35,12 +29,8 @@ import { PostRepository } from './repository/post.repository';
   ],
   exports: [
     {
-      provide: IPostServiceStableString,
-      useClass: PostServiceStable,
-    },
-    {
-      provide: IPostServiceUnstableString,
-      useClass: PostServiceUnstable,
+      provide: IPostServiceString,
+      useClass: PostService,
     },
   ],
 })
