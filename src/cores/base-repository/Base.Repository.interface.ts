@@ -18,6 +18,8 @@ export abstract class BaseRepository {
 
 export abstract class MongodbRepository extends BaseRepository {
   public abstract findByAggregation(...args: any): Promise<unknown>;
+  public abstract bulkWrite(...args: any): Promise<unknown>;
+  public abstract bulkSave(...args: any): Promise<unknown>;
 }
 
 // Do later since the app is using mongodb for now!
