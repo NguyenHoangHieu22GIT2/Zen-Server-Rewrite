@@ -4,7 +4,8 @@ import { Transform } from 'class-transformer';
 import { checkMongodbIdInTransformToThrowError } from 'src/common/utils';
 import { IsEnum, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { NounEntity } from '../entities/noun.entity';
+import { NounEntity, NounType } from '../entities/noun.entity';
+import { Optional } from '@nestjs/common';
 
 const notificationTypes: NotificationType[] = [
   'like',
@@ -39,7 +40,7 @@ export class NounDto implements NounEntity {
     default: '',
   })
   @IsEnum(notificationTypes)
-  type: NotificationType;
+  type: NounType;
 
   @ApiProperty({
     title: 'id of entity',
@@ -48,5 +49,6 @@ export class NounDto implements NounEntity {
     default: '',
   })
   @IsString()
+  @Optional()
   image: string;
 }
