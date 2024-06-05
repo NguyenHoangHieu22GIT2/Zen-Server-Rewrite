@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GroupController } from './group.controller';
-import { GroupServiceUnstable, GroupServiceStable } from './services//';
 
 describe('GroupController', () => {
   let controller: GroupController;

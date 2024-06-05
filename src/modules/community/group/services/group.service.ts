@@ -6,15 +6,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { EndUserId, GroupId } from 'src/common/types/utilTypes';
-import { CreateGroupDto, ModifyGroupDto } from '../../dto';
+import { CreateGroupDto, ModifyGroupDto } from '../dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import {
   isUndefined,
   isIdsEqual,
   PopulateSkipAndLimit,
 } from 'src/common/utils';
-import { SearchGroupsDto } from '../../dto/search-groups.dto';
-import { IGroupServiceUnstable } from './group.unstable.interface';
+import { SearchGroupsDto } from '../dto/search-groups.dto';
+import { IGroupService } from './group.interface';
 import {
   DocumentMongodbType,
   GroupAggregation,
@@ -22,18 +22,17 @@ import {
 import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
 
 import { TryCatchDecorator } from 'src/cores/decorators';
-import {
-  IGroupServiceStable,
-  IGroupServiceStableString,
-} from '../stable/group.stable.interface';
-import { Group } from '../../entities';
+
+import { Group } from '../entities';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
+import { GroupRepository } from '../repository/group.repository';
 
 @Injectable()
 @TryCatchDecorator()
-export class GroupServiceUnstable implements IGroupServiceUnstable {
+export class GroupService implements IGroupService {
   constructor(
-    @Inject(IGroupServiceStableString)
-    private readonly groupServiceStable: IGroupServiceStable,
+    @Inject(BaseRepositoryName)
+    private readonly groupRepository: GroupRepository,
   ) {}
 
   async createGroup(
@@ -41,62 +40,60 @@ export class GroupServiceUnstable implements IGroupServiceUnstable {
     createGroupDto: CreateGroupDto,
     imageName: string,
   ) {
-    const group = await this.groupServiceStable.createGroup(
+    const group = await this.groupRepository.create({
       endUserId,
-      createGroupDto,
-      imageName,
-    );
+      avatar: imageName,
+      ...createGroupDto,
+    });
 
     return group;
   }
 
   async findGroup(groupId: GroupId) {
-    const group = await this.groupServiceStable.findGroup(groupId);
+    const group = await this.groupRepository.findById(groupId);
     return group;
   }
 
   async getGroups(queryLimitSkip: QueryLimitSkip) {
-    const groups = await this.groupServiceStable.getGroups<GroupAggregation>([
-      ...PopulateSkipAndLimit(queryLimitSkip),
-      ...LookUpEndUserAggregate,
-    ]);
+    const groups =
+      await this.groupRepository.findByAggregation<GroupAggregation>([
+        ...PopulateSkipAndLimit(queryLimitSkip),
+        ...LookUpEndUserAggregate,
+      ]);
     return groups;
   }
 
   async searchGroups(searchGroupsDto: SearchGroupsDto) {
-    const groups = await this.groupServiceStable.getGroups<GroupAggregation>([
-      { $match: { $text: { $search: searchGroupsDto.name } } },
-      ...PopulateSkipAndLimit(searchGroupsDto),
-      ...LookUpEndUserAggregate,
-    ]);
+    const groups =
+      await this.groupRepository.findByAggregation<GroupAggregation>([
+        { $match: { $text: { $search: searchGroupsDto.name } } },
+        ...PopulateSkipAndLimit(searchGroupsDto),
+        ...LookUpEndUserAggregate,
+      ]);
     return groups;
   }
 
   async deleteGroup(endUserId: EndUserId, groupId: GroupId) {
     const group: DocumentMongodbType<Group> | undefined =
-      await this.groupServiceStable.findGroup(groupId);
+      await this.groupRepository.findById(groupId);
     if (isUndefined(group)) {
       throw new NotFoundException('No Group Found');
     }
     if (!isIdsEqual(endUserId, group.endUserId)) {
       throw new BadRequestException("You don't have access to this!");
     }
-    await this.groupServiceStable.deleteGroup(groupId);
+    await this.groupRepository.delete(groupId);
     return group;
   }
 
   async modifyGroup(endUserId: EndUserId, modifyGroupDto: ModifyGroupDto) {
-    const group = await this.groupServiceStable.findGroup(
-      modifyGroupDto.groupId,
-    );
+    const group = await this.groupRepository.findById(modifyGroupDto.groupId);
     if (isUndefined(group)) {
       throw new NotFoundException('No Group Found');
     }
     isIdsEqual(endUserId, group.endUserId);
-    await this.groupServiceStable.saveGroup(
-      modifyGroupDto.groupId,
-      modifyGroupDto,
-    );
+    Object.assign(group, modifyGroupDto);
+    await this.groupRepository.save(group);
     return group;
   }
 }

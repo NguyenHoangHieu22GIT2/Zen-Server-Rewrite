@@ -16,10 +16,7 @@ import {
   IEventServiceUnstableString,
 } from './services/unstable/event.unstable.interface';
 import { ApiTags } from '@nestjs/swagger';
-import {
-  IGroupServiceUnstable,
-  IGroupServiceUnstableString,
-} from '../group/services';
+
 import { RequestUser } from 'src/common/types/utilTypes';
 import { CreateEventDto, ModifyEventDto } from './dto';
 import { FindEventDto } from './dto/find-event.dto';
@@ -34,6 +31,7 @@ import { getEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/g
 import { findEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/find-event.api';
 import { modifyEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/modify-event.dto';
 import { deleteEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/delete-event.api';
+import { IGroupService, IGroupServiceString } from '../group/services';
 
 @Controller('event')
 @ApiTags('Event')
@@ -42,8 +40,8 @@ export class EventController {
     @Inject(IEventServiceUnstableString)
     private readonly eventService: IEventServiceUnstable,
 
-    @Inject(IGroupServiceUnstableString)
-    private readonly groupService: IGroupServiceUnstable,
+    @Inject(IGroupServiceString)
+    private readonly groupService: IGroupService,
 
     @Inject(IGroupMembersServiceUnstableString)
     private readonly groupMembersService: IGroupMembersServiceUnstable,

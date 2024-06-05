@@ -1,22 +1,20 @@
 import { Module } from '@nestjs/common';
-import { GroupServiceUnstable } from './services/unstable/group.unstable.service';
 import { GroupController } from './group.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Group, GroupSchema } from './entities/group.entity';
-import { GroupServiceStable, IGroupServiceUnstableString } from './services';
-import { IGroupServiceStableString } from './services/stable/group.stable.interface';
+import { GroupService, IGroupServiceString } from './services';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
+import { GroupRepository } from './repository/group.repository';
 
 @Module({
   controllers: [GroupController],
   providers: [
-    { provide: IGroupServiceUnstableString, useClass: GroupServiceUnstable },
-    { provide: IGroupServiceStableString, useClass: GroupServiceStable },
+    { provide: IGroupServiceString, useClass: GroupService },
+    { provide: BaseRepositoryName, useClass: GroupRepository },
   ],
   imports: [
     MongooseModule.forFeature([{ name: Group.name, schema: GroupSchema }]),
   ],
-  exports: [
-    { provide: IGroupServiceUnstableString, useClass: GroupServiceUnstable },
-  ],
+  exports: [{ provide: IGroupServiceString, useClass: GroupService }],
 })
 export class GroupModule {}

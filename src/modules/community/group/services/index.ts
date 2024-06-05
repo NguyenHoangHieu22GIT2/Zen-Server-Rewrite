@@ -1,3 +1,2 @@
-export * from './stable/group.stable.service';
-export * from './unstable/group.unstable.service';
-export * from './unstable/group.unstable.interface';
+export * from './group.service';
+export * from './group.interface';

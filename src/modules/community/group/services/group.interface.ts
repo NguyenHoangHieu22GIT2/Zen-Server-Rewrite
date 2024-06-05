@@ -1,16 +1,16 @@
 import { EndUserId, GroupId } from 'src/common/types/utilTypes';
-import { CreateGroupDto, ModifyGroupDto } from '../../dto';
+import { CreateGroupDto, ModifyGroupDto } from '../dto';
 import {
   DocumentMongodbType,
   GroupAggregation,
 } from 'src/common/types/mongodbTypes';
-import { Group } from '../../entities';
+import { Group } from '../entities';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
-import { SearchGroupsDto } from '../../dto/search-groups.dto';
+import { SearchGroupsDto } from '../dto/search-groups.dto';
 
-export const IGroupServiceUnstableString = 'IGroupServiceUnstable';
+export const IGroupServiceString = 'IGroupService';
 
-export interface IGroupServiceUnstable {
+export interface IGroupService {
   createGroup(
     endUserId: EndUserId,
     createGroupDto: CreateGroupDto,
