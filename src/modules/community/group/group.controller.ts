@@ -66,7 +66,6 @@ export class GroupController {
 
       storeFiles(createdImageObjects);
     }
-    console.log('imageName', imageName);
 
     const group = await this.groupService.createGroup(
       req.user._id,
