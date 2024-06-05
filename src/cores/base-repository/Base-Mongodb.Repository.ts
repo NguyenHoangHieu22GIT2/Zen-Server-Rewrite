@@ -10,12 +10,27 @@ import {
 import { MongodbRepository } from './Base.Repository.interface';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
 import { emptyObj, isMongodbId } from 'src/common/utils';
+
 export class GenericRepositoryMongodb<T> extends MongodbRepository {
   public model: Model<T>;
 
   constructor(readonly theModel: Model<T>) {
     super();
     this.model = theModel;
+  }
+
+  public async bulkSave(
+    documents: Parameters<typeof this.model.bulkSave>[0],
+    options: Parameters<typeof this.model.bulkSave>[1],
+  ): Promise<unknown> {
+    return this.model.bulkSave(documents, options);
+  }
+
+  public async bulkWrite(
+    writes: Parameters<typeof this.model.bulkWrite>[0],
+    options: Parameters<typeof this.model.bulkWrite>[1],
+  ): Promise<unknown> {
+    return this.model.bulkWrite(writes, options);
   }
 
   public async findAll(): Promise<DocumentMongodbType<T>[]> {
