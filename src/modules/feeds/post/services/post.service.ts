@@ -9,7 +9,7 @@ import { isIdsEqual } from 'src/common/utils/index';
 import { TryCatchDecorator } from 'src/cores/decorators';
 import { IPostService, IPostServiceArgs } from './post.interface';
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
-import { PostRepository } from '../../repository/post.repository';
+import { PostRepository } from '../repository/post.repository';
 @Injectable()
 @TryCatchDecorator()
 export class PostService implements IPostService {

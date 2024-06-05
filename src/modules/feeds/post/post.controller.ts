@@ -24,7 +24,7 @@ import {
   storeFiles,
   createImageObjectsToSave,
 } from 'src/common/utils/index';
-import { PostRedisStableService } from './services/stable/';
+import { PostRedisService } from './services/post.redis.service';
 import {
   DocumentMongodbType,
   PostAggregation,
@@ -45,10 +45,7 @@ import {
   DeletePostsSwaggerAPIDecorators,
 } from 'src/documents/swagger-api/posts/';
 import { FindByIdEndUserDto } from 'src/modules/users/enduser';
-import {
-  IPostService,
-  IPostServiceString,
-} from './services/unstable/post.interface';
+import { IPostService, IPostServiceString } from './services/post.interface';
 
 @ApiTags('Post')
 @Controller('posts')
@@ -57,7 +54,7 @@ export class PostController {
   constructor(
     @Inject(IPostServiceString)
     private readonly postService: IPostService,
-    private readonly postRedisStableService: PostRedisStableService,
+    private readonly postRedisService: PostRedisService,
   ) {}
 
   @Post()
@@ -101,7 +98,8 @@ export class PostController {
       queryLimitSkip: query,
     });
 
-    await this.postRedisStableService.savePosts(posts);
+    await this.postRedisService.savePosts(posts);
+
     return posts;
   }
 
@@ -115,7 +113,8 @@ export class PostController {
       getUserPostsDto,
       endUserId: param.endUserId,
     });
-    await this.postRedisStableService.savePosts(posts);
+    await this.postRedisService.savePosts(posts);
+
     return posts;
   }
 
@@ -130,16 +129,16 @@ export class PostController {
       endUserId: param.endUserId,
     });
 
-    await this.postRedisStableService.savePosts(posts);
+    await this.postRedisService.savePosts(posts);
+
     return posts;
   }
 
   @Get(':postId')
   @GetPostSwaggerAPIDecorators()
   async getPost(@Req() req: RequestUser, @Param() findPostDto: FindPostDto) {
-    const postCached = await this.postRedisStableService.getPost(
-      findPostDto.postId,
-    );
+    const postCached = await this.postRedisService.getPost(findPostDto.postId);
+
     if (postCached) {
       return postCached;
     }
@@ -147,7 +146,8 @@ export class PostController {
     if (!post) {
       throw new NotFoundException('No Post was found!');
     }
-    await this.postRedisStableService.savePosts([post]);
+    await this.postRedisService.savePosts([post]);
+
     return post;
   }
 

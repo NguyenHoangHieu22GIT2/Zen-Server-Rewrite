@@ -2,13 +2,13 @@ import {
   DocumentMongodbType,
   PostAggregation,
 } from 'src/common/types/mongodbTypes';
-import { Post } from '../../entities';
+import { Post } from '../entities';
 import {
   CreatePostDto,
   FindPostDto,
   GetUserPostsDto,
   ModifyPostDto,
-} from '../../dto';
+} from '../dto';
 import { EndUserId, PostId } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { PipelineStage } from 'mongoose';
