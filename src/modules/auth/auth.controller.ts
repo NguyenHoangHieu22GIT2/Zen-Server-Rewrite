@@ -31,6 +31,8 @@ import {
   IAuthUnstableService,
   IAuthUnstableServiceString,
 } from './unstable/auth.unstable.interface';
+import { MailerService } from '@nestjs-modules/mailer';
+import { forgotPasswordMail, registerMail } from 'src/common/mails/auth';
 
 @ApiTags('Authentication/Authorization')
 @SerializeDecorator(EndUserSerializeDto)
@@ -40,6 +42,7 @@ export class AuthController {
     @Inject(IAuthUnstableServiceString)
     private readonly authServiceUnstable: IAuthUnstableService,
     private readonly authRedisStableService: AuthRedisStableService,
+    private readonly mailerService: MailerService,
   ) {}
 
   @RegisterAccountSwaggerAPIDecorators()
@@ -66,7 +69,9 @@ export class AuthController {
     const result =
       await this.authServiceUnstable.registerAccount(registerEndUserDto);
 
-    // await this.mailerService.sendMail(registerMail(result.email, result.token));
+    await this.mailerService.sendMail(
+      registerMail(result.email, result.activationToken),
+    );
 
     await this.authRedisStableService.addUserRegisteredToRedis(
       registerEndUserDto.email,
@@ -94,9 +99,9 @@ export class AuthController {
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     const result =
       await this.authServiceUnstable.forgotPassword(forgotPasswordDto);
-    // await this.mailerService.sendMail(
-    //   forgotPasswordMail(result.email, result.token),
-    // );
+    await this.mailerService.sendMail(
+      forgotPasswordMail(result.email, result.modifyToken),
+    );
     return result;
   }
 

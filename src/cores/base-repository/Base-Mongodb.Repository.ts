@@ -26,6 +26,10 @@ export class GenericRepositoryMongodb<T> extends MongodbRepository {
     return this.model.bulkSave(documents, options);
   }
 
+  public async save(document: DocumentMongodbType<any>) {
+    return this.model.updateOne({ _id: document._id }, document);
+  }
+
   public async bulkWrite(
     writes: Parameters<typeof this.model.bulkWrite>[0],
     options: Parameters<typeof this.model.bulkWrite>[1],
