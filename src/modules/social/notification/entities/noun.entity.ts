@@ -1,7 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsEnum } from 'class-validator';
 import { Types } from 'mongoose';
-import { NotificationType } from './notification.entity';
 
+export type NounType = 'enduser' | 'post' | 'comment' | 'group';
+const nounTypes: NounType[] = ['enduser', 'post', 'comment', 'group'];
 export class NounEntity {
   @ApiProperty({
     title: 'id of subject',
@@ -22,12 +24,13 @@ export class NounEntity {
     type: String,
     required: true,
   })
-  type: NotificationType;
+  @IsEnum(nounTypes)
+  type: NounType;
 
   @ApiProperty({
     title: 'image of subject',
     type: String,
-    required: true,
+    required: false,
   })
-  image: string;
+  image?: string;
 }

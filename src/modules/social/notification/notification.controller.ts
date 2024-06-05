@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Inject,
-  Param,
   Post,
   Query,
   Req,
@@ -52,7 +51,7 @@ export class NotificationController {
   @getNotificationsSwaggerAPIDecorators()
   public async getNotifications(
     @Req() req: RequestUser,
-    @Param() queryLimitSkip: QueryLimitSkip,
+    @Query() queryLimitSkip: QueryLimitSkip,
   ) {
     const notifications = await this.notificationService.getNotifications(
       req.user._id,
