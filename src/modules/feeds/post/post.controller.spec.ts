@@ -1,15 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PostController } from './post.controller';
-import { PostServiceUnstable } from './services/unstable/';
+import { PostService } from './services/post.service';
 import mongoose, { connect } from 'mongoose';
 import { Post, PostSchema } from './entities/';
-import { PostServiceStable } from './services/stable/';
 import { MongooseModule } from '@nestjs/mongoose';
 import { faker } from '@faker-js/faker';
 import { EndUser } from 'src/modules/users/enduser/';
 import { RequestUser } from 'src/common/types/utilTypes/';
 import { createFakeImage, removeFile } from 'src/common/utils/';
-import { PostRedisStableService } from './services/stable/';
 
 describe('PostController', () => {
   let controller: PostController;

@@ -1,46 +1,31 @@
 import { Module } from '@nestjs/common';
-import {
-  PostController,
-  PostRedisStableService,
-  Post,
-  PostSchema,
-  PostServiceStable,
-  PostServiceUnstable,
-} from './';
+import { PostController, Post, PostSchema, PostService } from './';
 import { MongooseModule } from '@nestjs/mongoose';
-import { IPostServiceStableString } from './services/stable/post.stable.interface';
-import { IPostServiceUnstableString } from './services/unstable/post.unstable.interface';
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 import { PostRepository } from './repository/post.repository';
+import { IPostServiceString } from './services/post.interface';
+import { PostRedisService } from './services/post.redis.service';
 
 @Module({
   controllers: [PostController],
   providers: [
     {
-      provide: IPostServiceStableString,
-      useClass: PostServiceStable,
+      provide: IPostServiceString,
+      useClass: PostService,
     },
-    {
-      provide: IPostServiceUnstableString,
-      useClass: PostServiceUnstable,
-    },
-    PostRedisStableService,
     {
       provide: BaseRepositoryName,
       useClass: PostRepository,
     },
+    PostRedisService,
   ],
   imports: [
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
   ],
   exports: [
     {
-      provide: IPostServiceStableString,
-      useClass: PostServiceStable,
-    },
-    {
-      provide: IPostServiceUnstableString,
-      useClass: PostServiceUnstable,
+      provide: IPostServiceString,
+      useClass: PostService,
     },
   ],
 })

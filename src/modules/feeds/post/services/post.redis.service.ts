@@ -3,11 +3,11 @@ import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/
 import { EndUserId, PostId } from 'src/common/types/utilTypes';
 import { ExecuteIfRedisAvailableDecorator } from 'src/cores/decorators/ExecuteRedis.decorator';
 import { PostRedis } from 'src/cores/redis/post.redis';
-import { Post } from '../../entities';
+import { Post } from '../entities';
 
 @Injectable()
 @ExecuteIfRedisAvailableDecorator()
-export class PostRedisStableService {
+export class PostRedisService {
   async savePosts(posts: PostAggregation[]) {
     Promise.all([
       posts.map((post) => {
