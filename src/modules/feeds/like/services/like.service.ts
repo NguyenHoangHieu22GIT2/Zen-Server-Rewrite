@@ -1,27 +1,26 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Like } from '../../entities/';
+import { Like } from '../entities/';
 import { EndUserId, PostId } from 'src/common/types/utilTypes/';
 import {
   DocumentMongodbType,
   LikeAggregation,
 } from 'src/common/types/mongodbTypes/';
-import { LikeServiceStable } from '../stable/';
 import { QueryLimitSkip } from 'src/cores/global-dtos/';
 import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
-import { ILikeServiceUnstable } from './like.unstable.interface';
 import { TryCatchDecorator } from 'src/cores/decorators';
-import { ILikeServiceStableString } from '../stable/like.stable.interface';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
+import { LikeRepository } from '../repository/like.repository';
+import { ILikeService } from './like.interface';
 
 @Injectable()
 @TryCatchDecorator()
-export class LikeServiceUnstable implements ILikeServiceUnstable {
+export class LikeService implements ILikeService {
   constructor(
-    @Inject(ILikeServiceStableString)
-    private readonly likeServiceStable: LikeServiceStable,
+    @Inject(BaseRepositoryName) private readonly likeRepository: LikeRepository,
   ) {}
 
   async getNumberOfLikes(postId: PostId): Promise<number> {
-    const likesNumber = await this.likeServiceStable.getNumberOfLikes(postId);
+    const likesNumber = await this.likeRepository.countDocuments({ postId });
     return likesNumber;
   }
 
@@ -32,11 +31,16 @@ export class LikeServiceUnstable implements ILikeServiceUnstable {
     postId: PostId;
     queryLimitSkip: QueryLimitSkip;
   }): Promise<LikeAggregation[]> {
-    const likes = await this.likeServiceStable.getLikes({
-      postId,
-      queryLimitSkip,
-      pipelineStages: LookUpEndUserAggregate,
-    });
+    const likes = await this.likeRepository.findByAggregation<LikeAggregation>([
+      { $match: { postId } },
+      {
+        $skip: queryLimitSkip.skip,
+      },
+      {
+        $limit: queryLimitSkip.limit,
+      },
+      ...LookUpEndUserAggregate,
+    ]);
     return likes;
   }
 
@@ -47,9 +51,9 @@ export class LikeServiceUnstable implements ILikeServiceUnstable {
     postId: PostId;
     endUserId: EndUserId;
   }): Promise<DocumentMongodbType<Like>> {
-    let like = await this.likeServiceStable.findLike({ postId, endUserId });
+    let like = await this.likeRepository.findOne({ postId, endUserId });
     if (!like) {
-      like = await this.likeServiceStable.createLike({ endUserId, postId });
+      like = await this.likeRepository.create({ endUserId, postId });
     } else {
       await like.deleteOne();
     }
