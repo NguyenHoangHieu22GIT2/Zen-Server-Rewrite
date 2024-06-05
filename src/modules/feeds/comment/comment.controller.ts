@@ -11,7 +11,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { CommentServiceUnstable } from './services/unstable/';
 import {
   ModifyCommentDto,
   GetCommentsDto,
@@ -22,28 +21,30 @@ import { TcommentsLookUpEndUser } from './types/';
 import { ApiTags } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/modules/auth/passport/';
 import { RequestUser } from 'src/common/types/utilTypes/';
-import { ICommentUnstableServiceString } from './services/unstable/comment.unstable.interface';
+import {
+  ICommentService,
+  ICommentServiceString,
+} from './services/comment.interface';
 
 @ApiTags('Comment')
 @Controller('comment')
 export class CommentController {
   constructor(
-    @Inject(ICommentUnstableServiceString)
-    private readonly commentServiceUnstable: CommentServiceUnstable,
+    @Inject(ICommentServiceString)
+    private readonly commentService: ICommentService,
   ) {}
 
   @Get()
   async getComments(
     @Query() getCommentsDto: GetCommentsDto,
   ): Promise<TcommentsLookUpEndUser> {
-    const comments =
-      await this.commentServiceUnstable.getComments(getCommentsDto);
+    const comments = await this.commentService.getComments(getCommentsDto);
     return comments;
   }
 
   @Get(':commentId')
   async findComment(@Param() param: FindCommentDto) {
-    const comment = await this.commentServiceUnstable.findComment(param);
+    const comment = await this.commentService.findComment(param);
     return comment;
   }
 
@@ -53,7 +54,7 @@ export class CommentController {
     @Body() createCommentDto: CreateCommentDto,
     @Req() req: RequestUser,
   ) {
-    const comment = await this.commentServiceUnstable.createComment({
+    const comment = await this.commentService.createComment({
       endUserId: req.user._id,
       createCommentDto,
     });
@@ -66,7 +67,7 @@ export class CommentController {
     @Body() modifyCommentDto: ModifyCommentDto,
     @Req() req: RequestUser,
   ) {
-    const comment = await this.commentServiceUnstable.modifyComment({
+    const comment = await this.commentService.modifyComment({
       endUserId: req.user._id,
       modifyCommentDto,
     });
@@ -76,7 +77,7 @@ export class CommentController {
   @UseGuards(LoggedInGuard)
   @Delete(':commentId')
   async deleteComment(@Query() query: FindCommentDto, @Req() req: RequestUser) {
-    const comment = await this.commentServiceUnstable.deleteComment({
+    const comment = await this.commentService.deleteComment({
       endUserId: req.user._id,
       findCommentDto: query,
     });

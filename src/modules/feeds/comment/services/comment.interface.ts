@@ -4,14 +4,14 @@ import {
   FindCommentDto,
   GetCommentsDto,
   ModifyCommentDto,
-} from '../../dto';
-import { TcommentsLookUpEndUser } from '../../types';
+} from '../dto';
+import { TcommentsLookUpEndUser } from '../types';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
-import { Comment } from '../../entities';
+import { Comment } from '../entities';
 
-export const ICommentUnstableServiceString = 'ICommentUnstableService';
+export const ICommentServiceString = 'ICommentService';
 
-export interface ICommentUnstableService {
+export interface ICommentService {
   getComments(getCommentsDto: GetCommentsDto): Promise<TcommentsLookUpEndUser>;
 
   findComment(

@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
-import { CommentServiceUnstable } from './services/unstable/comment.unstable.service';
-import { CommentServiceStable } from './services/stable/comment.stable.service';
 import { CommentController } from './comment.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Comment, CommentSchema } from './entities/comment.entity';
-import { ICommentStableServiceString } from './services/stable/comment.stable.interface';
-import { ICommentUnstableServiceString } from './services/unstable/comment.unstable.interface';
+import { ICommentServiceString } from './services/comment.interface';
+import { CommentService } from './services';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
+import { CommentRepository } from './repository/comment.repository';
 
 @Module({
   controllers: [CommentController],
   providers: [
     {
-      provide: ICommentStableServiceString,
-      useClass: CommentServiceStable,
+      provide: BaseRepositoryName,
+      useClass: CommentRepository,
     },
     {
-      provide: ICommentUnstableServiceString,
-      useClass: CommentServiceUnstable,
+      provide: ICommentServiceString,
+      useClass: CommentService,
     },
   ],
   imports: [
