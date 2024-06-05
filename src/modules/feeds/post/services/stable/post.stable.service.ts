@@ -24,6 +24,7 @@ export class PostServiceStable implements IPostServiceStable {
     const postsAggregation: PostAggregation[] =
       await this.postRepository.findByAggregation([
         ...queryAggregation,
+        { $sort: { createdAt: -1 } },
         {
           $limit: queryLimitSkip.limit,
         },

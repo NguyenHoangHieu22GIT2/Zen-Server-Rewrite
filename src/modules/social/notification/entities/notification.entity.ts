@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
 import { NotificationId } from 'src/common/types/utilTypes/Brand';
 import { NounEntity } from './noun.entity';
 
@@ -17,12 +16,7 @@ export class Notification {
   _id: NotificationId;
 
   @Prop({
-    type: {
-      _id: { type: Types.ObjectId, required: true },
-      name: { type: String, required: true },
-      type: { type: String, required: true },
-      image: { type: String, required: true },
-    },
+    type: NounEntity,
   })
   subject: NounEntity;
 
@@ -30,36 +24,21 @@ export class Notification {
   verb: NotificationType;
 
   @Prop({
-    type: {
-      _id: { type: Types.ObjectId, required: true },
-      name: { type: String, required: true },
-      type: { type: String, required: true },
-      image: { type: String, required: true },
-    },
+    type: NounEntity,
   })
   directObject: NounEntity;
 
   @Prop({
-    type: {
-      _id: { type: Types.ObjectId, required: true },
-      name: { type: String, required: true },
-      type: { type: String, required: true },
-      image: { type: String, required: true },
-    },
+    type: NounEntity,
   })
   indirectObject: NounEntity;
 
   @Prop({
-    type: {
-      _id: { type: Types.ObjectId, required: false },
-      name: { type: String, required: false },
-      type: { type: String, required: false },
-      image: { type: String, required: false },
-    },
+    type: NounEntity,
   })
   prepObject: NounEntity;
 
-  @Prop({ required: true, type: String })
+  @Prop({ required: false, type: String })
   referenceLink: string;
 
   @Prop({ required: true, type: Boolean, default: false })
