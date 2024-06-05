@@ -6,7 +6,8 @@ export type NotificationType =
   | 'comment'
   | 'like'
   | 'mention' // TODO:Not implement for now, but will be in the future
-  | 'friend_request';
+  | 'friend-request'
+  | 'group-member-request';
 
 /**
  * Use Event-Grammer Model
