@@ -17,10 +17,7 @@ import { RequestUser } from 'src/common/types/utilTypes';
 import { CreateGroupDto, ModifyGroupDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/modules/auth';
-import {
-  IGroupServiceUnstable,
-  IGroupServiceUnstableString,
-} from './services/unstable/group.unstable.interface';
+
 import { FindGroupDto } from '../group-members';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { SearchGroupsDto } from './dto/search-groups.dto';
@@ -36,13 +33,14 @@ import {
   isImageTheRightType,
   storeFiles,
 } from 'src/common/utils';
+import { IGroupService, IGroupServiceString } from './services';
 
 @ApiTags('Group')
 @Controller('group')
 export class GroupController {
   constructor(
-    @Inject(IGroupServiceUnstableString)
-    private readonly groupService: IGroupServiceUnstable,
+    @Inject(IGroupServiceString)
+    private readonly groupService: IGroupService,
   ) {}
 
   @Post()

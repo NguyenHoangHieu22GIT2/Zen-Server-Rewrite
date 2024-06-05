@@ -1,14 +1,14 @@
-import { GroupServiceUnstable } from './group.unstable.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Group } from '../../entities';
+import { Group } from '../entities';
 import mongoose from 'mongoose';
 import { EndUserId, GroupId, MockedMethods } from 'src/common/types/utilTypes';
-import { GroupServiceStable } from '../stable/group.stable.service';
-import { IGroupServiceStableString } from '../stable/group.stable.interface';
+import { GroupServiceStable } from './stable/group.stable.service';
+import { IGroupServiceStableString } from './stable/group.stable.interface';
 import { InternalServerErrorException } from '@nestjs/common';
+import { GroupService } from './group.service';
 
 describe('groupUnstableService', () => {
-  let service: GroupServiceUnstable;
+  let service: GroupService;
   let mockupStableService: MockedMethods<GroupServiceStable>;
   const testEndUserId = new mongoose.Types.ObjectId() as EndUserId;
   const testGroupId = new mongoose.Types.ObjectId() as GroupId;
@@ -42,7 +42,7 @@ describe('groupUnstableService', () => {
     };
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        GroupServiceUnstable,
+        GroupService,
         {
           provide: IGroupServiceStableString,
           useValue: mockupStableService,
@@ -50,7 +50,7 @@ describe('groupUnstableService', () => {
       ],
     }).compile();
 
-    service = module.get<GroupServiceUnstable>(GroupServiceUnstable);
+    service = module.get<GroupService>(GroupService);
   });
 
   it('should be defined', () => {
