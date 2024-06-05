@@ -1,15 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import mongoose from 'mongoose';
 import { EndUserId, MockedMethods, PostId } from 'src/common/types/utilTypes';
-import { PostServiceUnstable } from './post.unstable.service';
-import {
-  IPostServiceStable,
-  IPostServiceStableString,
-} from '../stable/post.stable.interface';
+import { PostServiceUnstable } from './post.service';
 import { CreatePostDto } from '../../dto';
 import { Post } from '../../entities';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 
-describe('groupUnstableService', () => {
+describe('post', () => {
   let service: PostServiceUnstable;
   let mockupStableService: MockedMethods<IPostServiceStable>;
   const testEndUserId = new mongoose.Types.ObjectId() as EndUserId;
@@ -44,8 +41,8 @@ describe('groupUnstableService', () => {
       providers: [
         PostServiceUnstable,
         {
-          provide: IPostServiceStableString,
-          useValue: mockupStableService,
+          provide: BaseRepositoryName,
+          useValue: mockupRepository,
         },
       ],
     }).compile();

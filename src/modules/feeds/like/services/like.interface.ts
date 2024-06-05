@@ -3,34 +3,23 @@ import {
   LikeAggregation,
 } from 'src/common/types/mongodbTypes';
 import { EndUserId, PostId } from 'src/common/types/utilTypes';
-import { Like } from '../../entities';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
-import { PipelineStage } from 'mongoose';
+import { Like } from '../entities';
 
-export const ILikeServiceStableString = 'ILikeServiceStable';
+export const ILikeServiceString = 'ILikeService';
 
-export interface ILikeServiceStable {
+export interface ILikeService {
   getNumberOfLikes(postId: PostId): Promise<number>;
 
   getLikes({
     postId,
     queryLimitSkip,
-    pipelineStages,
   }: {
     postId: PostId;
     queryLimitSkip: QueryLimitSkip;
-    pipelineStages?: PipelineStage[];
   }): Promise<LikeAggregation[]>;
 
-  findLike({
-    postId,
-    endUserId,
-  }: {
-    postId: PostId;
-    endUserId: EndUserId;
-  }): Promise<DocumentMongodbType<Like>>;
-
-  createLike({
+  toggleLike({
     postId,
     endUserId,
   }: {

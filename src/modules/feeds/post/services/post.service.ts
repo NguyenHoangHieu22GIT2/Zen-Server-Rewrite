@@ -7,46 +7,40 @@ import {
 import { PipelineStage } from 'mongoose';
 import { isIdsEqual } from 'src/common/utils/index';
 import { TryCatchDecorator } from 'src/cores/decorators';
-import {
-  IPostServiceUnstable,
-  IPostServiceUnstableArgs,
-} from './post.unstable.interface';
-import {
-  IPostServiceStable,
-  IPostServiceStableString,
-} from '../stable/post.stable.interface';
-
+import { IPostService, IPostServiceArgs } from './post.interface';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
+import { PostRepository } from '../repository/post.repository';
 @Injectable()
 @TryCatchDecorator()
-export class PostServiceUnstable implements IPostServiceUnstable {
+export class PostService implements IPostService {
   constructor(
-    @Inject(IPostServiceStableString)
-    private readonly postServiceStable: IPostServiceStable,
+    @Inject(BaseRepositoryName)
+    private readonly postRepository: PostRepository,
   ) {}
 
   async createPost({
     createPostDto,
     endUserId,
     imageNames,
-  }: IPostServiceUnstableArgs['createPost']) {
-    const createdPost = await this.postServiceStable.createPost({
-      createPostDto,
+  }: IPostServiceArgs['createPost']) {
+    const createdPost = await this.postRepository.create({
+      ...createPostDto,
       endUserId,
-      imageNames,
+      images: imageNames,
     });
     return createdPost;
   }
 
-  public async findPost(findPostDto: IPostServiceUnstableArgs['findPost']) {
-    const post = await this.postServiceStable.findPostAggregation(findPostDto);
+  public async findPost(findPostDto: IPostServiceArgs['findPost']) {
+    const post = await this.postRepository.findPostAggregation(findPostDto);
     return post;
   }
 
   public async getUserPostsFromProfile({
     getUserPostsDto,
     endUserId,
-  }: IPostServiceUnstableArgs['getUserPosts']) {
-    const posts = await this.postServiceStable.getPostsAggregation({
+  }: IPostServiceArgs['getUserPosts']) {
+    const posts = await this.postRepository.getPostsAggregation({
       queryLimitSkip: getUserPostsDto,
       queryAggregation: [{ $match: { endUserId: endUserId } }],
     });
@@ -56,14 +50,14 @@ export class PostServiceUnstable implements IPostServiceUnstable {
   public async getUserPostsFromGroup({
     getUserPostsDto,
     endUserId,
-  }: IPostServiceUnstableArgs['getUserPosts']) {
+  }: IPostServiceArgs['getUserPosts']) {
     const query: PipelineStage[] = [{ $match: { endUserId: endUserId } }];
 
     if (getUserPostsDto.groupId) {
       query[0]['$match'].groupId = getUserPostsDto.groupId;
     }
 
-    const posts = await this.postServiceStable.getPostsAggregation({
+    const posts = await this.postRepository.getPostsAggregation({
       queryLimitSkip: getUserPostsDto,
       queryAggregation: query,
     });
@@ -73,8 +67,8 @@ export class PostServiceUnstable implements IPostServiceUnstable {
   public async getPostsAggregation({
     queryLimitSkip,
     pipelineStages,
-  }: IPostServiceUnstableArgs['getPostsAggregation']) {
-    return this.postServiceStable.getPostsAggregation({
+  }: IPostServiceArgs['getPostsAggregation']) {
+    return this.postRepository.getPostsAggregation({
       queryAggregation: pipelineStages,
       queryLimitSkip,
     });
@@ -85,10 +79,10 @@ export class PostServiceUnstable implements IPostServiceUnstable {
     //TODO: will use endUserId when we have recommendation system.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     endUserId,
-  }: IPostServiceUnstableArgs['getRecommendedPost']) {
+  }: IPostServiceArgs['getRecommendedPost']) {
     const queryAggregation: PipelineStage[] = [];
 
-    const posts = await this.postServiceStable.getPostsAggregation({
+    const posts = await this.postRepository.getPostsAggregation({
       queryLimitSkip,
       queryAggregation,
     });
@@ -100,10 +94,8 @@ export class PostServiceUnstable implements IPostServiceUnstable {
     endUserId,
     modifyPostDto,
     images,
-  }: IPostServiceUnstableArgs['modifyPost']) {
-    const post = await this.postServiceStable.findPostById({
-      postId: modifyPostDto.postId,
-    });
+  }: IPostServiceArgs['modifyPost']) {
+    const post = await this.postRepository.findById(modifyPostDto.postId);
 
     if (!post) {
       throw new BadRequestException('Post does not exist!');
@@ -113,17 +105,15 @@ export class PostServiceUnstable implements IPostServiceUnstable {
       throw new UnauthorizedException('You are not authorized to do this!');
     }
     Object.assign(post, { ...modifyPostDto, images });
-    await this.postServiceStable.savePost(post.id, post);
+    await post.save();
     return post;
   }
 
   public async deletePost({
     postId,
     endUserId,
-  }: IPostServiceUnstableArgs['deletePost']) {
-    const post = await this.postServiceStable.findPostById({
-      postId,
-    });
+  }: IPostServiceArgs['deletePost']) {
+    const post = await this.postRepository.findById(postId);
     if (!post) {
       throw new BadRequestException('Post does not exist!');
     }
@@ -131,7 +121,7 @@ export class PostServiceUnstable implements IPostServiceUnstable {
       throw new UnauthorizedException('You are not authorized to do this!');
     }
 
-    await this.postServiceStable.deletePost(postId);
+    await post.deleteOne();
     return post;
   }
 }

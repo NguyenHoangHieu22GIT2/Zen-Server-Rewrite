@@ -24,8 +24,7 @@ import {
   storeFiles,
   createImageObjectsToSave,
 } from 'src/common/utils/index';
-import { PostRedisStableService } from './services/stable/';
-import { PostServiceUnstable } from './services/unstable/';
+import { PostRedisService } from './services/post.redis.service';
 import {
   DocumentMongodbType,
   PostAggregation,
@@ -46,16 +45,16 @@ import {
   DeletePostsSwaggerAPIDecorators,
 } from 'src/documents/swagger-api/posts/';
 import { FindByIdEndUserDto } from 'src/modules/users/enduser';
-import { IPostServiceUnstableString } from './services/unstable/post.unstable.interface';
+import { IPostService, IPostServiceString } from './services/post.interface';
 
 @ApiTags('Post')
 @Controller('posts')
 @UseGuards(LoggedInGuard)
 export class PostController {
   constructor(
-    @Inject(IPostServiceUnstableString)
-    private readonly postUnstableService: PostServiceUnstable,
-    private readonly postRedisStableService: PostRedisStableService,
+    @Inject(IPostServiceString)
+    private readonly postService: IPostService,
+    private readonly postRedisService: PostRedisService,
   ) {}
 
   @Post()
@@ -79,7 +78,7 @@ export class PostController {
       storeFiles(createdImageObjects);
     }
 
-    const post = await this.postUnstableService.createPost({
+    const post = await this.postService.createPost({
       endUserId: req.user._id,
       createPostDto,
       imageNames,
@@ -94,12 +93,13 @@ export class PostController {
     @Req() req: RequestUser,
     @Query() query: QueryLimitSkip,
   ): Promise<PostAggregation[]> {
-    const posts = await this.postUnstableService.getRecommendedPosts({
+    const posts = await this.postService.getRecommendedPosts({
       endUserId: req.user._id,
       queryLimitSkip: query,
     });
 
-    await this.postRedisStableService.savePosts(posts);
+    await this.postRedisService.savePosts(posts);
+
     return posts;
   }
 
@@ -109,11 +109,12 @@ export class PostController {
     @Param() param: FindByIdEndUserDto,
     @Query() getUserPostsDto: GetUserPostsDto,
   ) {
-    const posts = await this.postUnstableService.getUserPostsFromProfile({
+    const posts = await this.postService.getUserPostsFromProfile({
       getUserPostsDto,
       endUserId: param.endUserId,
     });
-    await this.postRedisStableService.savePosts(posts);
+    await this.postRedisService.savePosts(posts);
+
     return posts;
   }
 
@@ -123,29 +124,30 @@ export class PostController {
     @Param() param: FindByIdEndUserDto,
     @Query() getUserPostsDto: GetUserPostsDto,
   ) {
-    const posts = await this.postUnstableService.getUserPostsFromGroup({
+    const posts = await this.postService.getUserPostsFromGroup({
       getUserPostsDto,
       endUserId: param.endUserId,
     });
 
-    await this.postRedisStableService.savePosts(posts);
+    await this.postRedisService.savePosts(posts);
+
     return posts;
   }
 
   @Get(':postId')
   @GetPostSwaggerAPIDecorators()
   async getPost(@Req() req: RequestUser, @Param() findPostDto: FindPostDto) {
-    const postCached = await this.postRedisStableService.getPost(
-      findPostDto.postId,
-    );
+    const postCached = await this.postRedisService.getPost(findPostDto.postId);
+
     if (postCached) {
       return postCached;
     }
-    const post = await this.postUnstableService.findPost(findPostDto);
+    const post = await this.postService.findPost(findPostDto);
     if (!post) {
       throw new NotFoundException('No Post was found!');
     }
-    await this.postRedisStableService.savePosts([post]);
+    await this.postRedisService.savePosts([post]);
+
     return post;
   }
 
@@ -167,7 +169,7 @@ export class PostController {
       storeFiles(createdImageObjects);
     }
 
-    const modifiedPost = await this.postUnstableService.modifyPost({
+    const modifiedPost = await this.postService.modifyPost({
       endUserId: req.user._id,
       modifyPostDto: modifyPostDto,
       images: imageNames,
@@ -179,7 +181,7 @@ export class PostController {
   @Delete('/:postId')
   @DeletePostsSwaggerAPIDecorators()
   async deletePost(@Req() req: RequestUser, @Param() findPostDto: FindPostDto) {
-    const post = await this.postUnstableService.deletePost({
+    const post = await this.postService.deletePost({
       endUserId: req.user._id,
       postId: findPostDto.postId,
     });

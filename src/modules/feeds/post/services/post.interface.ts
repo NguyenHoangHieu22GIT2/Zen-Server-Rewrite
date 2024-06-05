@@ -2,18 +2,18 @@ import {
   DocumentMongodbType,
   PostAggregation,
 } from 'src/common/types/mongodbTypes';
-import { Post } from '../../entities';
+import { Post } from '../entities';
 import {
   CreatePostDto,
   FindPostDto,
   GetUserPostsDto,
   ModifyPostDto,
-} from '../../dto';
+} from '../dto';
 import { EndUserId, PostId } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { PipelineStage } from 'mongoose';
 
-export type IPostServiceUnstableArgs = {
+export type IPostServiceArgs = {
   createPost: {
     createPostDto: CreatePostDto;
     endUserId: EndUserId;
@@ -48,38 +48,36 @@ export type IPostServiceUnstableArgs = {
   };
 };
 
-export const IPostServiceUnstableString = 'IPostServiceUnstable';
+export const IPostServiceString = 'IPostService';
 
-export interface IPostServiceUnstable {
+export interface IPostService {
   createPost(
-    createPost: IPostServiceUnstableArgs['createPost'],
+    createPost: IPostServiceArgs['createPost'],
   ): Promise<DocumentMongodbType<Post>>;
 
-  findPost(
-    findPostDto: IPostServiceUnstableArgs['findPost'],
-  ): Promise<PostAggregation>;
+  findPost(findPostDto: IPostServiceArgs['findPost']): Promise<PostAggregation>;
 
   getUserPostsFromGroup(
-    getuserPosts: IPostServiceUnstableArgs['getUserPosts'],
+    getuserPosts: IPostServiceArgs['getUserPosts'],
   ): Promise<PostAggregation[]>;
 
   getUserPostsFromProfile(
-    getuserPosts: IPostServiceUnstableArgs['getUserPosts'],
+    getuserPosts: IPostServiceArgs['getUserPosts'],
   ): Promise<PostAggregation[]>;
 
   getPostsAggregation(
-    getPostsAggregation: IPostServiceUnstableArgs['getPostsAggregation'],
+    getPostsAggregation: IPostServiceArgs['getPostsAggregation'],
   ): Promise<PostAggregation[]>;
 
   getRecommendedPosts(
-    getRecommendedPost: IPostServiceUnstableArgs['getRecommendedPost'],
+    getRecommendedPost: IPostServiceArgs['getRecommendedPost'],
   ): Promise<PostAggregation[]>;
 
   modifyPost(
-    modifyPost: IPostServiceUnstableArgs['modifyPost'],
+    modifyPost: IPostServiceArgs['modifyPost'],
   ): Promise<DocumentMongodbType<Post>>;
 
   deletePost(
-    deletePost: IPostServiceUnstableArgs['deletePost'],
+    deletePost: IPostServiceArgs['deletePost'],
   ): Promise<DocumentMongodbType<Post>>;
 }
