@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { GetGroupMembers } from '../dto/get-group-members.dto';
+import { GetGroupMembersDto } from '../dto/get-group-members.dto';
 import { EndUserId, GroupId } from 'src/common/types/utilTypes';
 import { Group } from 'src/modules/community/group/entities';
 import { IGroupMembersService } from './group-members.interface';
@@ -30,7 +30,7 @@ export class GroupMembersService implements IGroupMembersService {
     });
   }
 
-  async getGroupMembers(getGroupMembers: GetGroupMembers) {
+  async getGroupMembers(getGroupMembers: GetGroupMembersDto) {
     const groupMembers =
       await this.groupRepository.getGroupMembers(getGroupMembers);
     return groupMembers;

@@ -103,7 +103,7 @@ export class PostsController {
     );
 
     for (let i = 0; i < endUserFriends.length; i++) {
-      const friend = endUserFriends[i];
+      // const friend = endUserFriends[i];
     }
   }
 }

@@ -12,7 +12,7 @@ import {
 import { RequestUser } from 'src/common/types/utilTypes';
 import { LoggedInGuard } from 'src/modules/auth';
 import { FindGroupDto } from './dto/find-group.dto';
-import { GetGroupMembers } from './dto/get-group-members.dto';
+import { GetGroupMembersDto } from './dto/get-group-members.dto';
 import { DeleteGroupMember } from './dto/delete-group-member.dto';
 import { userJoinInSwaggerAPIDecorators } from 'src/documents/swagger-api/group-members/user-join-in.api';
 import {
@@ -54,7 +54,7 @@ export class GroupMembersController {
   @Get()
   @UseGuards(LoggedInGuard)
   @getGroupMembersSwaggerAPIDecorators()
-  async getGroupMembers(@Param() param: GetGroupMembers) {
+  async getGroupMembers(@Param() param: GetGroupMembersDto) {
     const groupMembers = await this.groupMembersService.getGroupMembers(param);
     return groupMembers;
   }

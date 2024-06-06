@@ -33,7 +33,7 @@ import {
   IGroupMembersService,
   IGroupMembersServiceString,
 } from '../group-members/services/group-members.interface';
-
+// TODO: Really coupled with other modules! Not good
 @Controller('event')
 @ApiTags('Event')
 export class EventController {
