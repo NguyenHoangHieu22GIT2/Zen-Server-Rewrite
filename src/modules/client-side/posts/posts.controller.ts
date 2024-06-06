@@ -21,6 +21,10 @@ import {
   IPostService,
   IPostServiceString,
 } from 'src/modules/feeds/post/services/post.interface';
+import {
+  IFriendService,
+  IFriendServiceString,
+} from 'src/modules/social/friend';
 
 @ApiTags('posts-for-client')
 @Controller('posts')
@@ -31,6 +35,8 @@ export class PostsController {
     @Inject(ICommentServiceString)
     private readonly commentService: ICommentService,
     @Inject(ILikeServiceString) private readonly likeService: ILikeService,
+    @Inject(IFriendServiceString)
+    private readonly friendService: IFriendService,
   ) {}
 
   @Get()
@@ -83,5 +89,21 @@ export class PostsController {
     }
 
     return posts;
+  }
+
+  //TODO: IT"S HARDDDD
+  @Get('friend-posts')
+  public async getFriendPosts(
+    @Req() req: RequestUser,
+    @Query() queryLimitSkip: QueryLimitSkip,
+  ) {
+    const endUserFriends = await this.friendService.getFriendList(
+      req.user._id,
+      queryLimitSkip,
+    );
+
+    for (let i = 0; i < endUserFriends.length; i++) {
+      const friend = endUserFriends[i];
+    }
   }
 }

@@ -14,7 +14,7 @@ export function getFriendsAggregation(
     },
     {
       $unwind: {
-        path: '$friends',
+        path: '$endUserIds',
       },
     },
     ...optionalQuery,
@@ -23,7 +23,7 @@ export function getFriendsAggregation(
     {
       $lookup: {
         from: 'endusers',
-        localField: 'friends',
+        localField: 'endUserIds',
         foreignField: '_id',
         as: 'friend',
       },
