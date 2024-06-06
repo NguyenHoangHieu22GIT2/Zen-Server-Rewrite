@@ -9,6 +9,11 @@ import { Like } from '../entities';
 export const ILikeServiceString = 'ILikeService';
 
 export interface ILikeService {
+  findLike(
+    endUserId: EndUserId,
+    postId: PostId,
+  ): Promise<DocumentMongodbType<Like>>;
+
   getNumberOfLikes(postId: PostId): Promise<number>;
 
   getLikes({

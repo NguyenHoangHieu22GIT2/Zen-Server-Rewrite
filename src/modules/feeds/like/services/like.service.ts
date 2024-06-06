@@ -19,6 +19,14 @@ export class LikeService implements ILikeService {
     @Inject(BaseRepositoryName) private readonly likeRepository: LikeRepository,
   ) {}
 
+  public async findLike(
+    endUserId: EndUserId,
+    postId: PostId,
+  ): Promise<DocumentMongodbType<Like>> {
+    const like = await this.likeRepository.findOne({ endUserId, postId });
+    return like;
+  }
+
   async getNumberOfLikes(postId: PostId): Promise<number> {
     const likesNumber = await this.likeRepository.countDocuments({ postId });
     return likesNumber;

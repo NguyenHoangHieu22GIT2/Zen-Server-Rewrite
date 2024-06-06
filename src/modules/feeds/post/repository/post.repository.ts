@@ -29,28 +29,32 @@ export class PostRepository extends GenericRepositoryMongodb<Post> {
     super(PostModel);
   }
 
-  public async getPostsAggregation({
+  public async getPostsAggregation<T>({
     queryLimitSkip,
     queryAggregation,
   }: Args['getPostsAggregation']) {
-    const postsAggregation: PostAggregation[] = await this.findByAggregation([
-      ...queryAggregation,
-      {
-        $limit: queryLimitSkip.limit,
-      },
-      { $skip: queryLimitSkip.skip },
-      ...LookUpEndUserAggregate,
-    ]);
+    const postsAggregation: (PostAggregation & T)[] =
+      await this.findByAggregation([
+        ...queryAggregation,
+        {
+          $limit: queryLimitSkip.limit,
+        },
+        { $skip: queryLimitSkip.skip },
+        ...LookUpEndUserAggregate,
+      ]);
     return postsAggregation;
   }
 
-  public async findPostAggregation(findPostDto: Args['findPostAggregation']) {
-    const postsAggregation: PostAggregation[] = await this.findByAggregation([
-      {
-        $match: { _id: findPostDto.postId },
-      },
-      ...LookUpEndUserAggregate,
-    ]);
+  public async findPostAggregation<T>(
+    findPostDto: Args['findPostAggregation'],
+  ) {
+    const postsAggregation: (PostAggregation & T)[] =
+      await this.findByAggregation([
+        {
+          $match: { _id: findPostDto.postId },
+        },
+        ...LookUpEndUserAggregate,
+      ]);
     const postAggregation = postsAggregation[0];
     return postAggregation;
   }

@@ -9,7 +9,7 @@ import {
   GetUserPostsDto,
   ModifyPostDto,
 } from '../dto';
-import { EndUserId, PostId } from 'src/common/types/utilTypes';
+import { EndUserId, GroupId, PostId } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { PipelineStage } from 'mongoose';
 
@@ -25,6 +25,11 @@ export type IPostServiceArgs = {
   getUserPosts: {
     endUserId: EndUserId;
     getUserPostsDto: GetUserPostsDto;
+  };
+
+  getGroupPosts: {
+    groupId: GroupId;
+    queryLimitSkip: QueryLimitSkip;
   };
 
   getPostsAggregation: {
@@ -55,23 +60,29 @@ export interface IPostService {
     createPost: IPostServiceArgs['createPost'],
   ): Promise<DocumentMongodbType<Post>>;
 
-  findPost(findPostDto: IPostServiceArgs['findPost']): Promise<PostAggregation>;
+  findPost<T extends object>(
+    findPostDto: IPostServiceArgs['findPost'],
+  ): Promise<PostAggregation & T>;
 
-  getUserPostsFromGroup(
+  getUserPostsFromGroup<T extends object>(
     getuserPosts: IPostServiceArgs['getUserPosts'],
-  ): Promise<PostAggregation[]>;
+  ): Promise<(PostAggregation & T)[]>;
 
-  getUserPostsFromProfile(
+  getUserPostsFromProfile<T extends object>(
     getuserPosts: IPostServiceArgs['getUserPosts'],
-  ): Promise<PostAggregation[]>;
+  ): Promise<(PostAggregation & T)[]>;
+
+  getGroupPosts<T extends object>(
+    args: IPostServiceArgs['getGroupPosts'],
+  ): Promise<(PostAggregation & T)[]>;
 
   getPostsAggregation(
     getPostsAggregation: IPostServiceArgs['getPostsAggregation'],
   ): Promise<PostAggregation[]>;
 
-  getRecommendedPosts(
+  getRecommendedPosts<T extends object>(
     getRecommendedPost: IPostServiceArgs['getRecommendedPost'],
-  ): Promise<PostAggregation[]>;
+  ): Promise<(PostAggregation & T)[]>;
 
   modifyPost(
     modifyPost: IPostServiceArgs['modifyPost'],
