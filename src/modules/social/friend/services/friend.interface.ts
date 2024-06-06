@@ -10,12 +10,12 @@ export interface IFriendService {
   getRecommendation(
     endUserId: EndUserId,
     queryLimitSkip: QueryLimitSkip,
-  ): Promise<FriendAggregation>;
+  ): Promise<FriendAggregation[]>;
 
   getFriendList(
     endUserId: EndUserId,
     queryLimitSkip: QueryLimitSkip,
-  ): Promise<FriendAggregation>;
+  ): Promise<FriendAggregation[]>;
 
   isFriends(leaderId: EndUserId, friendId: EndUserId): Promise<boolean>;
 
@@ -29,7 +29,7 @@ export interface IFriendService {
     endUserId: EndUserId,
     name: string,
     queryLimitSkip: QueryLimitSkip,
-  ): Promise<FriendAggregation>;
+  ): Promise<FriendAggregation[]>;
 
   removeFriend(
     leaderId: EndUserId,

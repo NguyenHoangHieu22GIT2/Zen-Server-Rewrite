@@ -38,7 +38,7 @@ export class FriendService implements IFriendService {
     endUserId: EndUserId,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _queryLimitSkip: QueryLimitSkip,
-  ): Promise<FriendAggregation> {
+  ): Promise<FriendAggregation[]> {
     const friends = await this.friendRepository.getFriendsAggregation([
       {
         $match: { endUserId: endUserId },
@@ -99,7 +99,7 @@ export class FriendService implements IFriendService {
   public async getFriendList(
     endUserId: EndUserId,
     queryLimitSkip: QueryLimitSkip,
-  ): Promise<FriendAggregation> {
+  ): Promise<FriendAggregation[]> {
     const query = getFriendsAggregation(endUserId, queryLimitSkip);
     const friends = await this.friendRepository.getFriendsAggregation(query);
     return friends;
@@ -109,7 +109,7 @@ export class FriendService implements IFriendService {
     endUserId: EndUserId,
     name: string,
     queryLimitSkip: QueryLimitSkip,
-  ): Promise<FriendAggregation> {
+  ): Promise<FriendAggregation[]> {
     const query = getFriendsAggregation(endUserId, queryLimitSkip, [
       { $match: { name: { $regex: name, $options: 'i' } } },
     ]);

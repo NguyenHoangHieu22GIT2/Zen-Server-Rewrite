@@ -33,35 +33,36 @@ export class FriendRepository extends GenericRepositoryMongodb<Friend> {
     leaderId,
     friendId,
   }: IFriendRepository['createFriend']): Promise<DocumentMongodbType<Friend>> {
-    return this.createMany([
-      {
-        leaderId: friendId,
-        friendId: leaderId,
-      },
-      {
-        leaderId: leaderId,
-        friendId: friendId,
-      },
-    ]);
+    let endUserFriend = await this.findOne({ endUserId: leaderId });
+
+    if (!endUserFriend) {
+      endUserFriend = await this.create({
+        endUserId: leaderId,
+        endUserIds: [friendId],
+      });
+      return endUserFriend;
+    }
+
+    endUserFriend.endUserIds.push(friendId);
+
+    return endUserFriend.save();
   }
 
   async removeFriend({
     leaderId,
     friendId,
   }: IFriendRepository['removeFriend']): Promise<DocumentMongodbType<Friend>> {
-    await this.delete({
-      leaderId: friendId,
-      friendId: leaderId,
-    });
-    return this.delete({ leaderId, friendId });
+    return this.updateOne(
+      { endUserId: leaderId },
+      { $pull: { endUserIds: friendId } },
+    );
   }
 
   async getFriendsAggregation(
     pipelineStage: PipelineStage[],
-  ): Promise<FriendAggregation> {
-    const friends = (
-      await this.findByAggregation(pipelineStage)
-    )[0] as FriendAggregation;
+  ): Promise<FriendAggregation[]> {
+    const friends =
+      await this.findByAggregation<FriendAggregation>(pipelineStage);
 
     return friends;
   }
