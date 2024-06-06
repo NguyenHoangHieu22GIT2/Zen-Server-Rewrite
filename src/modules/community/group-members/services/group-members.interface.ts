@@ -4,7 +4,7 @@ import {
 } from 'src/common/types/mongodbTypes';
 import { GroupMember } from '../entities';
 import { GetGroupMembers } from '../dto';
-import { EndUserId } from 'src/common/types/utilTypes';
+import { EndUserId, GroupId } from 'src/common/types/utilTypes';
 import { GroupIdAndUserIdObject } from './group-members.service';
 
 export const IGroupMembersServiceString = 'IGroupMembersService';
@@ -26,4 +26,6 @@ export interface IGroupMembersService {
     hostId: EndUserId,
     groupIdAndUserIdObject: GroupIdAndUserIdObject,
   ): Promise<GroupMember>;
+
+  countGroupMembers(groupId: GroupId): Promise<number>;
 }

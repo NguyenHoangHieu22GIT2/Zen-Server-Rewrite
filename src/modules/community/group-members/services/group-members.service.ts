@@ -19,6 +19,10 @@ export class GroupMembersService implements IGroupMembersService {
     private readonly groupRepository: GroupMembersRepository,
   ) {}
 
+  public async countGroupMembers(groupId: GroupId): Promise<number> {
+    return this.groupRepository.countDocuments({ groupId });
+  }
+
   async addGroupMember(groupIdAndUserIdObject: GroupIdAndUserIdObject) {
     return this.groupRepository.create({
       groupId: groupIdAndUserIdObject.groupId,

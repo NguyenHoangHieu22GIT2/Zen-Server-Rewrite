@@ -19,9 +19,13 @@ export interface IGroupService {
 
   findGroup(groupId: GroupId): Promise<DocumentMongodbType<Group>>;
 
-  getGroups(queryLimitSkip: QueryLimitSkip): Promise<GroupAggregation[]>;
+  getGroups<T>(
+    queryLimitSkip: QueryLimitSkip,
+  ): Promise<(GroupAggregation & T)[]>;
 
-  searchGroups(searchGroupsDto: SearchGroupsDto): Promise<GroupAggregation[]>;
+  searchGroups<T>(
+    searchGroupsDto: SearchGroupsDto,
+  ): Promise<(GroupAggregation & T)[]>;
 
   deleteGroup(
     endUserId: EndUserId,

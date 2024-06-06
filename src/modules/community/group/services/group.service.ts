@@ -54,22 +54,21 @@ export class GroupService implements IGroupService {
     return group;
   }
 
-  async getGroups(queryLimitSkip: QueryLimitSkip) {
-    const groups =
-      await this.groupRepository.findByAggregation<GroupAggregation>([
-        ...PopulateSkipAndLimit(queryLimitSkip),
-        ...LookUpEndUserAggregate,
-      ]);
+  async getGroups<T>(queryLimitSkip: QueryLimitSkip) {
+    const groups = await this.groupRepository.findByAggregation<
+      GroupAggregation & T
+    >([...PopulateSkipAndLimit(queryLimitSkip), ...LookUpEndUserAggregate]);
     return groups;
   }
 
-  async searchGroups(searchGroupsDto: SearchGroupsDto) {
-    const groups =
-      await this.groupRepository.findByAggregation<GroupAggregation>([
-        { $match: { $text: { $search: searchGroupsDto.name } } },
-        ...PopulateSkipAndLimit(searchGroupsDto),
-        ...LookUpEndUserAggregate,
-      ]);
+  async searchGroups<T>(searchGroupsDto: SearchGroupsDto) {
+    const groups = await this.groupRepository.findByAggregation<
+      GroupAggregation & T
+    >([
+      { $match: { $text: { $search: searchGroupsDto.name } } },
+      ...PopulateSkipAndLimit(searchGroupsDto),
+      ...LookUpEndUserAggregate,
+    ]);
     return groups;
   }
 
