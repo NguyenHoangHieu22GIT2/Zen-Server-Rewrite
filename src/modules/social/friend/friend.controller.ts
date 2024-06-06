@@ -1,10 +1,8 @@
 import {
-  Body,
   Controller,
   Get,
   Inject,
   Param,
-  Put,
   Query,
   Req,
   UseGuards,
@@ -12,12 +10,10 @@ import {
 
 import { ApiTags } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/modules/auth';
-import { FindFriendDto } from './dto';
 import { RequestUser } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { FindFriendsByName } from './dto/find-friends-by-name.dto';
 import { GetFriendsRecommendationSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/get-friends-recommendation.api';
-import { RemoveFriendSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/remove-friend.api';
 import { SearchFriendsByNameSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/search-friends-by-name.api';
 import { GetFriendListSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/get-friend-list.api';
 import { IFriendService, IFriendServiceString } from './services';
@@ -63,6 +59,7 @@ export class FriendController {
     );
     return friends;
   }
+
   @GetFriendListSwaggerAPIDecorators()
   @Get()
   public async getFriendList(
