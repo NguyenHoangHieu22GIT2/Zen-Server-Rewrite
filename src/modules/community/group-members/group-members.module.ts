@@ -2,23 +2,21 @@ import { Module } from '@nestjs/common';
 import { GroupMembersController } from './group-members.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GroupMember, GroupMemberSchema } from './entities/group-member.entity';
-import {
-  GroupMembersServiceStable,
-  GroupMembersServiceUnstable,
-} from './services';
-import { IGroupMembersServiceStableString } from './services/stable/group-member.interface';
-import { IGroupMembersServiceUnstableString } from './services/unstable/group-members.interface';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
+import { GroupMembersRepository } from './repository/group-members.repository';
+import { IGroupMembersServiceString } from './services/group-members.interface';
+import { GroupMembersService } from './services';
 
 @Module({
   controllers: [GroupMembersController],
   providers: [
     {
-      provide: IGroupMembersServiceStableString,
-      useClass: GroupMembersServiceStable,
+      provide: IGroupMembersServiceString,
+      useClass: GroupMembersService,
     },
     {
-      provide: IGroupMembersServiceUnstableString,
-      useClass: GroupMembersServiceUnstable,
+      provide: BaseRepositoryName,
+      useClass: GroupMembersRepository,
     },
   ],
   imports: [
@@ -28,12 +26,8 @@ import { IGroupMembersServiceUnstableString } from './services/unstable/group-me
   ],
   exports: [
     {
-      provide: IGroupMembersServiceStableString,
-      useClass: GroupMembersServiceStable,
-    },
-    {
-      provide: IGroupMembersServiceUnstableString,
-      useClass: GroupMembersServiceUnstable,
+      provide: IGroupMembersServiceString,
+      useClass: GroupMembersService,
     },
   ],
 })

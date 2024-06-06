@@ -24,17 +24,17 @@ import { FindGroupMemberDto } from './dto/find-group-member.dto';
 import { TryCatchDecorator } from 'src/cores/decorators/TryCatch.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import {
-  IGroupMembersServiceUnstable,
-  IGroupMembersServiceUnstableString,
-} from './services/unstable/group-members.interface';
+  IGroupMembersService,
+  IGroupMembersServiceString,
+} from './services/group-members.interface';
 
 @Controller('group-members')
 @TryCatchDecorator()
 @ApiTags('Group Member')
 export class GroupMembersController {
   constructor(
-    @Inject(IGroupMembersServiceUnstableString)
-    private readonly groupMembersService: IGroupMembersServiceUnstable,
+    @Inject(IGroupMembersServiceString)
+    private readonly groupMembersService: IGroupMembersService,
   ) {}
 
   @Post()

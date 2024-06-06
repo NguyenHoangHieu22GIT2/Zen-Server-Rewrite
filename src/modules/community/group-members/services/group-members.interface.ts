@@ -2,15 +2,14 @@ import {
   DocumentMongodbType,
   GroupMemberAggregation,
 } from 'src/common/types/mongodbTypes';
-import { GroupMember } from '../../entities';
-import { GetGroupMembers } from '../../dto';
+import { GroupMember } from '../entities';
+import { GetGroupMembers } from '../dto';
 import { EndUserId } from 'src/common/types/utilTypes';
-import { GroupIdAndUserIdObject } from '../stable/group-member.interface';
+import { GroupIdAndUserIdObject } from './group-members.service';
 
-export const IGroupMembersServiceUnstableString =
-  'IGroupMembersServiceUnstable';
+export const IGroupMembersServiceString = 'IGroupMembersService';
 
-export interface IGroupMembersServiceUnstable {
+export interface IGroupMembersService {
   addGroupMember(
     groupIdAndUserIdObject: GroupIdAndUserIdObject,
   ): Promise<DocumentMongodbType<GroupMember>>;

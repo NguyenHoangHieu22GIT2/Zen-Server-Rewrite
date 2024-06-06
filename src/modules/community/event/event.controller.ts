@@ -20,10 +20,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { RequestUser } from 'src/common/types/utilTypes';
 import { CreateEventDto, ModifyEventDto } from './dto';
 import { FindEventDto } from './dto/find-event.dto';
-import {
-  IGroupMembersServiceUnstable,
-  IGroupMembersServiceUnstableString,
-} from '../group-members/services/unstable/group-members.interface';
+
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { FindGroupDto } from '../group-members';
 import { createEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/create-event.api';
@@ -32,6 +29,10 @@ import { findEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/
 import { modifyEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/modify-event.dto';
 import { deleteEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/delete-event.api';
 import { IGroupService, IGroupServiceString } from '../group/services';
+import {
+  IGroupMembersService,
+  IGroupMembersServiceString,
+} from '../group-members/services/group-members.interface';
 
 @Controller('event')
 @ApiTags('Event')
@@ -43,8 +44,8 @@ export class EventController {
     @Inject(IGroupServiceString)
     private readonly groupService: IGroupService,
 
-    @Inject(IGroupMembersServiceUnstableString)
-    private readonly groupMembersService: IGroupMembersServiceUnstable,
+    @Inject(IGroupMembersServiceString)
+    private readonly groupMembersService: IGroupMembersService,
   ) {}
 
   @Post()
