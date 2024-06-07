@@ -22,5 +22,11 @@ import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.in
   imports: [
     MongooseModule.forFeature([{ name: Like.name, schema: LikeSchema }]),
   ],
+  exports: [
+    {
+      provide: ILikeServiceString,
+      useClass: LikeService,
+    },
+  ],
 })
 export class LikeModule {}

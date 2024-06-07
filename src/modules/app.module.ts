@@ -28,6 +28,7 @@ import { FriendSystemModule } from './social/friend-system/friend-system.module'
 import { ChatModule } from './communication/chat/chat.module';
 import { ReceiptModule } from './receipt/receipt.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { PostsModule } from './client-side/posts/posts.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
     GroupsModule,
     ReceiptModule,
     SubscriptionsModule,
+    PostsModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserRedis],

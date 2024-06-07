@@ -22,5 +22,11 @@ import { CommentRepository } from './repository/comment.repository';
   imports: [
     MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
   ],
+  exports: [
+    {
+      provide: ICommentServiceString,
+      useClass: CommentService,
+    },
+  ],
 })
 export class CommentModule {}
