@@ -2,10 +2,14 @@ import { GenericRepositoryMongodb } from 'src/cores/base-repository/Base-Mongodb
 import { Subscription } from '../entities/subscription.entity';
 import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class SubscriptionRepository extends GenericRepositoryMongodb<Subscription> {
-  constructor(@Inject() readonly subscriptionModel: Model<Subscription>) {
+  constructor(
+    @InjectModel(Subscription.name)
+    readonly subscriptionModel: Model<Subscription>,
+  ) {
     super(subscriptionModel);
   }
 }

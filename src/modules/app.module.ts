@@ -26,6 +26,8 @@ import { MailerConfig } from 'src/cores/configs/mailer.config';
 import { FriendRequestModule } from './social/friend-request/friend-request.module';
 import { FriendSystemModule } from './social/friend-system/friend-system.module';
 import { ChatModule } from './communication/chat/chat.module';
+import { ReceiptModule } from './receipt/receipt.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 
 @Module({
   imports: [
@@ -62,6 +64,8 @@ import { ChatModule } from './communication/chat/chat.module';
     FriendSystemModule,
     ChatModule,
     GroupsModule,
+    ReceiptModule,
+    SubscriptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserRedis],

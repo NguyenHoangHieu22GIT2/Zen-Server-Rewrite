@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { nameOfCollections } from 'src/common/constants';
 import {
@@ -29,3 +29,5 @@ export class Receipt {
 
   updatedAt: Date;
 }
+
+export const ReceiptSchema = SchemaFactory.createForClass(Receipt);

@@ -8,12 +8,14 @@ import { CreateReceiptDto } from '../dto/create-receipt.dto';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { noObj } from 'src/common/utils';
 import { TryCatchDecorator } from 'src/cores/decorators';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 
 @Injectable()
 @TryCatchDecorator()
 export class ReceiptService implements IReceiptService {
   constructor(
-    @Inject() private readonly receiptRepository: ReceiptRepository,
+    @Inject(BaseRepositoryName)
+    private readonly receiptRepository: ReceiptRepository,
   ) {}
 
   public async createReceipt(
