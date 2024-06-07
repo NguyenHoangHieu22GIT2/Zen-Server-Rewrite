@@ -3,7 +3,7 @@ import {
   GroupMemberAggregation,
 } from 'src/common/types/mongodbTypes';
 import { GroupMember } from '../entities';
-import { GetGroupMembersDto } from '../dto';
+import { FindGroupDto } from '../dto';
 import { EndUserId, GroupId } from 'src/common/types/utilTypes';
 import { GroupIdAndUserIdObject } from './group-members.service';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
@@ -16,7 +16,7 @@ export interface IGroupMembersService {
   ): Promise<DocumentMongodbType<GroupMember>>;
 
   getGroupMembers(
-    getGroupMembersDto: GetGroupMembersDto,
+    findGroupDto: FindGroupDto,
     queryLimitSkip: QueryLimitSkip,
   ): Promise<GroupMemberAggregation[]>;
 

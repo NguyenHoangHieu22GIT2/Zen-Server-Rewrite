@@ -34,10 +34,10 @@ export class GroupsController {
     @Param() param: FindGroupDto,
     @Query() queryLimitSkip: QueryLimitSkip,
   ) {
-    const groupMembers = await this.groupMemberService.getGroupMembers({
-      groupId: param.groupId,
-      ...queryLimitSkip,
-    });
+    const groupMembers = await this.groupMemberService.getGroupMembers(
+      param,
+      queryLimitSkip,
+    );
     return groupMembers;
   }
 
