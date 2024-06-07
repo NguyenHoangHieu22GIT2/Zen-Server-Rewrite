@@ -1,8 +1,8 @@
 import { Transform } from 'class-transformer';
-import { SubscriptionId } from 'src/common/types/utilTypes';
+import { ReceiptId } from 'src/common/types/utilTypes';
 import { checkMongodbIdInTransformToThrowError } from 'src/common/utils';
 
-export class CreateReceiptDto {
+export class FindReceiptDto {
   @Transform(checkMongodbIdInTransformToThrowError)
-  subscriptionId: SubscriptionId;
+  receiptId: ReceiptId;
 }
