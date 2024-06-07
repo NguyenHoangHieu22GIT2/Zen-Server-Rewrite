@@ -24,7 +24,10 @@ export class FriendService implements IFriendService {
     leaderId: EndUserId,
     friendId: EndUserId,
   ): Promise<boolean> {
-    const result = await this.friendRepository.findOne({ leaderId, friendId });
+    const result = await this.friendRepository.findOne({
+      endUserId: leaderId,
+      endUserIds: friendId,
+    });
 
     if (!result) {
       return false;
@@ -93,7 +96,7 @@ export class FriendService implements IFriendService {
       leaderId,
       friendId,
     });
-    return deletedFriend;
+    return deletedFriend[0];
   }
 
   public async getFriendList(
