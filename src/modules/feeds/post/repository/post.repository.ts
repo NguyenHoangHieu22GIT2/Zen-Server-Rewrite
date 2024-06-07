@@ -36,6 +36,7 @@ export class PostRepository extends GenericRepositoryMongodb<Post> {
     const postsAggregation: (PostAggregation & T)[] =
       await this.findByAggregation([
         ...queryAggregation,
+
         {
           $limit: queryLimitSkip.limit,
         },

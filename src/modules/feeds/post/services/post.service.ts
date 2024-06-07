@@ -115,7 +115,7 @@ export class PostService implements IPostService {
     images,
   }: IPostServiceArgs['modifyPost']) {
     const post = await this.postRepository.findById(modifyPostDto.postId);
-
+    console.log('Post', post, modifyPostDto.postId);
     if (!post) {
       throw new BadRequestException('Post does not exist!');
     }

@@ -137,11 +137,11 @@ export class PostController {
   @Get(':postId')
   @GetPostSwaggerAPIDecorators()
   async getPost(@Req() req: RequestUser, @Param() findPostDto: FindPostDto) {
-    const postCached = await this.postRedisService.getPost(findPostDto.postId);
+    // const postCached = await this.postRedisService.getPost(findPostDto.postId);
 
-    if (postCached) {
-      return postCached;
-    }
+    // if (postCached) {
+    //   return postCached;
+    // }
     const post = await this.postService.findPost(findPostDto);
     if (!post) {
       throw new NotFoundException('No Post was found!');

@@ -42,6 +42,7 @@ export class ConversationService implements IConversationService {
       endUserIds: endUserId,
       _id: conversationId,
     });
+    console.log(conversation);
     await conversation.populate('endUserIds');
     return conversation;
   }
