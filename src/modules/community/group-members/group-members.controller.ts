@@ -16,12 +16,8 @@ import { FindGroupDto } from './dto/find-group.dto';
 import { GetGroupMembersDto } from './dto/get-group-members.dto';
 import { DeleteGroupMember } from './dto/delete-group-member.dto';
 import { userJoinInSwaggerAPIDecorators } from 'src/documents/swagger-api/group-members/user-join-in.api';
-import {
-  findGroupMemberSwaggerAPIDecorators,
-  getGroupMembersSwaggerAPIDecorators,
-} from 'src/documents/swagger-api/group-members';
+import { getGroupMembersSwaggerAPIDecorators } from 'src/documents/swagger-api/group-members';
 import { DeleteGroupMemberSwaggerAPIDecorators } from 'src/documents/swagger-api/group-members/delete-group-member.api';
-import { FindGroupMemberDto } from './dto/find-group-member.dto';
 import { ApiTags } from '@nestjs/swagger';
 import {
   IGroupMembersService,
