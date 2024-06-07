@@ -22,7 +22,6 @@ import {
 } from 'src/documents/swagger-api/group-members';
 import { DeleteGroupMemberSwaggerAPIDecorators } from 'src/documents/swagger-api/group-members/delete-group-member.api';
 import { FindGroupMemberDto } from './dto/find-group-member.dto';
-import { TryCatchDecorator } from 'src/cores/decorators/TryCatch.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import {
   IGroupMembersService,
@@ -31,7 +30,6 @@ import {
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 
 @Controller('group-members')
-@TryCatchDecorator()
 @ApiTags('Group Member')
 export class GroupMembersController {
   constructor(
@@ -53,7 +51,7 @@ export class GroupMembersController {
     return groupMember;
   }
 
-  @Get()
+  @Get(':groupId')
   @UseGuards(LoggedInGuard)
   @getGroupMembersSwaggerAPIDecorators()
   async getGroupMembers(
@@ -67,21 +65,21 @@ export class GroupMembersController {
     return groupMembers;
   }
 
-  @Get(':endUserId')
-  @UseGuards(LoggedInGuard)
-  @findGroupMemberSwaggerAPIDecorators()
-  async findGroupMember(
-    @Param() params: FindGroupMemberDto,
-    // This will be used for later when we implement Private and public group
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    @Req() req: RequestUser,
-  ) {
-    const groupMember = await this.groupMembersService.findGroupMember({
-      endUserId: params.endUserId,
-      groupId: params.groupId,
-    });
-    return groupMember;
-  }
+  // @Get(':endUserId')
+  // @UseGuards(LoggedInGuard)
+  // @findGroupMemberSwaggerAPIDecorators()
+  // async findGroupMember(
+  //   @Param() params: FindGroupMemberDto,
+  //   // This will be used for later when we implement Private and public group
+  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   @Req() req: RequestUser,
+  // ) {
+  //   const groupMember = await this.groupMembersService.findGroupMember({
+  //     endUserId: params.endUserId,
+  //     groupId: params.groupId,
+  //   });
+  //   return groupMember;
+  // }
 
   @Delete(':endUserId')
   @UseGuards(LoggedInGuard)

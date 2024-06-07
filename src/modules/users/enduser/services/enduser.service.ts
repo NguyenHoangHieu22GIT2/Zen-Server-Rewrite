@@ -41,9 +41,7 @@ export class EndUserService implements IEndUserService {
     query: SearchUsersDto,
   ): Promise<DocumentMongodbType<EndUser>[]> {
     const endUsers = await this.endUserRepository.find(
-      {
-        $text: { $search: query.search },
-      },
+      { username: { $regex: query.search, $options: 'i' } },
       noObj,
       { limit: query.limit, skip: query.skip },
     );

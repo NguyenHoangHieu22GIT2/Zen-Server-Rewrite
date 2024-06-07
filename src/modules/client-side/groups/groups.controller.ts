@@ -12,7 +12,10 @@ import { RequestUser } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { LoggedInGuard } from 'src/modules/auth';
 import { FindGroupDto } from 'src/modules/community/group-members';
-import { IGroupMembersService } from 'src/modules/community/group-members/services/group-members.interface';
+import {
+  IGroupMembersService,
+  IGroupMembersServiceString,
+} from 'src/modules/community/group-members/services/group-members.interface';
 import {
   IGroupService,
   IGroupServiceString,
@@ -24,7 +27,7 @@ import {
 export class GroupsController {
   constructor(
     @Inject(IGroupServiceString) private readonly groupService: IGroupService,
-    @Inject(IGroupServiceString)
+    @Inject(IGroupMembersServiceString)
     private readonly groupMemberService: IGroupMembersService,
   ) {}
 
@@ -41,10 +44,9 @@ export class GroupsController {
     return groupMembers;
   }
 
-  @Get(':groupId')
+  @Get()
   public async groupDiscovery(
     @Req() req: RequestUser,
-    @Param() param: FindGroupDto,
     @Query() queryLimitSkip: QueryLimitSkip,
   ) {
     const groups = await this.groupService.getGroups<{
@@ -56,12 +58,15 @@ export class GroupsController {
       const group = groups[i];
       const isJoined = await this.groupMemberService.findGroupMember({
         endUserId: req.user._id,
-        groupId: param.groupId,
+        groupId: group._id,
       });
       const numOfMembers = await this.groupMemberService.countGroupMembers(
-        param.groupId,
+        group._id,
       );
       group.isJoined = isJoined ? true : false;
+      if (group.endUser._id.equals(req.user._id)) {
+        group.isJoined = true;
+      }
       group.numOfMembers = numOfMembers;
     }
 
@@ -73,14 +78,20 @@ export class GroupsController {
     @Req() req: RequestUser,
     @Param() param: FindGroupDto,
   ) {
-    const isJoined = await this.groupMemberService.findGroupMember({
-      endUserId: req.user._id,
-      groupId: param.groupId,
-    });
     const group = await this.groupService.findGroup(param.groupId);
     const numOfMembers = await this.groupMemberService.countGroupMembers(
       param.groupId,
     );
-    return { isJoined: isJoined ? true : false, group, numOfMembers };
+    let isJoined = false;
+    if (group.endUserId.equals(req.user._id)) {
+      isJoined = true;
+    } else {
+      const member = await this.groupMemberService.findGroupMember({
+        endUserId: req.user._id,
+        groupId: param.groupId,
+      });
+      isJoined = member ? true : false;
+    }
+    return { isJoined: isJoined, group, numOfMembers };
   }
 }

@@ -9,6 +9,7 @@ import { EnduserModule } from './users/enduser/enduser.module';
 import { AdminModule } from './users/admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { GroupModule } from './community/group/group.module';
+import { GroupsModule } from './client-side/groups/groups.module';
 import { LikeModule } from './feeds/like/like.module';
 import { CommentModule } from './feeds/comment/comment.module';
 import { PostModule } from './feeds/post/post.module';
@@ -60,6 +61,7 @@ import { ChatModule } from './communication/chat/chat.module';
     FriendRequestModule,
     FriendSystemModule,
     ChatModule,
+    GroupsModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserRedis],

@@ -5,7 +5,6 @@ import { checkToConvertToMongoIdOrThrowError } from 'src/common/utils';
 import { FindGroupDto } from './find-group.dto';
 
 export class FindGroupMemberDto extends FindGroupDto {
-  @IsString()
   @Transform(({ value }) =>
     checkToConvertToMongoIdOrThrowError<EndUserId>({
       id: value,
