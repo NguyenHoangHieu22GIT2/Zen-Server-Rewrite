@@ -62,6 +62,9 @@ export class GroupsController {
         param.groupId,
       );
       group.isJoined = isJoined ? true : false;
+      if (group.endUser._id.equals(req.user._id)) {
+        group.isJoined = true;
+      }
       group.numOfMembers = numOfMembers;
     }
 

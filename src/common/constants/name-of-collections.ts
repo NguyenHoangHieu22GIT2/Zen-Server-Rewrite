@@ -10,4 +10,6 @@ export const nameOfCollections = {
   Comment: 'comments',
   Friend: 'friends',
   Notification: 'notifications',
+  Subscription: 'subscription',
+  Receipt: 'receipt',
 } as const;

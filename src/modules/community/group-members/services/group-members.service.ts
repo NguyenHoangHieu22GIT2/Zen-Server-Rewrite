@@ -1,5 +1,4 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { GetGroupMembersDto } from '../dto/get-group-members.dto';
 import { EndUserId, GroupId } from 'src/common/types/utilTypes';
 import { Group } from 'src/modules/community/group/entities';
 import { IGroupMembersService } from './group-members.interface';

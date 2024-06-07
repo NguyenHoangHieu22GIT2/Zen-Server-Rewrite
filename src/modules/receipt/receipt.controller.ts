@@ -3,40 +3,50 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
+  Inject,
+  UseGuards,
+  Req,
+  Query,
 } from '@nestjs/common';
-import { ReceiptService } from './receipt.service';
 import { CreateReceiptDto } from './dto/create-receipt.dto';
-import { UpdateReceiptDto } from './dto/update-receipt.dto';
+import {
+  IReceiptService,
+  IReceiptServiceString,
+} from './service/receipt.service.interface';
+import { ApiTags } from '@nestjs/swagger';
+import { LoggedInGuard } from '../auth';
+import { RequestUser } from 'src/common/types/utilTypes';
+import { FindReceiptDto } from './dto/find-receipt.dto';
+import { QueryLimitSkip } from 'src/cores/global-dtos';
 
 @Controller('receipt')
+@ApiTags('Receipt')
+@UseGuards(LoggedInGuard)
 export class ReceiptController {
-  constructor(private readonly receiptService: ReceiptService) {}
+  constructor(
+    @Inject(IReceiptServiceString)
+    private readonly receiptService: IReceiptService,
+  ) {}
 
   @Post()
-  create(@Body() createReceiptDto: CreateReceiptDto) {
-    return this.receiptService.create(createReceiptDto);
+  create(@Req() req: RequestUser, @Body() createReceiptDto: CreateReceiptDto) {
+    return this.receiptService.createReceipt(req.user._id, createReceiptDto);
+  }
+
+  @Get(':receiptId')
+  findOne(@Param() findReceiptDto: FindReceiptDto, @Req() req: RequestUser) {
+    return this.receiptService.findReceipt(
+      req.user._id,
+      findReceiptDto.receiptId,
+    );
   }
 
   @Get()
-  findAll() {
-    return this.receiptService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.receiptService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReceiptDto: UpdateReceiptDto) {
-    return this.receiptService.update(+id, updateReceiptDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.receiptService.remove(+id);
+  getReceipts(
+    @Req() req: RequestUser,
+    @Query() queryLimitSkip: QueryLimitSkip,
+  ) {
+    return this.receiptService.getReceipts(req.user._id, queryLimitSkip);
   }
 }
