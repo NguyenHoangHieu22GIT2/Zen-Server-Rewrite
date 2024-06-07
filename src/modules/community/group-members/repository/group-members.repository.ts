@@ -3,10 +3,11 @@ import { GroupMember } from '../entities';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
-import { GetGroupMembers } from '../dto';
+import { GetGroupMembersDto } from '../dto';
 import { GroupMemberAggregation } from 'src/common/types/mongodbTypes';
 import { PopulateSkipAndLimit } from 'src/common/utils';
 import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
+import { QueryLimitSkip } from 'src/cores/global-dtos';
 
 @Injectable()
 export class GroupMembersRepository extends GenericRepositoryMongodb<GroupMember> {
@@ -17,13 +18,13 @@ export class GroupMembersRepository extends GenericRepositoryMongodb<GroupMember
     super(groupMemberModel);
   }
 
-  async getGroupMembers({
-    groupId,
-    ...queryLimitSkip
-  }: GetGroupMembers): Promise<GroupMemberAggregation[]> {
+  async getGroupMembers(
+    getGroupMembersDto: GetGroupMembersDto,
+    queryLimitSkip: QueryLimitSkip,
+  ): Promise<GroupMemberAggregation[]> {
     const groupMembers = await this.groupMemberModel.aggregate([
       {
-        $match: { groupId },
+        $match: { groupId: getGroupMembersDto.groupId },
       },
       ...PopulateSkipAndLimit(queryLimitSkip),
       ...LookUpEndUserAggregate,

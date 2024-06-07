@@ -6,6 +6,7 @@ import { GroupMember } from '../entities';
 import { GetGroupMembersDto } from '../dto';
 import { EndUserId, GroupId } from 'src/common/types/utilTypes';
 import { GroupIdAndUserIdObject } from './group-members.service';
+import { QueryLimitSkip } from 'src/cores/global-dtos';
 
 export const IGroupMembersServiceString = 'IGroupMembersService';
 
@@ -16,6 +17,7 @@ export interface IGroupMembersService {
 
   getGroupMembers(
     getGroupMembersDto: GetGroupMembersDto,
+    queryLimitSkip: QueryLimitSkip,
   ): Promise<GroupMemberAggregation[]>;
 
   findGroupMember(

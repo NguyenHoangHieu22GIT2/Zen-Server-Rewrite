@@ -6,6 +6,7 @@ import { IGroupMembersService } from './group-members.interface';
 import { isIdsEqual } from 'src/common/utils';
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 import { GroupMembersRepository } from '../repository/group-members.repository';
+import { QueryLimitSkip } from 'src/cores/global-dtos';
 export type GroupIdAndUserIdObject = {
   endUserId: EndUserId;
   groupId: GroupId;
@@ -30,9 +31,14 @@ export class GroupMembersService implements IGroupMembersService {
     });
   }
 
-  async getGroupMembers(getGroupMembers: GetGroupMembersDto) {
-    const groupMembers =
-      await this.groupRepository.getGroupMembers(getGroupMembers);
+  async getGroupMembers(
+    getGroupMembers: GetGroupMembersDto,
+    queryLimitSkip: QueryLimitSkip,
+  ) {
+    const groupMembers = await this.groupRepository.getGroupMembers(
+      getGroupMembers,
+      queryLimitSkip,
+    );
     return groupMembers;
   }
 

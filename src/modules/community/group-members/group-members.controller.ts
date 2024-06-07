@@ -6,6 +6,7 @@ import {
   Inject,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -27,6 +28,7 @@ import {
   IGroupMembersService,
   IGroupMembersServiceString,
 } from './services/group-members.interface';
+import { QueryLimitSkip } from 'src/cores/global-dtos';
 
 @Controller('group-members')
 @TryCatchDecorator()
@@ -54,8 +56,14 @@ export class GroupMembersController {
   @Get()
   @UseGuards(LoggedInGuard)
   @getGroupMembersSwaggerAPIDecorators()
-  async getGroupMembers(@Param() param: GetGroupMembersDto) {
-    const groupMembers = await this.groupMembersService.getGroupMembers(param);
+  async getGroupMembers(
+    @Param() param: GetGroupMembersDto,
+    @Query() query: QueryLimitSkip,
+  ) {
+    const groupMembers = await this.groupMembersService.getGroupMembers(
+      param,
+      query,
+    );
     return groupMembers;
   }
 
