@@ -42,6 +42,7 @@ export class ConversationService implements IConversationService {
       endUserIds: endUserId,
       _id: conversationId,
     });
+    await conversation.populate('endUserIds');
     return conversation;
   }
 
@@ -56,6 +57,11 @@ export class ConversationService implements IConversationService {
       noObj,
       { limit: query.limit, skip: query.skip },
     );
+
+    for (let i = 0; i < conversations.length; i++) {
+      await conversations[i].populate('endUserIds');
+    }
+
     return conversations;
   }
 
