@@ -16,7 +16,6 @@ import {
 } from 'src/common/types/mongodbTypes';
 import { FriendRequest } from '../entities/friend-request.entity';
 import { nameOfCollections } from 'src/common/constants';
-import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
 
 @Injectable()
 export class FriendRequestService implements IFriendRequestService {
@@ -63,14 +62,29 @@ export class FriendRequestService implements IFriendRequestService {
       await this.friendRequestRepository.findByAggregation([
         { $match: { leaderId: endUserId } },
         {
-          $skip: queryLimitSkip.skip,
+          $lookup: {
+            from: nameOfCollections.EndUser,
+            localField: 'friendId',
+            foreignField: '_id',
+            as: 'userFull',
+          },
         },
         {
-          $limit: queryLimitSkip.limit,
+          $unwind: '$userFull',
         },
-        ...LookUpEndUserAggregate,
+        {
+          $set: {
+            endUser: {
+              _id: '$userFull._id',
+              username: '$userFull.username',
+              avatar: '$userFull.avatar',
+            },
+          },
+        },
+        {
+          $unset: ['userFull', 'friendId', 'leaderId', 'updatedAt', '__v'],
+        },
       ]);
-
     return result;
   }
 
@@ -101,6 +115,7 @@ export class FriendRequestService implements IFriendRequestService {
         'You already accepted this friend request!',
       );
     }
+
     result.state = 'accepted';
     return result.save();
   }
