@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Inject,
+  Param,
   Patch,
   Query,
   Req,
@@ -20,6 +21,7 @@ import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { GetFriendRequestsSwaggerAPIDecorators } from 'src/documents/swagger-api/friend-request/get-friend-requests.api';
 import { DeclineFriendRequestSwaggerAPIDecorators } from 'src/documents/swagger-api/friend-request/decline-friend-request.api';
 import { FindFriendRequestDto } from './dto/find-friend-request.dto';
+import { FindByIdEndUserDto } from 'src/modules/users/enduser';
 
 @UseGuards(LoggedInGuard)
 @ApiTags('Friend Request')
@@ -29,6 +31,22 @@ export class FriendRequestController {
     @Inject(IFriendRequestServiceString)
     private readonly friendRequestService: IFriendRequestService,
   ) {}
+
+  @GetFriendRequestsSwaggerAPIDecorators()
+  @Get(":endUserId")
+  public async getFriendRequestsFromEndUserId(
+    @Req() req: RequestUser,
+    @Query() query: QueryLimitSkip,
+    @Param() param:FindByIdEndUserDto
+  ) {
+    const friendRequests = await this.friendRequestService.getFriendRequests(
+      param.endUserId,
+      query,
+    );
+
+    return friendRequests;
+  }
+
 
   @GetFriendRequestsSwaggerAPIDecorators()
   @Get()
@@ -44,6 +62,7 @@ export class FriendRequestController {
     return friendRequests;
   }
 
+  
   @DeclineFriendRequestSwaggerAPIDecorators()
   @Patch('decline-friend-request')
   public async declineFriendRequest(

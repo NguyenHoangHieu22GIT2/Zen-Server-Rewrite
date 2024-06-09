@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { PostAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/feeds/feeds';
 import { EndUserId, PostId } from 'src/common/types/utilTypes';
 import { ExecuteIfRedisAvailableDecorator } from 'src/cores/decorators/ExecuteRedis.decorator';
 import { PostRedis } from 'src/cores/redis/post.redis';
 import { Post } from '../entities';
+import { PopulateEndUserAggregation } from 'src/common/types/mongodbTypes';
 
 @Injectable()
 @ExecuteIfRedisAvailableDecorator()
 export class PostRedisService {
-  async savePosts(posts: PostAggregation[]) {
+  async savePosts(posts: PopulateEndUserAggregation<Post>[]) {
     Promise.all([
       posts.map((post) => {
         return PostRedis.postConvertToRedisTypeThenHSET(post._id, post);
@@ -16,7 +16,10 @@ export class PostRedisService {
     ]);
   }
 
-  async increaseView(endUserId: EndUserId, posts: PostAggregation[]) {
+  async increaseView(
+    endUserId: EndUserId,
+    posts: PopulateEndUserAggregation<Post>[],
+  ) {
     Promise.all([
       posts.map((post) => {
         return PostRedis.viewsPFADD(post._id, endUserId);

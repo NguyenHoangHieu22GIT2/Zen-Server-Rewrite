@@ -10,9 +10,10 @@ import { TryCatchDecorator } from 'src/cores/decorators';
 import { IPostService, IPostServiceArgs } from './post.interface';
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 import { PostRepository } from '../repository/post.repository';
-import { PostAggregation } from 'src/common/types/mongodbTypes';
 import { GroupId } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
+import { PopulateEndUserAggregation } from 'src/common/types/mongodbTypes';
+import { Post } from '../entities';
 @Injectable()
 @TryCatchDecorator()
 export class PostService implements IPostService {
@@ -27,7 +28,7 @@ export class PostService implements IPostService {
   }: {
     groupId: GroupId;
     queryLimitSkip: QueryLimitSkip;
-  }): Promise<(PostAggregation & T)[]> {
+  }): Promise<(PopulateEndUserAggregation<Post> & T)[]> {
     const groupPosts = await this.postRepository.getPostsAggregation<T>({
       queryLimitSkip,
       queryAggregation: [{ $match: { groupId: groupId } }],
@@ -50,7 +51,7 @@ export class PostService implements IPostService {
 
   public async findPost<T>(
     findPostDto: IPostServiceArgs['findPost'],
-  ): Promise<PostAggregation & T> {
+  ): Promise<PopulateEndUserAggregation<Post> & T> {
     const post = await this.postRepository.findPostAggregation<T>(findPostDto);
     return post;
   }

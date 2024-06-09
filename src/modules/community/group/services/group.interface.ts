@@ -2,7 +2,7 @@ import { EndUserId, GroupId } from 'src/common/types/utilTypes';
 import { CreateGroupDto, ModifyGroupDto } from '../dto';
 import {
   DocumentMongodbType,
-  GroupAggregation,
+  PopulateEndUserAggregation,
 } from 'src/common/types/mongodbTypes';
 import { Group } from '../entities';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
@@ -21,11 +21,11 @@ export interface IGroupService {
 
   getGroups<T>(
     queryLimitSkip: QueryLimitSkip,
-  ): Promise<(GroupAggregation & T)[]>;
+  ): Promise<(PopulateEndUserAggregation<Group> & T)[]>;
 
   searchGroups<T>(
     searchGroupsDto: SearchGroupsDto,
-  ): Promise<(GroupAggregation & T)[]>;
+  ): Promise<(PopulateEndUserAggregation<Group> & T)[]>;
 
   deleteGroup(
     endUserId: EndUserId,

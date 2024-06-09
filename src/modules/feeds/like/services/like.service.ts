@@ -3,7 +3,7 @@ import { Like } from '../entities/';
 import { EndUserId, PostId } from 'src/common/types/utilTypes/';
 import {
   DocumentMongodbType,
-  LikeAggregation,
+  PopulateEndUserAggregation,
 } from 'src/common/types/mongodbTypes/';
 import { QueryLimitSkip } from 'src/cores/global-dtos/';
 import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
@@ -38,8 +38,10 @@ export class LikeService implements ILikeService {
   }: {
     postId: PostId;
     queryLimitSkip: QueryLimitSkip;
-  }): Promise<LikeAggregation[]> {
-    const likes = await this.likeRepository.findByAggregation<LikeAggregation>([
+  }): Promise<PopulateEndUserAggregation<Like>[]> {
+    const likes = await this.likeRepository.findByAggregation<
+      PopulateEndUserAggregation<Like>
+    >([
       { $match: { postId } },
       {
         $skip: queryLimitSkip.skip,

@@ -1,4 +1,7 @@
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
+import {
+  DocumentMongodbType,
+  PopulateEndUserAggregation,
+} from 'src/common/types/mongodbTypes';
 import { EndUserId, FriendRequestId } from 'src/common/types/utilTypes';
 import { FriendRequest } from '../entities/friend-request.entity';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
@@ -31,5 +34,5 @@ export interface IFriendRequestService<
   getFriendRequests(
     endUserId: EndUserId,
     queryLimitSkip: QueryLimitSkip,
-  ): Promise<DocumentMongodbType<T>[]>;
+  ): Promise<PopulateEndUserAggregation<FriendRequest>[]>;
 }

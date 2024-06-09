@@ -10,8 +10,13 @@ import { IFriendRequestService } from './friend-request.interface.service';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { emptyObj, isIdsEqual } from 'src/common/utils';
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
+import {
+  DocumentMongodbType,
+  PopulateEndUserAggregation,
+} from 'src/common/types/mongodbTypes';
 import { FriendRequest } from '../entities/friend-request.entity';
+import { nameOfCollections } from 'src/common/constants';
+import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
 
 @Injectable()
 export class FriendRequestService implements IFriendRequestService {
@@ -54,13 +59,18 @@ export class FriendRequestService implements IFriendRequestService {
     endUserId: EndUserId,
     queryLimitSkip: QueryLimitSkip,
   ) {
-    const result = await this.friendRequestRepository.find(
-      {
-        leaderId: endUserId,
-      },
-      emptyObj,
-      { ...queryLimitSkip },
-    );
+    const result: PopulateEndUserAggregation<FriendRequest>[] =
+      await this.friendRequestRepository.findByAggregation([
+        { $match: { leaderId: endUserId } },
+        {
+          $skip: queryLimitSkip.skip,
+        },
+        {
+          $limit: queryLimitSkip.limit,
+        },
+        ...LookUpEndUserAggregate,
+      ]);
+
     return result;
   }
 

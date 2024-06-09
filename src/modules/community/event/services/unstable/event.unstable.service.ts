@@ -9,7 +9,7 @@ import {
 } from '../stable/event.stable.interface';
 import {
   DocumentMongodbType,
-  EventAggregation,
+  PopulateEndUserAggregation,
 } from 'src/common/types/mongodbTypes';
 import { Event } from '../../entities';
 import { EndUserId, EventId, GroupId } from 'src/common/types/utilTypes';
@@ -48,7 +48,9 @@ export class EventServiceUnstable implements IEventServiceUnstable {
   }
 
   async getEvents(queryLimitSkip: QueryLimitSkip, groupId: GroupId) {
-    const events = await this.eventServiceStable.getEvents<EventAggregation>([
+    const events = await this.eventServiceStable.getEvents<
+      PopulateEndUserAggregation<Event>
+    >([
       { $match: { groupId } },
       ...PopulateSkipAndLimit(queryLimitSkip),
       ...LookUpEndUserAggregate,

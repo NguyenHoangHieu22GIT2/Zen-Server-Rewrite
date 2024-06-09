@@ -3,11 +3,11 @@ import { GenericRepositoryMongodb } from 'src/cores/base-repository/Base-Mongodb
 import { Post } from '../entities';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PipelineStage } from 'mongoose';
-import { PostAggregation } from 'src/common/types/mongodbTypes';
 import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
 import { EndUserId } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { CreatePostDto, FindPostDto } from '../dto';
+import { PopulateEndUserAggregation } from 'src/common/types/mongodbTypes';
 
 export type Args = {
   getPostsAggregation: {
@@ -33,7 +33,7 @@ export class PostRepository extends GenericRepositoryMongodb<Post> {
     queryLimitSkip,
     queryAggregation,
   }: Args['getPostsAggregation']) {
-    const postsAggregation: (PostAggregation & T)[] =
+    const postsAggregation: (PopulateEndUserAggregation<Post> & T)[] =
       await this.findByAggregation([
         ...queryAggregation,
 
@@ -49,7 +49,7 @@ export class PostRepository extends GenericRepositoryMongodb<Post> {
   public async findPostAggregation<T>(
     findPostDto: Args['findPostAggregation'],
   ) {
-    const postsAggregation: (PostAggregation & T)[] =
+    const postsAggregation: (PopulateEndUserAggregation<Post> & T)[] =
       await this.findByAggregation([
         {
           $match: { _id: findPostDto.postId },

@@ -1,6 +1,6 @@
 import {
   DocumentMongodbType,
-  GroupMemberAggregation,
+  PopulateEndUserAggregation,
 } from 'src/common/types/mongodbTypes';
 import { GroupMember } from '../entities';
 import { FindGroupDto } from '../dto';
@@ -18,7 +18,7 @@ export interface IGroupMembersService {
   getGroupMembers(
     findGroupDto: FindGroupDto,
     queryLimitSkip: QueryLimitSkip,
-  ): Promise<GroupMemberAggregation[]>;
+  ): Promise<PopulateEndUserAggregation<GroupMember>[]>;
 
   findGroupMember(
     groupIdAndUserIdObject: GroupIdAndUserIdObject,

@@ -1,6 +1,6 @@
 import {
   DocumentMongodbType,
-  EventAggregation,
+  PopulateEndUserAggregation,
 } from 'src/common/types/mongodbTypes';
 import { Event } from '../../entities';
 import { EndUserId, EventId, GroupId } from 'src/common/types/utilTypes';
@@ -24,7 +24,7 @@ export interface IEventServiceUnstable {
   getEvents(
     queryLimitSkip: QueryLimitSkip,
     groupId: GroupId,
-  ): Promise<EventAggregation[]>;
+  ): Promise<PopulateEndUserAggregation<Event>[]>;
 
   modifyEvent(
     endUserId: EndUserId,

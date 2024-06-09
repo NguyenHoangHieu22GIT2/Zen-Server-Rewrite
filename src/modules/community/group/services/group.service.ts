@@ -17,7 +17,7 @@ import { SearchGroupsDto } from '../dto/search-groups.dto';
 import { IGroupService } from './group.interface';
 import {
   DocumentMongodbType,
-  GroupAggregation,
+  PopulateEndUserAggregation,
 } from 'src/common/types/mongodbTypes';
 import { LookUpEndUserAggregate } from 'src/cores/mongodb-aggregations';
 
@@ -56,14 +56,14 @@ export class GroupService implements IGroupService {
 
   async getGroups<T>(queryLimitSkip: QueryLimitSkip) {
     const groups = await this.groupRepository.findByAggregation<
-      GroupAggregation & T
+      PopulateEndUserAggregation<Group> & T
     >([...PopulateSkipAndLimit(queryLimitSkip), ...LookUpEndUserAggregate]);
     return groups;
   }
 
   async searchGroups<T>(searchGroupsDto: SearchGroupsDto) {
     const groups = await this.groupRepository.findByAggregation<
-      GroupAggregation & T
+      PopulateEndUserAggregation<Group> & T
     >([
       { $match: { $text: { $search: searchGroupsDto.name } } },
       ...PopulateSkipAndLimit(searchGroupsDto),

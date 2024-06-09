@@ -1,7 +1,9 @@
 import { QueryLimitSkip } from 'src/cores/global-dtos';
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
+import {
+  DocumentMongodbType,
+  FriendAggregation,
+} from 'src/common/types/mongodbTypes';
 import { EndUserId } from 'src/common/types/utilTypes';
-import { FriendAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/social/friend.aggregation';
 import { Friend } from '../entities/friend.entity';
 
 export const IFriendServiceString = 'IFriendService';

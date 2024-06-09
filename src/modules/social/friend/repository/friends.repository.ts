@@ -2,8 +2,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Friend } from '../entities/friend.entity';
 import { Model, PipelineStage } from 'mongoose';
 import { GenericRepositoryMongodb } from 'src/cores/base-repository/Base-Mongodb.Repository';
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
-import { FriendAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/social/friend.aggregation';
+import {
+  DocumentMongodbType,
+  FriendAggregation,
+} from 'src/common/types/mongodbTypes';
 import { EndUserId } from 'src/common/types/utilTypes';
 
 export type IFriendRepository = {

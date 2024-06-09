@@ -1,6 +1,6 @@
 import {
   DocumentMongodbType,
-  LikeAggregation,
+  PopulateEndUserAggregation,
 } from 'src/common/types/mongodbTypes';
 import { EndUserId, PostId } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
@@ -22,7 +22,7 @@ export interface ILikeService {
   }: {
     postId: PostId;
     queryLimitSkip: QueryLimitSkip;
-  }): Promise<LikeAggregation[]>;
+  }): Promise<PopulateEndUserAggregation<Like>[]>;
 
   toggleLike({
     postId,

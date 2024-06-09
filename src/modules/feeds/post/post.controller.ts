@@ -27,7 +27,7 @@ import {
 import { PostRedisService } from './services/post.redis.service';
 import {
   DocumentMongodbType,
-  PostAggregation,
+  PopulateEndUserAggregation,
 } from 'src/common/types/mongodbTypes/';
 import { Post as PostEntity } from './entities/';
 import {
@@ -92,7 +92,7 @@ export class PostController {
   async getRecommendedPosts(
     @Req() req: RequestUser,
     @Query() query: QueryLimitSkip,
-  ): Promise<PostAggregation[]> {
+  ): Promise<PopulateEndUserAggregation<PostEntity>[]> {
     const posts = await this.postService.getRecommendedPosts({
       endUserId: req.user._id,
       queryLimitSkip: query,

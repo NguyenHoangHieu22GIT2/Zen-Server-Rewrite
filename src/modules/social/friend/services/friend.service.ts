@@ -1,11 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IFriendService } from './friend.interface';
 
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
+import {
+  DocumentMongodbType,
+  FriendAggregation,
+} from 'src/common/types/mongodbTypes';
 import { EndUserId } from 'src/common/types/utilTypes';
 import { Friend } from '../entities/friend.entity';
 import { TryCatchDecorator } from 'src/cores/decorators';
-import { FriendAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/social/friend.aggregation';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { getFriendsAggregation } from 'src/cores/mongodb-aggregations';
 import { nameOfCollections } from 'src/common/constants';

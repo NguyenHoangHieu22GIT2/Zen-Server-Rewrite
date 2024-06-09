@@ -1,6 +1,6 @@
 import {
   DocumentMongodbType,
-  PostAggregation,
+  PopulateEndUserAggregation,
 } from 'src/common/types/mongodbTypes';
 import { Post } from '../entities';
 import {
@@ -62,27 +62,27 @@ export interface IPostService {
 
   findPost<T extends object>(
     findPostDto: IPostServiceArgs['findPost'],
-  ): Promise<PostAggregation & T>;
+  ): Promise<PopulateEndUserAggregation<Post> & T>;
 
   getUserPostsFromGroup<T extends object>(
     getuserPosts: IPostServiceArgs['getUserPosts'],
-  ): Promise<(PostAggregation & T)[]>;
+  ): Promise<(PopulateEndUserAggregation<Post> & T)[]>;
 
   getUserPostsFromProfile<T extends object>(
     getuserPosts: IPostServiceArgs['getUserPosts'],
-  ): Promise<(PostAggregation & T)[]>;
+  ): Promise<(PopulateEndUserAggregation<Post> & T)[]>;
 
   getGroupPosts<T extends object>(
     args: IPostServiceArgs['getGroupPosts'],
-  ): Promise<(PostAggregation & T)[]>;
+  ): Promise<(PopulateEndUserAggregation<Post> & T)[]>;
 
   getPostsAggregation(
     getPostsAggregation: IPostServiceArgs['getPostsAggregation'],
-  ): Promise<PostAggregation[]>;
+  ): Promise<PopulateEndUserAggregation<Post>[]>;
 
   getRecommendedPosts<T extends object>(
     getRecommendedPost: IPostServiceArgs['getRecommendedPost'],
-  ): Promise<(PostAggregation & T)[]>;
+  ): Promise<(PopulateEndUserAggregation<Post> & T)[]>;
 
   modifyPost(
     modifyPost: IPostServiceArgs['modifyPost'],
