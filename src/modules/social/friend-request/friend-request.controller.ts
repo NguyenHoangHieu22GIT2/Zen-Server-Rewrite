@@ -7,6 +7,7 @@ import {
   Patch,
   Query,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -22,6 +23,7 @@ import { GetFriendRequestsSwaggerAPIDecorators } from 'src/documents/swagger-api
 import { DeclineFriendRequestSwaggerAPIDecorators } from 'src/documents/swagger-api/friend-request/decline-friend-request.api';
 import { FindFriendRequestDto } from './dto/find-friend-request.dto';
 import { FindByIdEndUserDto } from 'src/modules/users/enduser';
+import { isIdsEqual } from 'src/common/utils';
 
 @UseGuards(LoggedInGuard)
 @ApiTags('Friend Request')
@@ -33,12 +35,16 @@ export class FriendRequestController {
   ) {}
 
   @GetFriendRequestsSwaggerAPIDecorators()
-  @Get(":endUserId")
+  @Get(':endUserId')
   public async getFriendRequestsFromEndUserId(
     @Req() req: RequestUser,
     @Query() query: QueryLimitSkip,
-    @Param() param:FindByIdEndUserDto
+    @Param() param: FindByIdEndUserDto,
   ) {
+    if (!isIdsEqual(req.user._id, param.endUserId)) {
+      throw new UnauthorizedException("you can't do this!");
+    }
+
     const friendRequests = await this.friendRequestService.getFriendRequests(
       param.endUserId,
       query,
@@ -46,7 +52,6 @@ export class FriendRequestController {
 
     return friendRequests;
   }
-
 
   @GetFriendRequestsSwaggerAPIDecorators()
   @Get()
@@ -62,7 +67,6 @@ export class FriendRequestController {
     return friendRequests;
   }
 
-  
   @DeclineFriendRequestSwaggerAPIDecorators()
   @Patch('decline-friend-request')
   public async declineFriendRequest(
