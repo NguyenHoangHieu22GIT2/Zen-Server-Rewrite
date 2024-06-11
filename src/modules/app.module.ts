@@ -29,6 +29,7 @@ import { ChatModule } from './communication/chat/chat.module';
 import { ReceiptModule } from './receipt/receipt.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { PostsModule } from './client-side/posts/posts.module';
+import { ProfileModule } from './client-side/profile';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { PostsModule } from './client-side/posts/posts.module';
     ReceiptModule,
     SubscriptionsModule,
     PostsModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserRedis],
