@@ -1,32 +1,32 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import {
-  LikeServiceUnstable,
-  LikeServiceStable,
-  LikeController,
-  Like,
-  LikeSchema,
-} from './';
-import { ILikeServiceStableString } from './services/stable/like.stable.interface';
-import { ILikeServiceUnstableString } from './services/unstable/like.unstable.interface';
+import { LikeController, Like, LikeSchema } from './';
 import { LikeRepository } from './repository/like.repository';
+import { LikeService } from './services/like.service';
+import { ILikeServiceString } from './services/like.interface';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 
 @Module({
   controllers: [LikeController],
   providers: [
     {
-      provide: ILikeServiceStableString,
-      useClass: LikeServiceStable,
+      provide: ILikeServiceString,
+      useClass: LikeService,
     },
     {
-      provide: ILikeServiceUnstableString,
-      useClass: LikeServiceUnstable,
+      provide: BaseRepositoryName,
+      useClass: LikeRepository,
     },
-    LikeRepository,
   ],
   imports: [
     MongooseModule.forFeature([{ name: Like.name, schema: LikeSchema }]),
+  ],
+  exports: [
+    {
+      provide: ILikeServiceString,
+      useClass: LikeService,
+    },
   ],
 })
 export class LikeModule {}

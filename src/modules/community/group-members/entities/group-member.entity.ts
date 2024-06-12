@@ -11,7 +11,7 @@ export class GroupMember {
     type: Types.ObjectId,
     ref: nameOfCollections.EndUser,
   })
-  userId: Types.ObjectId;
+  endUserId: Types.ObjectId;
 
   @Prop({ required: true, type: Types.ObjectId, ref: nameOfCollections.Group })
   groupId: Types.ObjectId;

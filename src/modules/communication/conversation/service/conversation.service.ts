@@ -20,7 +20,14 @@ export class ConversationService implements IConversationService {
     leaderId: EndUserId,
     endUserIds: EndUserId[],
   ): Promise<DocumentMongodbType<Conversation>> {
-    const conversation = await this.conversationRepository.create({
+    let conversation;
+    conversation = await this.conversationRepository.findOne({
+      endUserIds: { $eq: endUserIds },
+    });
+    if (conversation) {
+      return conversation;
+    }
+    conversation = await this.conversationRepository.create({
       name: ConversationDefaultName,
       endUserIds,
     });
@@ -33,8 +40,10 @@ export class ConversationService implements IConversationService {
   ): Promise<DocumentMongodbType<Conversation>> {
     const conversation = await this.conversationRepository.findOne({
       endUserIds: endUserId,
-      conversationId,
+      _id: conversationId,
     });
+    console.log(conversation);
+    await conversation.populate('endUserIds');
     return conversation;
   }
 
@@ -49,6 +58,11 @@ export class ConversationService implements IConversationService {
       noObj,
       { limit: query.limit, skip: query.skip },
     );
+
+    for (let i = 0; i < conversations.length; i++) {
+      await conversations[i].populate('endUserIds');
+    }
+
     return conversations;
   }
 

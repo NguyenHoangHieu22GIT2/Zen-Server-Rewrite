@@ -5,12 +5,19 @@ import { isMongoId } from 'class-validator';
 import { EndUserId } from '../types/utilTypes';
 import { BadRequestException } from '@nestjs/common';
 import { RedisClient } from 'src/cores/redis';
+import { TransformFnParams } from 'class-transformer';
 
 const emptyObj = {};
 
 const noop = () => {};
 
 const noObj = {};
+
+const checkMongodbIdInTransform = (opts: TransformFnParams) =>
+  checkToConvertToMongoIdOrThrowError({ id: opts.value, returnError: false });
+
+const checkMongodbIdInTransformToThrowError = (opts: TransformFnParams) =>
+  checkToConvertToMongoIdOrThrowError({ id: opts.value, returnError: true });
 
 function isArray<T>(value: any): value is T[] {
   return Array.isArray(value);
@@ -190,4 +197,6 @@ export {
   PopulateSkipAndLimit,
   isRedisResultEmpty,
   decorateAndConcatName,
+  checkMongodbIdInTransform,
+  checkMongodbIdInTransformToThrowError,
 };

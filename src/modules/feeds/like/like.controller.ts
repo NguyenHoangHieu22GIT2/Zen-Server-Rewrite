@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { LikeServiceUnstable } from './services/unstable/';
 import { RequestUser } from 'src/common/types/utilTypes/';
 import { FindPostDto } from '../post/dto/';
 import {
@@ -23,15 +22,15 @@ import { LoggedInGuard } from 'src/modules/auth/passport/';
 import { QueryLimitSkip } from 'src/cores/global-dtos/';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes/';
 import { Like } from './entities/';
-import { ILikeServiceUnstableString } from './services/unstable/like.unstable.interface';
+import { ILikeService, ILikeServiceString } from './services/like.interface';
 
 @Controller('like')
 @ApiTags('Like')
 @UseGuards(LoggedInGuard)
 export class LikeController {
   constructor(
-    @Inject(ILikeServiceUnstableString)
-    private readonly likeServiceUnstable: LikeServiceUnstable,
+    @Inject(ILikeServiceString)
+    private readonly likeServiceUnstable: ILikeService,
   ) {}
 
   @Post()

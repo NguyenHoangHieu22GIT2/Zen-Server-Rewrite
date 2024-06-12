@@ -9,7 +9,7 @@ export class MailerConfig implements MailerOptionsFactory {
     return {
       transport: {
         service: this.configService.get<string>('mailer_service'),
-        host: this.configService.get<string>('mailer_host'),
+        // host: this.configService.get<string>('mailer_host'),
         auth: {
           user: this.configService.get<string>('mailer_username'),
           pass: this.configService.get<string>('mailer_password'),

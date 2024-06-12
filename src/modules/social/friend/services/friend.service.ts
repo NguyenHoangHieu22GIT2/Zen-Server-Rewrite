@@ -1,11 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IFriendService } from './friend.interface';
 
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
+import {
+  DocumentMongodbType,
+  FriendAggregation,
+} from 'src/common/types/mongodbTypes';
 import { EndUserId } from 'src/common/types/utilTypes';
 import { Friend } from '../entities/friend.entity';
 import { TryCatchDecorator } from 'src/cores/decorators';
-import { FriendAggregation } from 'src/common/types/mongodbTypes/aggregationTypes/social/friend.aggregation';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { getFriendsAggregation } from 'src/cores/mongodb-aggregations';
 import { nameOfCollections } from 'src/common/constants';
@@ -24,7 +26,10 @@ export class FriendService implements IFriendService {
     leaderId: EndUserId,
     friendId: EndUserId,
   ): Promise<boolean> {
-    const result = await this.friendRepository.findOne({ leaderId, friendId });
+    const result = await this.friendRepository.findOne({
+      endUserId: leaderId,
+      endUserIds: friendId,
+    });
 
     if (!result) {
       return false;
@@ -38,7 +43,7 @@ export class FriendService implements IFriendService {
     endUserId: EndUserId,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _queryLimitSkip: QueryLimitSkip,
-  ): Promise<FriendAggregation> {
+  ): Promise<FriendAggregation[]> {
     const friends = await this.friendRepository.getFriendsAggregation([
       {
         $match: { endUserId: endUserId },
@@ -93,13 +98,13 @@ export class FriendService implements IFriendService {
       leaderId,
       friendId,
     });
-    return deletedFriend;
+    return deletedFriend[0];
   }
 
   public async getFriendList(
     endUserId: EndUserId,
     queryLimitSkip: QueryLimitSkip,
-  ): Promise<FriendAggregation> {
+  ): Promise<FriendAggregation[]> {
     const query = getFriendsAggregation(endUserId, queryLimitSkip);
     const friends = await this.friendRepository.getFriendsAggregation(query);
     return friends;
@@ -109,7 +114,7 @@ export class FriendService implements IFriendService {
     endUserId: EndUserId,
     name: string,
     queryLimitSkip: QueryLimitSkip,
-  ): Promise<FriendAggregation> {
+  ): Promise<FriendAggregation[]> {
     const query = getFriendsAggregation(endUserId, queryLimitSkip, [
       { $match: { name: { $regex: name, $options: 'i' } } },
     ]);

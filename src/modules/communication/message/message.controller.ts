@@ -32,7 +32,6 @@ export class MessageController {
       req.user._id,
       query.conversationId,
     );
-
     const messages = await this.messageService.getMessages(
       conversation._id,
       query,

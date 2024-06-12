@@ -9,6 +9,7 @@ import { EnduserModule } from './users/enduser/enduser.module';
 import { AdminModule } from './users/admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { GroupModule } from './community/group/group.module';
+import { GroupsModule } from './client-side/groups/groups.module';
 import { LikeModule } from './feeds/like/like.module';
 import { CommentModule } from './feeds/comment/comment.module';
 import { PostModule } from './feeds/post/post.module';
@@ -25,6 +26,10 @@ import { MailerConfig } from 'src/cores/configs/mailer.config';
 import { FriendRequestModule } from './social/friend-request/friend-request.module';
 import { FriendSystemModule } from './social/friend-system/friend-system.module';
 import { ChatModule } from './communication/chat/chat.module';
+import { ReceiptModule } from './receipt/receipt.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { PostsModule } from './client-side/posts/posts.module';
+import { ProfileModule } from './client-side/profile';
 
 @Module({
   imports: [
@@ -60,6 +65,11 @@ import { ChatModule } from './communication/chat/chat.module';
     FriendRequestModule,
     FriendSystemModule,
     ChatModule,
+    GroupsModule,
+    ReceiptModule,
+    SubscriptionsModule,
+    PostsModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserRedis],

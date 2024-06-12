@@ -12,7 +12,7 @@ import { isIdsEqual } from 'src/common/utils';
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 import {
   DocumentMongodbType,
-  // PopulateEndUserAggregation,
+  PopulateEndUserAggregation,
 } from 'src/common/types/mongodbTypes';
 import { FriendRequest } from '../entities/friend-request.entity';
 import { nameOfCollections } from 'src/common/constants';

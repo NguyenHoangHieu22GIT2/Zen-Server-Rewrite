@@ -15,6 +15,8 @@ import { IConversationServiceString } from '../conversation/service/conversation
 import { SendMessageDto } from './dto/send-message.dto';
 import { socketEmit } from './path/socket.emit';
 import { DeleteMessageDto } from './dto/delete-message.dto';
+import mongoose from 'mongoose';
+import { ConversationId, EndUserId } from 'src/common/types/utilTypes';
 // import { SendMessageDto } from './dto/send-message.dto';
 
 @WebSocketGateway()
@@ -43,11 +45,14 @@ export class ChatGateway {
 
   @SubscribeMessage(socketOn.sendMessage)
   public async sendMessage(@MessageBody() body: SendMessageDto) {
+    body.endUserId = new mongoose.Types.ObjectId(body.endUserId) as EndUserId;
+    body.conversationId = new mongoose.Types.ObjectId(
+      body.conversationId,
+    ) as ConversationId;
     const conversation = await this.conversationService.getConversation(
       body.endUserId,
       body.conversationId,
     );
-
     if (!conversation) {
       throw new UnauthorizedException(
         'You are not allowed to add message here!',

@@ -6,35 +6,31 @@ import {
   Inject,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { RequestUser } from 'src/common/types/utilTypes';
 import { LoggedInGuard } from 'src/modules/auth';
 import { FindGroupDto } from './dto/find-group.dto';
-import { GetGroupMembers } from './dto/get-group-members.dto';
+import { GetGroupMembersDto } from './dto/get-group-members.dto';
 import { DeleteGroupMember } from './dto/delete-group-member.dto';
 import { userJoinInSwaggerAPIDecorators } from 'src/documents/swagger-api/group-members/user-join-in.api';
-import {
-  findGroupMemberSwaggerAPIDecorators,
-  getGroupMembersSwaggerAPIDecorators,
-} from 'src/documents/swagger-api/group-members';
+import { getGroupMembersSwaggerAPIDecorators } from 'src/documents/swagger-api/group-members';
 import { DeleteGroupMemberSwaggerAPIDecorators } from 'src/documents/swagger-api/group-members/delete-group-member.api';
-import { FindGroupMemberDto } from './dto/find-group-member.dto';
-import { TryCatchDecorator } from 'src/cores/decorators/TryCatch.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import {
-  IGroupMembersServiceUnstable,
-  IGroupMembersServiceUnstableString,
-} from './services/unstable/group-members.interface';
+  IGroupMembersService,
+  IGroupMembersServiceString,
+} from './services/group-members.interface';
+import { QueryLimitSkip } from 'src/cores/global-dtos';
 
 @Controller('group-members')
-@TryCatchDecorator()
 @ApiTags('Group Member')
 export class GroupMembersController {
   constructor(
-    @Inject(IGroupMembersServiceUnstableString)
-    private readonly groupMembersService: IGroupMembersServiceUnstable,
+    @Inject(IGroupMembersServiceString)
+    private readonly groupMembersService: IGroupMembersService,
   ) {}
 
   @Post()
@@ -51,29 +47,35 @@ export class GroupMembersController {
     return groupMember;
   }
 
-  @Get()
+  @Get(':groupId')
   @UseGuards(LoggedInGuard)
   @getGroupMembersSwaggerAPIDecorators()
-  async getGroupMembers(@Param() param: GetGroupMembers) {
-    const groupMembers = await this.groupMembersService.getGroupMembers(param);
+  async getGroupMembers(
+    @Param() param: GetGroupMembersDto,
+    @Query() query: QueryLimitSkip,
+  ) {
+    const groupMembers = await this.groupMembersService.getGroupMembers(
+      param,
+      query,
+    );
     return groupMembers;
   }
 
-  @Get(':endUserId')
-  @UseGuards(LoggedInGuard)
-  @findGroupMemberSwaggerAPIDecorators()
-  async findGroupMember(
-    @Param() params: FindGroupMemberDto,
-    // This will be used for later when we implement Private and public group
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    @Req() req: RequestUser,
-  ) {
-    const groupMember = await this.groupMembersService.findGroupMember({
-      endUserId: params.endUserId,
-      groupId: params.groupId,
-    });
-    return groupMember;
-  }
+  // @Get(':endUserId')
+  // @UseGuards(LoggedInGuard)
+  // @findGroupMemberSwaggerAPIDecorators()
+  // async findGroupMember(
+  //   @Param() params: FindGroupMemberDto,
+  //   // This will be used for later when we implement Private and public group
+  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //   @Req() req: RequestUser,
+  // ) {
+  //   const groupMember = await this.groupMembersService.findGroupMember({
+  //     endUserId: params.endUserId,
+  //     groupId: params.groupId,
+  //   });
+  //   return groupMember;
+  // }
 
   @Delete(':endUserId')
   @UseGuards(LoggedInGuard)

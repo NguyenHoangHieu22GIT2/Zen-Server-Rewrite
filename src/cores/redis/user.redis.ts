@@ -13,7 +13,6 @@ import { ConvertObjectToHash } from 'src/common/utils/index';
 export class UserRedis {
   //HASH
   static async userConvertToRedisTypeThenHSET(email: string, endUser: EndUser) {
-    console.log("John made it, he's the only one:", endUser);
     const convertedUser = ConvertObjectToHash(endUser);
     return RedisClient.HSET(userKey(email), convertedUser);
   }

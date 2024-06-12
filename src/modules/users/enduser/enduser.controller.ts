@@ -9,6 +9,7 @@ import {
   UploadedFile,
   Req,
   Inject,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SerializeDecorator } from 'src/cores/interceptors/';
@@ -24,6 +25,8 @@ import {
   IEndUserService,
   IEndUserServiceString,
 } from './services/enduser.interface.service';
+import { QueryLimitSkip } from 'src/cores/global-dtos';
+import { SearchUsersDto } from './dto/search-users.dto';
 
 @ApiTags('End User')
 @Controller('endusers')
@@ -34,6 +37,18 @@ export class EnduserController {
     @Inject(IEndUserServiceString)
     private readonly endUserService: IEndUserService,
   ) {}
+
+  @Get()
+  public async find(@Query() query: QueryLimitSkip) {
+    const users = await this.endUserService.find(query);
+    return users;
+  }
+
+  @Get('search')
+  public async search(@Query() query: SearchUsersDto) {
+    const users = await this.endUserService.searchByUsername(query);
+    return users;
+  }
 
   @Get('/:endUserId')
   @FindOneEndUserSwaggerAPIDecorators()

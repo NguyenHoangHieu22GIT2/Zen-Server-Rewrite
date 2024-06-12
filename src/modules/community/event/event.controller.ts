@@ -16,17 +16,11 @@ import {
   IEventServiceUnstableString,
 } from './services/unstable/event.unstable.interface';
 import { ApiTags } from '@nestjs/swagger';
-import {
-  IGroupServiceUnstable,
-  IGroupServiceUnstableString,
-} from '../group/services';
+
 import { RequestUser } from 'src/common/types/utilTypes';
 import { CreateEventDto, ModifyEventDto } from './dto';
 import { FindEventDto } from './dto/find-event.dto';
-import {
-  IGroupMembersServiceUnstable,
-  IGroupMembersServiceUnstableString,
-} from '../group-members/services/unstable/group-members.interface';
+
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { FindGroupDto } from '../group-members';
 import { createEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/create-event.api';
@@ -34,7 +28,12 @@ import { getEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/g
 import { findEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/find-event.api';
 import { modifyEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/modify-event.dto';
 import { deleteEventSwaggerAPIDecorators } from 'src/documents/swagger-api/events/delete-event.api';
-
+import { IGroupService, IGroupServiceString } from '../group/services';
+import {
+  IGroupMembersService,
+  IGroupMembersServiceString,
+} from '../group-members/services/group-members.interface';
+// TODO: Really coupled with other modules! Not good
 @Controller('event')
 @ApiTags('Event')
 export class EventController {
@@ -42,11 +41,11 @@ export class EventController {
     @Inject(IEventServiceUnstableString)
     private readonly eventService: IEventServiceUnstable,
 
-    @Inject(IGroupServiceUnstableString)
-    private readonly groupService: IGroupServiceUnstable,
+    @Inject(IGroupServiceString)
+    private readonly groupService: IGroupService,
 
-    @Inject(IGroupMembersServiceUnstableString)
-    private readonly groupMembersService: IGroupMembersServiceUnstable,
+    @Inject(IGroupMembersServiceString)
+    private readonly groupMembersService: IGroupMembersService,
   ) {}
 
   @Post()

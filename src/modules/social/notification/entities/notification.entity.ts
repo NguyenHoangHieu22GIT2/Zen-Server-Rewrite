@@ -1,48 +1,44 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
 import { NotificationId } from 'src/common/types/utilTypes/Brand';
+import { NounEntity } from './noun.entity';
 
 export type NotificationType =
   | 'comment'
   | 'like'
-  | 'mention ' // TODO:Not implement for now, but will be in the future
+  | 'mention' // TODO:Not implement for now, but will be in the future
   | 'friend_request';
 
 /**
  * Use Event-Grammer Model
  * */
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, strictQuery: true })
 export class Notification {
   _id: NotificationId;
 
   @Prop({
-    required: true,
-    type: Types.ObjectId,
+    type: NounEntity,
   })
-  subjectId: Types.ObjectId;
+  subject: NounEntity;
 
   @Prop({ required: true, type: String })
   verb: NotificationType;
 
   @Prop({
-    required: true,
-    type: Types.ObjectId,
+    type: NounEntity,
   })
-  directObjectId: Types.ObjectId;
+  directObject: NounEntity;
 
   @Prop({
-    required: false,
-    type: Types.ObjectId,
+    type: NounEntity,
   })
-  indirectObjectId: Types.ObjectId;
+  indirectObject: NounEntity;
 
   @Prop({
-    required: false,
-    type: Types.ObjectId,
+    type: NounEntity,
   })
-  prepObjectId: Types.ObjectId;
+  prepObject: NounEntity;
 
-  @Prop({ required: true, type: String })
+  @Prop({ required: false, type: String })
   referenceLink: string;
 
   @Prop({ required: true, type: Boolean, default: false })

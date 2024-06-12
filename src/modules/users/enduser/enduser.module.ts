@@ -25,5 +25,11 @@ import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.in
   imports: [
     MongooseModule.forFeature([{ name: EndUser.name, schema: EndUserSchema }]),
   ],
+  exports: [
+    {
+      provide: IEndUserServiceString,
+      useClass: EndUserService,
+    },
+  ],
 })
 export class EnduserModule {}
