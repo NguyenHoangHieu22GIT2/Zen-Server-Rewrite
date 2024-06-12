@@ -1,10 +1,8 @@
 import {
-  Body,
   Controller,
   Get,
   Inject,
   Param,
-  Put,
   Query,
   Req,
   UseGuards,
@@ -12,15 +10,14 @@ import {
 
 import { ApiTags } from '@nestjs/swagger';
 import { LoggedInGuard } from 'src/modules/auth';
-import { FindFriendDto } from './dto';
 import { RequestUser } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { FindFriendsByName } from './dto/find-friends-by-name.dto';
 import { GetFriendsRecommendationSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/get-friends-recommendation.api';
-import { RemoveFriendSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/remove-friend.api';
 import { SearchFriendsByNameSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/search-friends-by-name.api';
 import { GetFriendListSwaggerAPIDecorators } from 'src/documents/swagger-api/friends/get-friend-list.api';
 import { IFriendService, IFriendServiceString } from './services';
+import { FindByIdEndUserDto } from 'src/modules/users/enduser';
 
 /**
  * leaderId => the user doing the action
@@ -63,6 +60,7 @@ export class FriendController {
     );
     return friends;
   }
+
   @GetFriendListSwaggerAPIDecorators()
   @Get()
   public async getFriendList(
@@ -71,6 +69,19 @@ export class FriendController {
   ) {
     const friendList = await this.friendService.getFriendList(
       req.user._id,
+      query,
+    );
+    return friendList;
+  }
+  @GetFriendListSwaggerAPIDecorators()
+  @Get(':endUserId')
+  public async getFriendListOfUser(
+    @Req() req: RequestUser,
+    @Param() param: FindByIdEndUserDto,
+    @Query() query: QueryLimitSkip,
+  ) {
+    const friendList = await this.friendService.getFriendList(
+      param.endUserId,
       query,
     );
     return friendList;

@@ -8,10 +8,14 @@ import { FriendRequestRepository } from '../repository/friend-request.repository
 import { EndUserId, FriendRequestId } from 'src/common/types/utilTypes';
 import { IFriendRequestService } from './friend-request.interface.service';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
-import { emptyObj, isIdsEqual } from 'src/common/utils';
+import { isIdsEqual } from 'src/common/utils';
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
-import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
+import {
+  DocumentMongodbType,
+  // PopulateEndUserAggregation,
+} from 'src/common/types/mongodbTypes';
 import { FriendRequest } from '../entities/friend-request.entity';
+import { nameOfCollections } from 'src/common/constants';
 
 @Injectable()
 export class FriendRequestService implements IFriendRequestService {
@@ -54,13 +58,35 @@ export class FriendRequestService implements IFriendRequestService {
     endUserId: EndUserId,
     queryLimitSkip: QueryLimitSkip,
   ) {
-    const result = await this.friendRequestRepository.find(
-      {
-        leaderId: endUserId,
-      },
-      emptyObj,
-      { ...queryLimitSkip },
-    );
+    const result: PopulateEndUserAggregation<FriendRequest>[] =
+      await this.friendRequestRepository.findByAggregation([
+        { $match: { friendId: endUserId } },
+        { $skip: queryLimitSkip.skip },
+        { $limit: queryLimitSkip.limit },
+        {
+          $lookup: {
+            from: nameOfCollections.EndUser,
+            localField: 'leaderId',
+            foreignField: '_id',
+            as: 'userFull',
+          },
+        },
+        {
+          $unwind: '$userFull',
+        },
+        {
+          $set: {
+            endUser: {
+              _id: '$userFull._id',
+              username: '$userFull.username',
+              avatar: '$userFull.avatar',
+            },
+          },
+        },
+        {
+          $unset: ['userFull', 'friendId', 'leaderId', 'updatedAt', '__v'],
+        },
+      ]);
     return result;
   }
 
@@ -91,6 +117,7 @@ export class FriendRequestService implements IFriendRequestService {
         'You already accepted this friend request!',
       );
     }
+
     result.state = 'accepted';
     return result.save();
   }

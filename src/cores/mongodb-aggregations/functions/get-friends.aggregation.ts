@@ -4,7 +4,7 @@ import { QueryLimitSkip } from 'src/cores/global-dtos';
 export function getFriendsAggregation(
   endUserId: EndUserId,
   queryLimitSkip: QueryLimitSkip,
-  optionalQuery?: PipelineStage[],
+  optionalQuery: PipelineStage[] = [],
 ): PipelineStage[] {
   return [
     {
