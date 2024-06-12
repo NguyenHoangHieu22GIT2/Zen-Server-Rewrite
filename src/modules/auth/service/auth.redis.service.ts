@@ -5,7 +5,7 @@ import { EndUser } from 'src/modules/users/enduser/entities/enduser.entity';
 
 @Injectable()
 @ExecuteIfRedisAvailableDecorator()
-export class AuthRedisStableService {
+export class AuthRedisService {
   async userConvertToRedisTypeThenHSET(user: EndUser) {
     UserRedis.userConvertToRedisTypeThenHSET(user.email, user);
   }

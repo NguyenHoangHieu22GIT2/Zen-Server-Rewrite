@@ -1,8 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EndUserId, MockedMethods } from 'src/common/types/utilTypes';
-import { AuthServiceUnstable } from './auth.unstable.service';
-import { AuthServiceStable } from '../stable';
-import { IAuthServiceStableString } from '../stable/auth.stable.interface';
 import { EndUser } from 'src/modules/users/enduser';
 import mongoose from 'mongoose';
 import { v4 } from 'uuid';
@@ -11,9 +8,11 @@ import { gender } from 'src/common/constants';
 import { describe } from 'node:test';
 import * as bcrypt from 'bcryptjs';
 import { tryCatchForTest } from 'src/common/utils/tests/tryCatchForTest';
+import { IAuthService } from './auth.interface';
+import { AuthRepository } from '../repository/auth.repository';
 describe('Auth Service Unstable', () => {
-  let service: AuthServiceUnstable;
-  let mockupStableService: MockedMethods<AuthServiceStable>;
+  let service: IAuthService;
+  let mockupRepository: MockedMethods<AuthRepository>;
   const rawPassword = faker.internet.password();
   const hashedPassword = bcrypt.hashSync(rawPassword, 2);
   const testEndUser: EndUser & { save: () => any } = {
@@ -39,11 +38,7 @@ describe('Auth Service Unstable', () => {
   };
   beforeEach(async () => {
     jest.clearAllMocks();
-    mockupStableService = {
-      findAccountFilterQuery: jest.fn(),
-      findAccountById: jest.fn(),
-      create: jest.fn(),
-    };
+    mockupRepository = {};
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [

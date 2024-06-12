@@ -2,24 +2,24 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EndUser, EndUserSchema } from 'src/modules/users/enduser/';
 import {
-  AuthServiceStable,
   LocalStrategy,
   AuthSerializer,
-  AuthRedisStableService,
-  AuthServiceUnstable,
+  AuthRedisService,
   AuthController,
+  AuthService,
 } from './';
-import { IAuthServiceStableString } from './stable/auth.stable.interface';
-import { IAuthUnstableServiceString } from './unstable/auth.unstable.interface';
+import { IAuthServiceString } from './service/auth.interface';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
+import { AuthRepository } from './repository/auth.repository';
 
 @Module({
   controllers: [AuthController],
   providers: [
-    { useClass: AuthServiceStable, provide: IAuthServiceStableString },
-    { useClass: AuthServiceUnstable, provide: IAuthUnstableServiceString },
+    { useClass: AuthService, provide: IAuthServiceString },
+    { provide: BaseRepositoryName, useClass: AuthRepository },
     LocalStrategy,
     AuthSerializer,
-    AuthRedisStableService,
+    AuthRedisService,
   ],
   imports: [
     MongooseModule.forFeature([{ name: EndUser.name, schema: EndUserSchema }]),

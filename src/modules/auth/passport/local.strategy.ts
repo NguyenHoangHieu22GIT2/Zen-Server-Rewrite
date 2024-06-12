@@ -2,15 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { UserRedis } from 'src/cores/redis/user.redis';
-import {
-  IAuthUnstableService,
-  IAuthUnstableServiceString,
-} from '../unstable/auth.unstable.interface';
+import { IAuthService, IAuthServiceString } from '../service/auth.interface';
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @Inject(IAuthUnstableServiceString)
-    private readonly authService: IAuthUnstableService,
+    @Inject(IAuthServiceString)
+    private readonly authService: IAuthService,
   ) {
     super({
       usernameField: 'email',

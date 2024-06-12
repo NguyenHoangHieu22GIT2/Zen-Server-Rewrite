@@ -6,22 +6,21 @@ import {
   ForgotPasswordDto,
   LoginEndUserDto,
   RegisterEndUserDto,
-} from '../dto/';
+} from '../dto';
 import { EndUser } from 'src/modules/users/enduser/';
 import { v4 } from 'uuid';
 import { checkingToConvertToObjectFromDocument } from 'src/common/utils/';
-import {
-  IAuthServiceStable,
-  IAuthServiceStableString,
-} from '../stable/auth.stable.interface';
-import { IAuthUnstableService } from './auth.unstable.interface';
+
 import { FilterQuery } from 'mongoose';
 import { isNullOrUndefined } from 'src/common/utils/';
+import { AuthRepository } from '../repository/auth.repository';
+import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
+import { IAuthService } from './auth.interface';
 @Injectable()
-export class AuthServiceUnstable implements IAuthUnstableService {
+export class AuthService implements IAuthService {
   constructor(
-    @Inject(IAuthServiceStableString)
-    private readonly authServiceStable: IAuthServiceStable,
+    @Inject(BaseRepositoryName)
+    private readonly authRepsitory: AuthRepository,
   ) {}
 
   async registerAccount(registerEndUserDto: RegisterEndUserDto) {
@@ -35,18 +34,19 @@ export class AuthServiceUnstable implements IAuthUnstableService {
       password: hashedPassword,
       activationToken: v4(),
     };
-    const createdAccount = await this.authServiceStable.create(accountInfo);
+    const createdAccount = await this.authRepsitory.create(accountInfo);
 
     return createdAccount;
   }
 
   async findAccountFilterQuery(filterQuery: FilterQuery<EndUser>) {
-    return this.authServiceStable.findAccountFilterQuery(filterQuery);
+    return this.authRepsitory.findOne(filterQuery);
   }
 
   async activateAccount({ activationToken }: ActivateAccountDto) {
-    const inactivateAccount =
-      await this.authServiceStable.findAccountFilterQuery({ activationToken });
+    const inactivateAccount = await this.authRepsitory.findOne({
+      activationToken,
+    });
 
     if (isNullOrUndefined(inactivateAccount)) {
       throw new UnauthorizedException('We found no account with this token!');
@@ -60,7 +60,7 @@ export class AuthServiceUnstable implements IAuthUnstableService {
   }
 
   async loginAccount(loginEndUserDto: LoginEndUserDto) {
-    const existedAccount = await this.authServiceStable.findAccountFilterQuery({
+    const existedAccount = await this.authRepsitory.findOne({
       email: loginEndUserDto.email,
     });
     if (isNullOrUndefined(existedAccount)) {
@@ -89,7 +89,7 @@ export class AuthServiceUnstable implements IAuthUnstableService {
   }
 
   async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
-    const user = await this.authServiceStable.findAccountFilterQuery({
+    const user = await this.authRepsitory.findOne({
       email: forgotPasswordDto.email,
     });
 
@@ -106,7 +106,7 @@ export class AuthServiceUnstable implements IAuthUnstableService {
   async changeForgottonPassword(
     changeForgottonPasswordDto: ChangeForgottonPasswordDto,
   ) {
-    const existedAccount = await this.authServiceStable.findAccountFilterQuery({
+    const existedAccount = await this.authRepsitory.findOne({
       modifyToken: changeForgottonPasswordDto.modifyToken,
     });
 

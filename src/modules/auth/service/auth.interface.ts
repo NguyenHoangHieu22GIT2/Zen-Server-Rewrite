@@ -9,9 +9,9 @@ import {
 import { EndUser } from 'src/modules/users/enduser';
 import { FilterQuery } from 'mongoose';
 
-export const IAuthUnstableServiceString = 'IAuthUnstableService';
+export const IAuthServiceString = 'IAuthService';
 
-export interface IAuthUnstableService {
+export interface IAuthService {
   registerAccount(
     registerEndUserDto: RegisterEndUserDto,
   ): Promise<DocumentMongodbType<EndUser>>;
