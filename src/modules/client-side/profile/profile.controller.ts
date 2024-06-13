@@ -53,7 +53,7 @@ export class ProfileController {
     @Param() param: FindByIdEndUserDto,
     @Query() query: QueryLimitSkip,
   ) {
-    const endUser = await this.endUserService.findById(req.user._id);
+    const endUser = await this.endUserService.findById(param.endUserId);
 
     const isFriend = await this.friendService.isFriends(
       req.user._id,
