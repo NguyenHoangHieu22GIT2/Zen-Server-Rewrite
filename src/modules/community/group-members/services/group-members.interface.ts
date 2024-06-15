@@ -7,6 +7,7 @@ import { FindGroupDto } from '../dto';
 import { EndUserId, GroupId } from 'src/common/types/utilTypes';
 import { GroupIdAndUserIdObject } from './group-members.service';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
+import { PipelineStage } from 'mongoose';
 
 export const IGroupMembersServiceString = 'IGroupMembersService';
 
@@ -19,6 +20,8 @@ export interface IGroupMembersService {
     findGroupDto: FindGroupDto,
     queryLimitSkip: QueryLimitSkip,
   ): Promise<PopulateEndUserAggregation<GroupMember>[]>;
+
+  getGroupMembersAggregation<T>(pipelineStages: PipelineStage[]): Promise<T[]>;
 
   findGroupMember(
     groupIdAndUserIdObject: GroupIdAndUserIdObject,

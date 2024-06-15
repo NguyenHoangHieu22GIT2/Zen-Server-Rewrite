@@ -1,8 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { EndUserId, GroupId } from 'src/common/types/utilTypes';
-import { Group } from 'src/modules/community/group/entities';
 import { IGroupMembersService } from './group-members.interface';
-import { isIdsEqual } from 'src/common/utils';
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 import { GroupMembersRepository } from '../repository/group-members.repository';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
@@ -10,6 +8,7 @@ import { FindGroupDto } from '../dto';
 import { GroupMember } from '../entities';
 import { PopulateEndUserAggregation } from 'src/common/types/mongodbTypes';
 import { nameOfCollections } from 'src/common/constants';
+import { PipelineStage } from 'mongoose';
 export type GroupIdAndUserIdObject = {
   endUserId: EndUserId;
   groupId: GroupId;
@@ -17,18 +16,23 @@ export type GroupIdAndUserIdObject = {
 @Injectable()
 export class GroupMembersService implements IGroupMembersService {
   constructor(
-    // @Inject(IgroupRepositoryString)
-    // private readonly groupRepository: IgroupRepository,
     @Inject(BaseRepositoryName)
-    private readonly groupRepository: GroupMembersRepository,
+    private readonly groupMemberRepository: GroupMembersRepository,
   ) {}
+  public async getGroupMembersAggregation<T>(
+    pipelineStages: PipelineStage[],
+  ): Promise<T[]> {
+    const groups =
+      await this.groupMemberRepository.findByAggregation<T>(pipelineStages);
+    return groups;
+  }
 
   public async countGroupMembers(groupId: GroupId): Promise<number> {
-    return this.groupRepository.countDocuments({ groupId });
+    return this.groupMemberRepository.countDocuments({ groupId });
   }
 
   async addGroupMember(groupIdAndUserIdObject: GroupIdAndUserIdObject) {
-    return this.groupRepository.create({
+    return this.groupMemberRepository.create({
       groupId: groupIdAndUserIdObject.groupId,
       endUserId: groupIdAndUserIdObject.endUserId,
     });
@@ -43,7 +47,7 @@ export class GroupMembersService implements IGroupMembersService {
     //   queryLimitSkip,
     // );
     const result: PopulateEndUserAggregation<GroupMember>[] =
-      await this.groupRepository.findByAggregation([
+      await this.groupMemberRepository.findByAggregation([
         { $skip: queryLimitSkip.skip },
         { $limit: queryLimitSkip.limit },
         {
@@ -74,7 +78,7 @@ export class GroupMembersService implements IGroupMembersService {
   }
 
   async findGroupMember({ endUserId, groupId }: GroupIdAndUserIdObject) {
-    const groupMember = await this.groupRepository.findOne({
+    const groupMember = await this.groupMemberRepository.findOne({
       endUserId,
       groupId,
     });
@@ -84,7 +88,7 @@ export class GroupMembersService implements IGroupMembersService {
     hostId: EndUserId,
     { endUserId, groupId }: GroupIdAndUserIdObject,
   ) {
-    const groupMember = await this.groupRepository.findOne({
+    const groupMember = await this.groupMemberRepository.findOne({
       endUserId,
       groupId,
     });

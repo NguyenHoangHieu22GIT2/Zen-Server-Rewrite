@@ -22,9 +22,15 @@ export type IPostServiceArgs = {
 
   findPost: FindPostDto;
 
+  getUserPostsFromGroup: {
+    endUserId: EndUserId;
+    queryLimitSkip: QueryLimitSkip;
+    groupId: GroupId;
+  };
+
   getUserPosts: {
     endUserId: EndUserId;
-    getUserPostsDto: GetUserPostsDto;
+    queryLimitSkip: QueryLimitSkip;
   };
 
   getGroupPosts: {
@@ -65,7 +71,7 @@ export interface IPostService {
   ): Promise<PopulateEndUserAggregation<Post> & T>;
 
   getUserPostsFromGroup<T extends object>(
-    getuserPosts: IPostServiceArgs['getUserPosts'],
+    getuserPosts: IPostServiceArgs['getUserPostsFromGroup'],
   ): Promise<(PopulateEndUserAggregation<Post> & T)[]>;
 
   getUserPostsFromProfile<T extends object>(
@@ -76,9 +82,9 @@ export interface IPostService {
     args: IPostServiceArgs['getGroupPosts'],
   ): Promise<(PopulateEndUserAggregation<Post> & T)[]>;
 
-  getPostsAggregation(
+  getPostsAggregation<T extends object>(
     getPostsAggregation: IPostServiceArgs['getPostsAggregation'],
-  ): Promise<PopulateEndUserAggregation<Post>[]>;
+  ): Promise<(PopulateEndUserAggregation<Post> & T)[]>;
 
   getRecommendedPosts<T extends object>(
     getRecommendedPost: IPostServiceArgs['getRecommendedPost'],

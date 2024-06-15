@@ -65,7 +65,7 @@ export class ProfileController {
       numOfLikes: number;
     }>({
       endUserId: param.endUserId,
-      getUserPostsDto: { ...query },
+      queryLimitSkip: query,
     });
 
     for (let i = 0; i < posts.length; i++) {
