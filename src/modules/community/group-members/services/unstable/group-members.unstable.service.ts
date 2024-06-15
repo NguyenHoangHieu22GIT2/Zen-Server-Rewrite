@@ -37,6 +37,7 @@ export class GroupMembersServiceUnstable
     );
     return groupMember;
   }
+
   async deleteGroupMember(
     hostId: EndUserId,
     groupIdAndUserIdObject: GroupIdAndUserIdObject,
@@ -52,7 +53,7 @@ export class GroupMembersServiceUnstable
     if (isIdsEqual(hostId, groupPopulatedInGroupMember.endUserId)) {
       throw new BadRequestException("You don't have access to this!");
     }
-    groupMember.deleteOne();
+    await groupMember.deleteOne();
     return groupMember;
   }
 }
