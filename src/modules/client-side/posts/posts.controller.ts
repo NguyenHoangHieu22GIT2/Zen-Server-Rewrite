@@ -40,7 +40,7 @@ export class PostsController {
     private readonly friendService: IFriendService,
   ) {}
 
-  @Get()
+  @Get('/search')
   public async searchPosts(
     @Req() req: RequestUser,
     @Query() searchPostsDto: SearchPostsDto,

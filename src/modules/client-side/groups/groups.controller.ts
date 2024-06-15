@@ -49,7 +49,7 @@ export class GroupsController {
   @Get('join-groups')
   public async getJoinedGroups(
     @Req() req: RequestUser,
-    @Param() query: QueryLimitSkip,
+    @Query() query: QueryLimitSkip,
   ) {
     const results = await this.groupMemberService.getGroupMembersAggregation<{
       group: Group;

@@ -103,7 +103,7 @@ export class GroupMembersService implements IGroupMembersService {
     // if (isIdsEqual(hostId, groupPopulatedInGroupMember.endUserId)) {
     //   throw new BadRequestException("You don't have access to this!");
     // }
-    groupMember.deleteOne();
+    await groupMember.deleteOne();
     console.log(groupMember);
     return groupMember;
   }
