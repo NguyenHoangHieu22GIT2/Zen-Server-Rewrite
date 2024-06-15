@@ -9,6 +9,7 @@ import { GroupMember } from '../entities';
 import { PopulateEndUserAggregation } from 'src/common/types/mongodbTypes';
 import { nameOfCollections } from 'src/common/constants';
 import { PipelineStage } from 'mongoose';
+import { noObj } from 'src/common/utils';
 export type GroupIdAndUserIdObject = {
   endUserId: EndUserId;
   groupId: GroupId;
@@ -29,6 +30,18 @@ export class GroupMembersService implements IGroupMembersService {
 
   public async countGroupMembers(groupId: GroupId): Promise<number> {
     return this.groupMemberRepository.countDocuments({ groupId });
+  }
+
+  public async getGroupsJoined(
+    endUserId: EndUserId,
+    { limit, skip }: QueryLimitSkip,
+  ) {
+    const groupsJoined = await this.groupMemberRepository.find(
+      { endUserId },
+      noObj,
+      { limit, skip },
+    );
+    return groupsJoined;
   }
 
   async addGroupMember(groupIdAndUserIdObject: GroupIdAndUserIdObject) {
@@ -103,7 +116,7 @@ export class GroupMembersService implements IGroupMembersService {
     // if (isIdsEqual(hostId, groupPopulatedInGroupMember.endUserId)) {
     //   throw new BadRequestException("You don't have access to this!");
     // }
-    groupMember.deleteOne();
+    await groupMember.deleteOne();
     console.log(groupMember);
     return groupMember;
   }

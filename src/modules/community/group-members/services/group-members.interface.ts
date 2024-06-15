@@ -21,6 +21,11 @@ export interface IGroupMembersService {
     queryLimitSkip: QueryLimitSkip,
   ): Promise<PopulateEndUserAggregation<GroupMember>[]>;
 
+  getGroupsJoined(
+    endUserId: EndUserId,
+    queryLimitSkip: QueryLimitSkip,
+  ): Promise<DocumentMongodbType<GroupMember>[]>;
+
   getGroupMembersAggregation<T>(pipelineStages: PipelineStage[]): Promise<T[]>;
 
   findGroupMember(
