@@ -46,6 +46,7 @@ import {
 } from 'src/documents/swagger-api/posts/';
 import { FindByIdEndUserDto } from 'src/modules/users/enduser';
 import { IPostService, IPostServiceString } from './services/post.interface';
+import { getUserPostsFromGroupDto } from './dto/get-user-posts-from-group.dto';
 
 @ApiTags('Post')
 @Controller('posts')
@@ -107,11 +108,11 @@ export class PostController {
   @GetPostsSwaggerAPIDecorators()
   async getUserPostsFromProfile(
     @Param() param: FindByIdEndUserDto,
-    @Query() getUserPostsDto: GetUserPostsDto,
+    @Query() queryLimitSkip: QueryLimitSkip,
   ) {
     const posts = await this.postService.getUserPostsFromProfile({
-      getUserPostsDto,
       endUserId: param.endUserId,
+      queryLimitSkip: queryLimitSkip,
     });
     await this.postRedisService.savePosts(posts);
 
@@ -122,11 +123,15 @@ export class PostController {
   @GetPostsSwaggerAPIDecorators()
   async getUserPostsFromGroup(
     @Param() param: FindByIdEndUserDto,
-    @Query() getUserPostsDto: GetUserPostsDto,
+    @Query() getUserPostsFromGroupDto: getUserPostsFromGroupDto,
   ) {
     const posts = await this.postService.getUserPostsFromGroup({
-      getUserPostsDto,
       endUserId: param.endUserId,
+      queryLimitSkip: {
+        limit: getUserPostsFromGroupDto.limit,
+        skip: getUserPostsFromGroupDto.skip,
+      },
+      groupId: getUserPostsFromGroupDto.groupId,
     });
 
     await this.postRedisService.savePosts(posts);

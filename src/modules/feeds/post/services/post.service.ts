@@ -14,6 +14,7 @@ import { GroupId } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { PopulateEndUserAggregation } from 'src/common/types/mongodbTypes';
 import { Post } from '../entities';
+
 @Injectable()
 @TryCatchDecorator()
 export class PostService implements IPostService {
@@ -57,38 +58,37 @@ export class PostService implements IPostService {
   }
 
   public async getUserPostsFromProfile<T>({
-    getUserPostsDto,
+    queryLimitSkip,
     endUserId,
   }: IPostServiceArgs['getUserPosts']) {
     const posts = await this.postRepository.getPostsAggregation<T>({
-      queryLimitSkip: getUserPostsDto,
+      queryLimitSkip: queryLimitSkip,
       queryAggregation: [{ $match: { endUserId: endUserId } }],
     });
     return posts;
   }
 
   public async getUserPostsFromGroup<T>({
-    getUserPostsDto,
     endUserId,
-  }: IPostServiceArgs['getUserPosts']) {
-    const query: PipelineStage[] = [{ $match: { endUserId: endUserId } }];
-
-    if (getUserPostsDto.groupId) {
-      query[0]['$match'].groupId = getUserPostsDto.groupId;
-    }
+    queryLimitSkip,
+    groupId,
+  }: IPostServiceArgs['getUserPostsFromGroup']) {
+    const query: PipelineStage[] = [
+      { $match: { endUserId: endUserId, groupId: groupId } },
+    ];
 
     const posts = await this.postRepository.getPostsAggregation<T>({
-      queryLimitSkip: getUserPostsDto,
+      queryLimitSkip: queryLimitSkip,
       queryAggregation: query,
     });
     return posts;
   }
 
-  public async getPostsAggregation({
+  public async getPostsAggregation<T>({
     queryLimitSkip,
     pipelineStages,
   }: IPostServiceArgs['getPostsAggregation']) {
-    return this.postRepository.getPostsAggregation({
+    return this.postRepository.getPostsAggregation<T>({
       queryAggregation: pipelineStages,
       queryLimitSkip,
     });

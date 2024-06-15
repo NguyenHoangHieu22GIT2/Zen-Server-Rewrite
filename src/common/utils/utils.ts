@@ -12,7 +12,6 @@ const emptyObj = {};
 const noop = () => {};
 
 const noObj = {};
-
 const checkMongodbIdInTransform = (opts: TransformFnParams) =>
   checkToConvertToMongoIdOrThrowError({ id: opts.value, returnError: false });
 
