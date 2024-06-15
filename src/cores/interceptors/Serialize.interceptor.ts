@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
+import mongoose from 'mongoose';
 
 // Easier to call
 export function SerializeDecorator(serializeDto: any) {

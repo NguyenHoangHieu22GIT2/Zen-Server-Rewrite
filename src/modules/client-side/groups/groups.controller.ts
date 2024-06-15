@@ -51,49 +51,22 @@ export class GroupsController {
     @Req() req: RequestUser,
     @Query() query: QueryLimitSkip,
   ) {
-    const results = await this.groupMemberService.getGroupMembersAggregation<{
-      group: Group;
-    }>([
-      {
-        $match: { endUserId: req.user._id },
-      },
-      { $limit: query.limit },
-      { $skip: query.skip },
-      {
-        $lookup: {
-          from: nameOfCollections.Group,
-          localField: 'groupId',
-          foreignField: 'id',
-          as: 'group',
-        },
-      },
-      {
-        $project: {
-          group: 1,
-        },
-      },
-      {
-        $lookup: {
-          from: nameOfCollections.EndUser,
-          localField: 'group.endUserId',
-          foreignField: 'id',
-          as: 'endUser',
-        },
-      },
-      {
-        $unset: [
-          'group.endUser.password',
-          'group.endUser.activationToken',
-          'group.endUser.modifyToken',
-        ],
-      },
-    ]);
+    const groupsJoined = await this.groupMemberService.getGroupsJoined(
+      req.user._id,
+      query,
+    );
+
+    for (let i = 0; i < groupsJoined.length; i++) {
+      const groupJoined = groupsJoined[i];
+
+      await groupJoined.populate('groupId');
+    }
 
     const groupsCreated = await this.groupService.getYourCreatedGroups(
       req.user._id,
       query,
     );
-    return { groupsJoined: results, groupsCreated };
+    return { groupsJoined, groupsCreated };
   }
 
   @Get()
