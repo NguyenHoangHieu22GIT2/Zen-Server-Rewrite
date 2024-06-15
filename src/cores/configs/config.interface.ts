@@ -4,8 +4,8 @@ export interface IConfig {
   db_name: string;
   app_name: string;
   redis_host: string;
-  mailer_password: string;
   redis_port: number;
+  mailer_password: string;
   mailer_username: string;
   mailer_service: string;
   mailer_host: string;
