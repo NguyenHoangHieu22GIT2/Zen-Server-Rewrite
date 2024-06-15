@@ -99,10 +99,33 @@ export class GroupController {
     return this.groupService.deleteGroup(req.user._id, param.groupId);
   }
 
-  @Patch()
+  @Patch(':groupId')
+  @UseInterceptors(FilesInterceptor('files'))
   @UseGuards(LoggedInGuard)
   @modifyGroupSwaggerAPIDecorators()
-  modifyGroup(@Req() req: RequestUser, modifyGroupDto: ModifyGroupDto) {
-    return this.groupService.modifyGroup(req.user._id, modifyGroupDto);
+  modifyGroup(
+    @Req() req: RequestUser,
+    @Body() modifyGroupDto: ModifyGroupDto,
+    @Param() param: FindGroupDto,
+    @UploadedFiles() images: Express.Multer.File[],
+  ) {
+    const image = images[0];
+    let imageName: string;
+    if (image) {
+      isImageTheRightType(image);
+
+      const { createdImageObjects, imageNames } = createImageObjectsToSave([
+        image,
+      ]);
+      imageName = imageNames[0];
+
+      storeFiles(createdImageObjects);
+    }
+    return this.groupService.modifyGroup(
+      req.user._id,
+      param.groupId,
+      modifyGroupDto,
+      imageName,
+    );
   }
 }

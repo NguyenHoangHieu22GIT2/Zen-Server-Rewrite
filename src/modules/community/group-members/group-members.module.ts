@@ -6,6 +6,7 @@ import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.in
 import { GroupMembersRepository } from './repository/group-members.repository';
 import { IGroupMembersServiceString } from './services/group-members.interface';
 import { GroupMembersService } from './services';
+import { Group, GroupSchema } from '../group/entities';
 
 @Module({
   controllers: [GroupMembersController],
@@ -22,6 +23,7 @@ import { GroupMembersService } from './services';
   imports: [
     MongooseModule.forFeature([
       { name: GroupMember.name, schema: GroupMemberSchema },
+      { name: Group.name, schema: GroupSchema },
     ]),
   ],
   exports: [

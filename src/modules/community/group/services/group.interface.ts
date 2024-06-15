@@ -34,6 +34,8 @@ export interface IGroupService {
 
   modifyGroup(
     endUserId: EndUserId,
+    groupId: GroupId,
     modifyGroupDto: ModifyGroupDto,
+    imageName: string,
   ): Promise<DocumentMongodbType<Group>>;
 }

@@ -85,13 +85,18 @@ export class GroupService implements IGroupService {
     return group;
   }
 
-  async modifyGroup(endUserId: EndUserId, modifyGroupDto: ModifyGroupDto) {
-    const group = await this.groupRepository.findById(modifyGroupDto.groupId);
+  async modifyGroup(
+    endUserId: EndUserId,
+    groupId: GroupId,
+    modifyGroupDto: ModifyGroupDto,
+    imageName: string,
+  ) {
+    const group = await this.groupRepository.findById(groupId);
     if (isUndefined(group)) {
       throw new NotFoundException('No Group Found');
     }
     isIdsEqual(endUserId, group.endUserId);
-    Object.assign(group, modifyGroupDto);
+    Object.assign(group, { ...modifyGroupDto, imageName });
     await this.groupRepository.save(group);
     return group;
   }

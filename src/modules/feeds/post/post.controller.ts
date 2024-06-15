@@ -48,7 +48,7 @@ import { FindByIdEndUserDto } from 'src/modules/users/enduser';
 import { IPostService, IPostServiceString } from './services/post.interface';
 
 @ApiTags('Post')
-@Controller('posts')
+@Controller('post')
 @UseGuards(LoggedInGuard)
 export class PostController {
   constructor(

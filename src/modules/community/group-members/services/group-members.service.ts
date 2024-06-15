@@ -7,6 +7,9 @@ import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.in
 import { GroupMembersRepository } from '../repository/group-members.repository';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { FindGroupDto } from '../dto';
+import { GroupMember } from '../entities';
+import { PopulateEndUserAggregation } from 'src/common/types/mongodbTypes';
+import { nameOfCollections } from 'src/common/constants';
 export type GroupIdAndUserIdObject = {
   endUserId: EndUserId;
   groupId: GroupId;
@@ -35,11 +38,39 @@ export class GroupMembersService implements IGroupMembersService {
     getGroupMembers: FindGroupDto,
     queryLimitSkip: QueryLimitSkip,
   ) {
-    const groupMembers = await this.groupRepository.getGroupMembers(
-      getGroupMembers,
-      queryLimitSkip,
-    );
-    return groupMembers;
+    // const groupMembers = await this.groupRepository.getGroupMembers(
+    //   getGroupMembers,
+    //   queryLimitSkip,
+    // );
+    const result: PopulateEndUserAggregation<GroupMember>[] =
+      await this.groupRepository.findByAggregation([
+        { $skip: queryLimitSkip.skip },
+        { $limit: queryLimitSkip.limit },
+        {
+          $lookup: {
+            from: nameOfCollections.EndUser,
+            localField: 'endUserId',
+            foreignField: '_id',
+            as: 'userFull',
+          },
+        },
+        {
+          $unwind: '$userFull',
+        },
+        {
+          $set: {
+            endUser: {
+              _id: '$userFull._id',
+              username: '$userFull.username',
+              avatar: '$userFull.avatar',
+            },
+          },
+        },
+        {
+          $unset: ['userFull', 'endUserId', 'updatedAt', '__v'],
+        },
+      ]);
+    return result;
   }
 
   async findGroupMember({ endUserId, groupId }: GroupIdAndUserIdObject) {
@@ -57,15 +88,19 @@ export class GroupMembersService implements IGroupMembersService {
       endUserId,
       groupId,
     });
-    //Populate in Mongoose is hard with types, so it has to be this ugly!
-    const groupPopulatedInGroupMember = (await groupMember.populate({
-      path: 'groupId',
-      select: 'endUserId',
-    })) as Group & { groupId: Pick<Group, 'endUserId'> };
-    if (isIdsEqual(hostId, groupPopulatedInGroupMember.endUserId)) {
-      throw new BadRequestException("You don't have access to this!");
+    if (!groupMember) {
+      throw new BadRequestException('Group member not found!');
     }
+    //Populate in Mongoose is hard with types, so it has to be this ugly!
+    // const groupPopulatedInGroupMember = (await groupMember.populate({
+    //   path: 'groupId',
+    //   select: 'endUserId',
+    // })) as Group & { groupId: Pick<Group, 'endUserId'> };
+    // if (isIdsEqual(hostId, groupPopulatedInGroupMember.endUserId)) {
+    //   throw new BadRequestException("You don't have access to this!");
+    // }
     groupMember.deleteOne();
+    console.log(groupMember);
     return groupMember;
   }
 }

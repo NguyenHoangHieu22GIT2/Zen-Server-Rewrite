@@ -35,7 +35,6 @@ export class CreatePostDto {
       returnError: false,
     }),
   )
-  @IsString()
   @IsOptional()
   groupId?: GroupId;
 }

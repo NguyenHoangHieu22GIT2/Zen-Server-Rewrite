@@ -58,7 +58,6 @@ export class ModifyPostDto {
   )
   @IsString()
   @IsOptional()
-  @IsOptional()
   groupId?: GroupId;
 
   // This is for testing with swagger, not used in normal codes
@@ -68,5 +67,6 @@ export class ModifyPostDto {
     required: true,
     example: [],
   })
+  @IsOptional()
   images: [];
 }

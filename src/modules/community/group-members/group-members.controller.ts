@@ -76,14 +76,15 @@ export class GroupMembersController {
   //   });
   //   return groupMember;
   // }
-
-  @Delete(':endUserId')
+  //@Controller('group-members')
+  @Delete(':groupId/:endUserId')
   @UseGuards(LoggedInGuard)
   @DeleteGroupMemberSwaggerAPIDecorators()
   async deleteGroupMember(
     @Req() req: RequestUser,
     @Param() params: DeleteGroupMember,
   ) {
+    console.log('params', params);
     const groupMember = await this.groupMembersService.deleteGroupMember(
       req.user._id,
       {
