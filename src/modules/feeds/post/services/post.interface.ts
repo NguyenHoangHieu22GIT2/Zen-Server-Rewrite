@@ -76,9 +76,9 @@ export interface IPostService {
     args: IPostServiceArgs['getGroupPosts'],
   ): Promise<(PopulateEndUserAggregation<Post> & T)[]>;
 
-  getPostsAggregation(
+  getPostsAggregation<T extends object>(
     getPostsAggregation: IPostServiceArgs['getPostsAggregation'],
-  ): Promise<PopulateEndUserAggregation<Post>[]>;
+  ): Promise<(PopulateEndUserAggregation<Post> & T)[]>;
 
   getRecommendedPosts<T extends object>(
     getRecommendedPost: IPostServiceArgs['getRecommendedPost'],

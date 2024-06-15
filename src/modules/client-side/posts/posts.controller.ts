@@ -25,6 +25,7 @@ import {
   IFriendService,
   IFriendServiceString,
 } from 'src/modules/social/friend';
+import { SearchPostsDto } from './dtos/search-posts.dto';
 
 @ApiTags('posts-for-client')
 @Controller('posts')
@@ -38,6 +39,33 @@ export class PostsController {
     @Inject(IFriendServiceString)
     private readonly friendService: IFriendService,
   ) {}
+
+  @Get()
+  public async searchPosts(
+    @Req() req: RequestUser,
+    @Query() searchPostsDto: SearchPostsDto,
+  ) {
+    const posts = await this.postService.getPostsAggregation<{
+      hasLiked: boolean;
+      numOfLikes: number;
+    }>({
+      queryLimitSkip: { ...searchPostsDto },
+      pipelineStages: [
+        { $match: { $text: { $search: searchPostsDto.searchKeyWords } } },
+      ],
+    });
+
+    for (let i = 0; i < posts.length; i++) {
+      const post = posts[i];
+      const like = await this.likeService.findLike(req.user._id, post._id);
+      const numOfLikes = await this.likeService.getNumberOfLikes(post._id);
+
+      post.hasLiked = like ? true : false;
+      post.numOfLikes = numOfLikes;
+    }
+
+    return posts;
+  }
 
   @Get()
   public async getPosts(
