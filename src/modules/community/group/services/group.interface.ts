@@ -23,6 +23,11 @@ export interface IGroupService {
     queryLimitSkip: QueryLimitSkip,
   ): Promise<(PopulateEndUserAggregation<Group> & T)[]>;
 
+  getYourCreatedGroups<T>(
+    endUserId: EndUserId,
+    queryLimitSkip: QueryLimitSkip,
+  ): Promise<(PopulateEndUserAggregation<Group> & T)[]>;
+
   searchGroups<T>(
     searchGroupsDto: SearchGroupsDto,
   ): Promise<(PopulateEndUserAggregation<Group> & T)[]>;

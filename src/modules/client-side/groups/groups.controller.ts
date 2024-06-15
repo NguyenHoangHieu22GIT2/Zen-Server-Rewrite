@@ -8,9 +8,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { nameOfCollections } from 'src/common/constants';
 import { RequestUser } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { LoggedInGuard } from 'src/modules/auth';
+import { Group } from 'src/modules/community/group';
 import { FindGroupDto } from 'src/modules/community/group-members';
 import {
   IGroupMembersService,
@@ -42,6 +44,56 @@ export class GroupsController {
       queryLimitSkip,
     );
     return groupMembers;
+  }
+
+  @Get('join-groups')
+  public async getJoinedGroups(
+    @Req() req: RequestUser,
+    @Param() query: QueryLimitSkip,
+  ) {
+    const results = await this.groupMemberService.getGroupMembersAggregation<{
+      group: Group;
+    }>([
+      {
+        $match: { endUserId: req.user._id },
+      },
+      { $limit: query.limit },
+      { $skip: query.skip },
+      {
+        $lookup: {
+          from: nameOfCollections.Group,
+          localField: 'groupId',
+          foreignField: 'id',
+          as: 'group',
+        },
+      },
+      {
+        $project: {
+          group: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: nameOfCollections.EndUser,
+          localField: 'group.endUserId',
+          foreignField: 'id',
+          as: 'endUser',
+        },
+      },
+      {
+        $unset: [
+          'group.endUser.password',
+          'group.endUser.activationToken',
+          'group.endUser.modifyToken',
+        ],
+      },
+    ]);
+
+    const groupsCreated = await this.groupService.getYourCreatedGroups(
+      req.user._id,
+      query,
+    );
+    return { groupsJoined: results, groupsCreated };
   }
 
   @Get()

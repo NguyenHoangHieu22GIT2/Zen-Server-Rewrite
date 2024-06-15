@@ -61,6 +61,20 @@ export class GroupService implements IGroupService {
     return groups;
   }
 
+  public async getYourCreatedGroups<T>(
+    endUserId: EndUserId,
+    queryLimitSkip: QueryLimitSkip,
+  ) {
+    const groups = await this.groupRepository.findByAggregation<
+      PopulateEndUserAggregation<Group> & T
+    >([
+      { $match: { endUserId: endUserId } },
+      ...PopulateSkipAndLimit(queryLimitSkip),
+      ...LookUpEndUserAggregate,
+    ]);
+    return groups;
+  }
+
   async searchGroups<T>(searchGroupsDto: SearchGroupsDto) {
     const groups = await this.groupRepository.findByAggregation<
       PopulateEndUserAggregation<Group> & T
