@@ -3,6 +3,8 @@ import { GroupMemberRequest } from '../entities/group-member-request.entity';
 import { DocumentMongodbType } from 'src/common/types/mongodbTypes';
 import { Group } from '../../group/entities';
 
+export const IGroupMemberRequestsString = 'IGroupMemberRequests';
+
 export interface IGroupMemberRequests<T = GroupMemberRequest> {
   createRequest(
     endUserId: EndUserId,
@@ -23,6 +25,6 @@ export interface IGroupMemberRequests<T = GroupMemberRequest> {
 
   getRequests(
     hostId: EndUserId,
-    groupId: EndUserId,
+    group: Group,
   ): Promise<DocumentMongodbType<T>[]>;
 }

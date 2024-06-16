@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -25,13 +26,25 @@ import { FindByIdEndUserDto } from 'src/modules/users/enduser';
  * friendId => the user getting actioned
  */
 @Controller('friend')
-@ApiTags('friends')
+@ApiTags('Friends')
 @UseGuards(LoggedInGuard)
 export class FriendController {
   constructor(
     @Inject(IFriendServiceString)
     private readonly friendService: IFriendService,
   ) {}
+
+  @Delete(':endUserId')
+  public async deleteFriend(
+    @Req() req: RequestUser,
+    @Param() param: FindByIdEndUserDto,
+  ) {
+    const friend = await this.friendService.removeFriend(
+      req.user._id,
+      param.endUserId,
+    );
+    return friend;
+  }
 
   @GetFriendsRecommendationSwaggerAPIDecorators()
   @Get('recommendation')
@@ -73,6 +86,7 @@ export class FriendController {
     );
     return friendList;
   }
+
   @GetFriendListSwaggerAPIDecorators()
   @Get(':endUserId')
   public async getFriendListOfUser(

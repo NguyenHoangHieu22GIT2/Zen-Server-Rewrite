@@ -16,7 +16,7 @@ export class Group {
   @Prop({ required: true, type: Boolean })
   isVisible: boolean;
 
-  @Prop({ required: true, type: String })
+  @Prop({ required: false, type: String })
   avatar: string;
 
   @Prop({

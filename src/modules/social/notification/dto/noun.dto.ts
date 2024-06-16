@@ -11,7 +11,7 @@ const notificationTypes: NotificationType[] = [
   'like',
   'comment',
   'mention',
-  'friend_request',
+  'friend-request',
 ];
 
 export class NounDto implements NounEntity {

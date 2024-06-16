@@ -32,14 +32,14 @@ export class GroupMemberRequestsService implements IGroupMemberRequests {
     endUserId: EndUserId,
     group: Group,
   ): Promise<DocumentMongodbType<GroupMemberRequest>> {
+    if (!group.endUserId.equals(hostId)) {
+      throw new UnauthorizedException('You can not do this action!');
+    }
+
     const request = await this.groupMemberRequestRepository.findOne({
       endUserId,
       groupId: group._id,
     });
-
-    if (!group.endUserId.equals(hostId)) {
-      throw new UnauthorizedException('You can not do this action!');
-    }
 
     request.state = 'accepted';
 
@@ -49,11 +49,34 @@ export class GroupMemberRequestsService implements IGroupMemberRequests {
   public async declineRequest(
     hostId: EndUserId,
     endUserId: EndUserId,
-    groupId: EndUserId,
-  ): Promise<DocumentMongodbType<GroupMemberRequest>> {}
+    group: Group,
+  ): Promise<DocumentMongodbType<GroupMemberRequest>> {
+    if (!group.endUserId.equals(hostId)) {
+      throw new UnauthorizedException('You can not do this action!');
+    }
+
+    const request = await this.groupMemberRequestRepository.findOne({
+      endUserId,
+      groupId: group._id,
+    });
+
+    await request.deleteOne();
+
+    return request;
+  }
 
   public async getRequests(
     hostId: EndUserId,
-    groupId: EndUserId,
-  ): Promise<DocumentMongodbType<GroupMemberRequest>[]> {}
+    group: Group,
+  ): Promise<DocumentMongodbType<GroupMemberRequest>[]> {
+    if (!group.endUserId.equals(hostId)) {
+      throw new UnauthorizedException('You can not do this action!');
+    }
+
+    const requests = await this.groupMemberRequestRepository.find({
+      groupId: group._id,
+    });
+
+    return requests;
+  }
 }

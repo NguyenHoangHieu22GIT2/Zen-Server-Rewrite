@@ -58,11 +58,11 @@ function ConvertObjectToHash<T extends object>(
     const propertyInObjectToConvert = objectToConvert[key];
 
     // If Date, then convert to Unix time then turn it into string
-    if (propertyInObjectToConvert instanceof Date)
+    if (propertyInObjectToConvert instanceof Date) {
       convertedObject[key] = propertyInObjectToConvert.getTime().toString();
-    else if (isMongodbId(propertyInObjectToConvert.toString()))
+    } else if (isMongodbId(propertyInObjectToConvert.toString())) {
       convertedObject[key] = propertyInObjectToConvert.toString();
-    else if (
+    } else if (
       propertyInObjectToConvert instanceof Array ||
       propertyInObjectToConvert instanceof Object
     ) {

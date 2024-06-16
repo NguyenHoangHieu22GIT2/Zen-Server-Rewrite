@@ -8,11 +8,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { nameOfCollections } from 'src/common/constants';
 import { RequestUser } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { LoggedInGuard } from 'src/modules/auth';
-import { Group } from 'src/modules/community/group';
 import { FindGroupDto } from 'src/modules/community/group-members';
 import {
   IGroupMembersService,
@@ -22,6 +20,10 @@ import {
   IGroupService,
   IGroupServiceString,
 } from 'src/modules/community/group/services';
+import {
+  IEndUserService,
+  IEndUserServiceString,
+} from 'src/modules/users/enduser';
 
 @Controller('groups')
 @ApiTags('Groups-for-client')
@@ -31,35 +33,32 @@ export class GroupsController {
     @Inject(IGroupServiceString) private readonly groupService: IGroupService,
     @Inject(IGroupMembersServiceString)
     private readonly groupMemberService: IGroupMembersService,
+    @Inject(IEndUserServiceString)
+    private readonly endUserService: IEndUserService,
   ) {}
-
-  @Get(':groupId/group-members-count')
-  public async groupMembersCount(
-    @Req() req: RequestUser,
-    @Param() param: FindGroupDto,
-    @Query() queryLimitSkip: QueryLimitSkip,
-  ) {
-    const groupMembers = await this.groupMemberService.getGroupMembers(
-      param,
-      queryLimitSkip,
-    );
-    return groupMembers;
-  }
 
   @Get('join-groups')
   public async getJoinedGroups(
     @Req() req: RequestUser,
-    @Param() query: QueryLimitSkip,
+    @Query() query: QueryLimitSkip,
   ) {
     const groupsJoined = await this.groupMemberService.getGroupsJoined(
       req.user._id,
       query,
     );
+    console.log(groupsJoined);
 
     for (let i = 0; i < groupsJoined.length; i++) {
       const groupJoined = groupsJoined[i];
 
       await groupJoined.populate('groupId');
+
+      const endUser = await this.endUserService.findById(
+        //@ts-expect-error error type
+        groupJoined.groupId.endUserId,
+      );
+      //@ts-expect-error error type
+      groupJoined.endUser = endUser;
     }
 
     const groupsCreated = await this.groupService.getYourCreatedGroups(
@@ -118,5 +117,18 @@ export class GroupsController {
       isJoined = member ? true : false;
     }
     return { isJoined: isJoined, group, numOfMembers };
+  }
+
+  @Get(':groupId/group-members-count')
+  public async groupMembersCount(
+    @Req() req: RequestUser,
+    @Param() param: FindGroupDto,
+    @Query() queryLimitSkip: QueryLimitSkip,
+  ) {
+    const groupMembers = await this.groupMemberService.getGroupMembers(
+      param,
+      queryLimitSkip,
+    );
+    return groupMembers;
   }
 }
