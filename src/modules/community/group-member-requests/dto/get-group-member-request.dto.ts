@@ -1,8 +1,8 @@
 import { Transform } from 'class-transformer';
-import { GroupId } from 'src/common/types/utilTypes';
+import { GroupMemberRequestId } from 'src/common/types/utilTypes';
 import { checkMongodbIdInTransformToThrowError } from 'src/common/utils';
 
-export class FindGroupDto {
+export class GetGroupMemberRequestDto {
   @Transform(checkMongodbIdInTransformToThrowError)
-  groupId: GroupId;
+  groupMemberRequestDto: GroupMemberRequestId;
 }

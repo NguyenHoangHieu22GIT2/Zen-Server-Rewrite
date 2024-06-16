@@ -22,6 +22,13 @@ export type GroupPostId = Brand<Types.ObjectId, 'GroupPostId'>;
 
 export type GroupId = Brand<Types.ObjectId, 'GroupId'>;
 
+export type GroupMemberId = Brand<Types.ObjectId, 'GroupMemberId'>;
+
+export type GroupMemberRequestId = Brand<
+  Types.ObjectId,
+  'GroupMemberRequestId'
+>;
+
 export type CommentId = Brand<Types.ObjectId, 'CommentId'>;
 
 export type ConversationId = Brand<Types.ObjectId, 'ConversationId'>;

@@ -9,7 +9,8 @@ import { GroupMember } from '../entities';
 import { PopulateEndUserAggregation } from 'src/common/types/mongodbTypes';
 import { nameOfCollections } from 'src/common/constants';
 import { PipelineStage } from 'mongoose';
-import { noObj } from 'src/common/utils';
+import { isIdsEqual, noObj } from 'src/common/utils';
+import { Group } from '../../group/entities';
 export type GroupIdAndUserIdObject = {
   endUserId: EndUserId;
   groupId: GroupId;
@@ -109,13 +110,15 @@ export class GroupMembersService implements IGroupMembersService {
       throw new BadRequestException('Group member not found!');
     }
     //Populate in Mongoose is hard with types, so it has to be this ugly!
-    // const groupPopulatedInGroupMember = (await groupMember.populate({
-    //   path: 'groupId',
-    //   select: 'endUserId',
-    // })) as Group & { groupId: Pick<Group, 'endUserId'> };
-    // if (isIdsEqual(hostId, groupPopulatedInGroupMember.endUserId)) {
-    //   throw new BadRequestException("You don't have access to this!");
-    // }
+    const groupPopulatedInGroupMember: Group & {
+      groupId: Pick<Group, 'endUserId'>;
+    } = await groupMember.populate({
+      path: 'groupId',
+      select: 'endUserId',
+    });
+    if (isIdsEqual(hostId, groupPopulatedInGroupMember.endUserId)) {
+      throw new BadRequestException("You don't have access to this!");
+    }
     await groupMember.deleteOne();
     console.log(groupMember);
     return groupMember;

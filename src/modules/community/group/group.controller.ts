@@ -9,7 +9,7 @@ import {
   Post,
   Query,
   Req,
-  UploadedFiles,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -27,7 +27,7 @@ import { getGroupsSwaggerAPIDecorators } from 'src/documents/swagger-api/groups/
 import { searchGroupsSwaggerAPIDecorators } from 'src/documents/swagger-api/groups/search-groups.api';
 import { deleteGroupSwaggerAPIDecorators } from 'src/documents/swagger-api/groups/delete-group.api';
 import { modifyGroupSwaggerAPIDecorators } from 'src/documents/swagger-api/groups/modify-group.api';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import {
   createImageObjectsToSave,
   isImageTheRightType,
@@ -45,14 +45,13 @@ export class GroupController {
 
   @Post()
   @UseGuards(LoggedInGuard)
-  @UseInterceptors(FilesInterceptor('files'))
+  @UseInterceptors(FileInterceptor('files'))
   @createGroupSwaggerAPIDecorators()
   async createGroup(
     @Req() req: RequestUser,
     @Body() createGroupDto: CreateGroupDto,
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFile() image: Express.Multer.File,
   ) {
-    const image = images[0];
     let imageName: string;
     if (image) {
       isImageTheRightType(image);
@@ -107,9 +106,8 @@ export class GroupController {
     @Req() req: RequestUser,
     @Body() modifyGroupDto: ModifyGroupDto,
     @Param() param: FindGroupDto,
-    @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFile() image: Express.Multer.File,
   ) {
-    const image = images[0];
     let imageName: string;
     if (image) {
       isImageTheRightType(image);

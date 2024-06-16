@@ -30,6 +30,7 @@ import { ReceiptModule } from './receipt/receipt.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { PostsModule } from './client-side/posts/posts.module';
 import { ProfileModule } from './client-side/profile';
+import { GroupMemberRequestsModule } from './community/group-member-requests/group-member-requests.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { ProfileModule } from './client-side/profile';
     SubscriptionsModule,
     PostsModule,
     ProfileModule,
+    GroupMemberRequestsModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserRedis],
