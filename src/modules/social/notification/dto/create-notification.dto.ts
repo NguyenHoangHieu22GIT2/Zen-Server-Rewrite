@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import { IsString, ValidateNested } from 'class-validator';
 import { NounDto } from './noun.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { Optional } from '@nestjs/common';
 
 export class CreateNotificationDto implements Partial<Notification> {
   // We can use token from user to get the ID
@@ -40,7 +41,8 @@ export class CreateNotificationDto implements Partial<Notification> {
     title: 'prepObject',
     type: NounDto,
   })
-  prepObject: NounDto;
+  @Optional()
+  prepObject?: NounDto;
 
   @IsString()
   referenceLink: string;

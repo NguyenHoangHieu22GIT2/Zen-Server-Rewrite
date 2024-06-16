@@ -100,7 +100,10 @@ export class PostService implements IPostService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     endUserId,
   }: IPostServiceArgs['getRecommendedPost']) {
-    const queryAggregation: PipelineStage[] = [];
+    const queryAggregation: PipelineStage[] = [
+      { $match: { groupId: { $exists: false } } },
+      { $sort: { createdAt: -1 } },
+    ];
 
     const posts = await this.postRepository.getPostsAggregation<T>({
       queryLimitSkip,

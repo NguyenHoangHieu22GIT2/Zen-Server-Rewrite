@@ -39,7 +39,6 @@ export class NounDto implements NounEntity {
     type: String,
     default: '',
   })
-  @IsEnum(notificationTypes)
   type: NounType;
 
   @ApiProperty({

@@ -9,7 +9,7 @@ export class GroupMemberRequest {
   @Prop({
     required: true,
     type: Types.ObjectId,
-    ref: nameOfCollections.EndUser,
+    ref: 'EndUser',
   })
   endUserId: EndUserId;
 

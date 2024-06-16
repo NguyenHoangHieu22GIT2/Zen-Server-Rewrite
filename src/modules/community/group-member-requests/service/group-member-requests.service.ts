@@ -76,6 +76,9 @@ export class GroupMemberRequestsService implements IGroupMemberRequests {
     const requests = await this.groupMemberRequestRepository.find({
       groupId: group._id,
     });
+    for (let i = 0; i < requests.length; i++) {
+      await requests[i].populate('endUserId');
+    }
 
     return requests;
   }

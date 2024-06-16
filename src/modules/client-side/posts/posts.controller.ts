@@ -79,6 +79,7 @@ export class PostsController {
       endUserId: req.user._id,
       queryLimitSkip,
     });
+    console.log(posts);
 
     for (let i = 0; i < posts.length; i++) {
       const post = posts[i];
@@ -89,6 +90,7 @@ export class PostsController {
       post.hasLiked = like ? true : false;
       post.numOfLikes = numOfLikes;
     }
+    console.log(posts);
     return posts;
   }
 
