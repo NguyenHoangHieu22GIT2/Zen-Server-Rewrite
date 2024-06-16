@@ -26,6 +26,7 @@ import {
   IFriendServiceString,
 } from 'src/modules/social/friend';
 import { SearchPostsDto } from './dtos/search-posts.dto';
+import { FindByIdEndUserDto } from 'src/modules/users/enduser';
 
 @ApiTags('posts-for-client')
 @Controller('posts')
@@ -39,6 +40,37 @@ export class PostsController {
     @Inject(IFriendServiceString)
     private readonly friendService: IFriendService,
   ) {}
+
+  @Get('/liked-posts')
+  public async getLikedPosts(
+    @Req() req: RequestUser,
+    @Query() query: QueryLimitSkip,
+  ) {
+    const likes = await this.likeService.getPostLikesOfUser(
+      req.user._id,
+      query,
+    );
+    const posts = [];
+    for (let i = 0; i < likes.length; i++) {
+      const like = likes[i];
+
+      const post = await this.postService.findPost({ postId: like.postId });
+
+      posts.push(post);
+    }
+
+    for (let i = 0; i < posts.length; i++) {
+      const post = posts[i];
+      // TODO: REALLY SLOW / WILL OPTIMIZE THIS LATER!
+      const like = await this.likeService.findLike(req.user._id, post._id);
+      const numOfLikes = await this.likeService.getNumberOfLikes(post._id);
+
+      post.hasLiked = like ? true : false;
+      post.numOfLikes = numOfLikes;
+    }
+
+    return posts;
+  }
 
   @Get('/search')
   public async searchPosts(
@@ -79,7 +111,6 @@ export class PostsController {
       endUserId: req.user._id,
       queryLimitSkip,
     });
-    console.log(posts);
 
     for (let i = 0; i < posts.length; i++) {
       const post = posts[i];
@@ -135,5 +166,32 @@ export class PostsController {
     for (let i = 0; i < endUserFriends.length; i++) {
       // const friend = endUserFriends[i];
     }
+  }
+
+  @Get('enduser/:endUserId')
+  public async getPostsFromOneUser(
+    @Req() req: RequestUser,
+    @Param() param: FindByIdEndUserDto,
+    @Query() query: QueryLimitSkip,
+  ) {
+    const posts = await this.postService.getUserPostsFromProfile<{
+      hasLiked: boolean;
+      numOfLikes: number;
+    }>({
+      endUserId: param.endUserId,
+      queryLimitSkip: query,
+    });
+
+    for (let i = 0; i < posts.length; i++) {
+      const post = posts[i];
+      // TODO: REALLY SLOW / WILL OPTIMIZE THIS LATER!
+      const like = await this.likeService.findLike(req.user._id, post._id);
+      const numOfLikes = await this.likeService.getNumberOfLikes(post._id);
+
+      post.hasLiked = like ? true : false;
+      post.numOfLikes = numOfLikes;
+    }
+
+    return posts;
   }
 }

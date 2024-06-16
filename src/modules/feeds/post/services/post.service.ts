@@ -109,7 +109,6 @@ export class PostService implements IPostService {
       queryLimitSkip,
       queryAggregation,
     });
-
     return posts;
   }
 

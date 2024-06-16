@@ -11,6 +11,7 @@ import { TryCatchDecorator } from 'src/cores/decorators';
 import { BaseRepositoryName } from 'src/cores/base-repository/Base.Repository.interface';
 import { LikeRepository } from '../repository/like.repository';
 import { ILikeService } from './like.interface';
+import { noObj } from 'src/common/utils';
 
 @Injectable()
 @TryCatchDecorator()
@@ -18,6 +19,18 @@ export class LikeService implements ILikeService {
   constructor(
     @Inject(BaseRepositoryName) private readonly likeRepository: LikeRepository,
   ) {}
+
+  public async getPostLikesOfUser(
+    endUserId: EndUserId,
+    { limit, skip }: QueryLimitSkip,
+  ) {
+    const likes = await this.likeRepository.find({ endUserId }, noObj, {
+      limit,
+      skip,
+    });
+
+    return likes;
+  }
 
   public async findLike(
     endUserId: EndUserId,

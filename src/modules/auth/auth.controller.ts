@@ -7,6 +7,8 @@ import {
   Req,
   Inject,
   BadRequestException,
+  Get,
+  Param,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
@@ -33,7 +35,6 @@ import { IAuthService, IAuthServiceString } from './service/auth.interface';
 import { AuthRedisService } from './service';
 
 @ApiTags('Authentication/Authorization')
-@SerializeDecorator(EndUserSerializeDto)
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -45,6 +46,7 @@ export class AuthController {
 
   @RegisterAccountSwaggerAPIDecorators()
   @Post('register-account')
+  @SerializeDecorator(EndUserSerializeDto)
   async registerAccount(@Body() registerEndUserDto: RegisterEndUserDto) {
     const message = 'This email is already in used. Try another one';
 
@@ -78,14 +80,19 @@ export class AuthController {
 
   //check the sent activation token  & remove the activate token field in the db
   @ActivateAccountSwaggerAPIDecorators()
-  @Patch('activate-account')
-  async activateAccount(@Body() activateAccountDto: ActivateAccountDto) {
-    return this.authService.activateAccount(activateAccountDto);
+  @Get('activate-account/:activationToken')
+  async activateAccount(@Param() activateAccountDto: ActivateAccountDto) {
+    const account = await this.authService.activateAccount(activateAccountDto);
+    if (!account) {
+      return "There's no user with this token";
+    }
+    return 'You activated this account successfully';
   }
 
   @LoginAccountSwaggerAPIDecorators()
   @Patch('login-account')
   @UseGuards(LocalGuard)
+  @SerializeDecorator(EndUserSerializeDto)
   loginAccount(@Req() req: Request) {
     console.log(req.user, 'req.user');
     return req.user;
@@ -93,6 +100,7 @@ export class AuthController {
 
   @ForgotPasswordSwaggerAPIDecorators()
   @Patch('forgot-password')
+  @SerializeDecorator(EndUserSerializeDto)
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     const result = await this.authService.forgotPassword(forgotPasswordDto);
     await this.mailerService.sendMail(
@@ -103,6 +111,7 @@ export class AuthController {
 
   @ChangeForgottonPasswordSwaggerAPIDecorators()
   @Patch('change-forgottent-password')
+  @SerializeDecorator(EndUserSerializeDto)
   async changeForgottonPassword(
     @Body() changeForgottonPasswordDto: ChangeForgottonPasswordDto,
   ) {

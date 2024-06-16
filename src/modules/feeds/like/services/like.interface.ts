@@ -14,6 +14,11 @@ export interface ILikeService {
     postId: PostId,
   ): Promise<DocumentMongodbType<Like>>;
 
+  getPostLikesOfUser(
+    endUserId: EndUserId,
+    queryLimitSkip: QueryLimitSkip,
+  ): Promise<DocumentMongodbType<Like>[]>;
+
   getNumberOfLikes(postId: PostId): Promise<number>;
 
   getLikes({

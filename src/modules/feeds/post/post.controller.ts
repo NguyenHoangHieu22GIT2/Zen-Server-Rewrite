@@ -30,12 +30,7 @@ import {
   PopulateEndUserAggregation,
 } from 'src/common/types/mongodbTypes/';
 import { Post as PostEntity } from './entities/';
-import {
-  FindPostDto,
-  GetUserPostsDto,
-  ModifyPostDto,
-  CreatePostDto,
-} from './dto/';
+import { FindPostDto, ModifyPostDto, CreatePostDto } from './dto/';
 
 import {
   CreatePostSwaggerAPIDecorators,

@@ -3,12 +3,7 @@ import {
   PopulateEndUserAggregation,
 } from 'src/common/types/mongodbTypes';
 import { Post } from '../entities';
-import {
-  CreatePostDto,
-  FindPostDto,
-  GetUserPostsDto,
-  ModifyPostDto,
-} from '../dto';
+import { CreatePostDto, FindPostDto, ModifyPostDto } from '../dto';
 import { EndUserId, GroupId, PostId } from 'src/common/types/utilTypes';
 import { QueryLimitSkip } from 'src/cores/global-dtos';
 import { PipelineStage } from 'mongoose';
