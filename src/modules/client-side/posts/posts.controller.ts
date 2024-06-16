@@ -41,13 +41,14 @@ export class PostsController {
     private readonly friendService: IFriendService,
   ) {}
 
-  @Get('/liked-posts')
+  @Get('/liked-posts/:endUserId')
   public async getLikedPosts(
     @Req() req: RequestUser,
     @Query() query: QueryLimitSkip,
+    @Param() param: FindByIdEndUserDto,
   ) {
     const likes = await this.likeService.getPostLikesOfUser(
-      req.user._id,
+      param.endUserId || req.user._id,
       query,
     );
     const posts = [];
