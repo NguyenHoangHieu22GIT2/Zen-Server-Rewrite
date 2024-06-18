@@ -56,18 +56,19 @@ export class PostsController {
       const like = likes[i];
 
       const post = await this.postService.findPost({ postId: like.postId });
-
-      posts.push(post);
+      if (post) posts.push(post);
     }
 
     for (let i = 0; i < posts.length; i++) {
       const post = posts[i];
       // TODO: REALLY SLOW / WILL OPTIMIZE THIS LATER!
-      const like = await this.likeService.findLike(req.user._id, post._id);
-      const numOfLikes = await this.likeService.getNumberOfLikes(post._id);
+      if (post) {
+        const like = await this.likeService.findLike(req.user._id, post._id);
+        const numOfLikes = await this.likeService.getNumberOfLikes(post._id);
 
-      post.hasLiked = like ? true : false;
-      post.numOfLikes = numOfLikes;
+        post.hasLiked = like ? true : false;
+        post.numOfLikes = numOfLikes;
+      }
     }
 
     return posts;

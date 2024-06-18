@@ -62,6 +62,15 @@ export class ModifyPostDto {
 
   // This is for testing with swagger, not used in normal codes
   @ApiProperty({
+    title: 'existingImages',
+    type: Array,
+    required: true,
+    example: [],
+  })
+  @IsOptional()
+  existingImages?: string;
+
+  @ApiProperty({
     title: 'images',
     type: Array,
     required: true,

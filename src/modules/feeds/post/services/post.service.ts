@@ -63,7 +63,15 @@ export class PostService implements IPostService {
   }: IPostServiceArgs['getUserPosts']) {
     const posts = await this.postRepository.getPostsAggregation<T>({
       queryLimitSkip: queryLimitSkip,
-      queryAggregation: [{ $match: { endUserId: endUserId } }],
+      queryAggregation: [
+        {
+          $match: {
+            endUserId: endUserId,
+            groupId: { $exists: false },
+          },
+        },
+        { $sort: { createdAt: -1 } },
+      ],
     });
     return posts;
   }

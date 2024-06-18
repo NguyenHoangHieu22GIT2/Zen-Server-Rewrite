@@ -159,7 +159,14 @@ export class PostController {
     @Body() modifyPostDto: ModifyPostDto,
     @UploadedFiles() images: Express.Multer.File[],
   ) {
-    const imageNames: string[] = [];
+    console.log(
+      modifyPostDto.existingImages,
+      typeof modifyPostDto.existingImages,
+    );
+    let imageNames: string[] = [];
+    if (modifyPostDto.existingImages) {
+      imageNames = JSON.parse(modifyPostDto.existingImages) as string[];
+    }
     if (images) {
       isImagesTheRightType(images);
 
